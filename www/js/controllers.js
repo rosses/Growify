@@ -98,6 +98,68 @@ angular.module('growify.controllers', [])
       $scope.botonesLogin = true;
     });
   };
+
+  $scope.loginGoogle = function() {
+    window.plugins.googleplus.login(
+        {
+          'scopes': '', // optional, space-separated list of scopes, If not included or empty, defaults to `profile` and `email`.
+          'webClientId': '', // optional (client id of the web app/server side) clientId of your Web application from Credentials settings of your project - On Android, this MUST be included to get an idToken. On iOS, it is not required.
+          'offline': false, // optional, but requires the webClientId - if set to true the plugin will also return a serverAuthCode, which can be used to grant offline access to a non-Google server
+        },
+        function (obj) {
+          err(JSON.stringify(obj)); // Solo para test
+
+
+          // Intentar logear
+          var login_xpress = {'googleToken': obj.idToken };
+          $http.post($localStorage.growify.rest+'/login', login_xpress).
+          then(function (data, status, headers, config) {
+            $localStorage.growify.access_token = data.data.jwt;
+            err('Autologin OK');
+            $state.go( "terms" );
+          },function() {
+            err('No pude hacer autologin, cuenta nueva?');
+            // No pude, registrar cuenta
+            var data = {
+              'username':   obj.email, 
+              'email':      obj.email, 
+              'googleToken':   obj.idToken
+            };
+            $http.post($localStorage.growify.rest+'/registration', data).
+            then(function (data, status, headers, config) {
+              if (data.data.active == true) { 
+                err('Registro OK');
+                $localStorage.growify.username = obj.email;
+                $localStorage.growify.email = obj.email;
+                $localStorage.growify.googleToken = obj.idToken;
+                $localStorage.growify.id = data.data._id;
+                $localStorage.growify.auth = 1;
+                // get access token
+                var login_xpress = {'googleToken': obj.idToken };
+                $http.post($localStorage.growify.rest+'/login', login_xpress).
+                then(function (data, status, headers, config) {
+                  err('Ahora login');
+                  $localStorage.growify.access_token = data.data.jwt;
+                  $state.go( "terms" );
+                });        
+              }
+              else {
+                err('No pudo acceder con Google a Growify, es posible que ya tenga una cuenta creada con el correo electrónico indicado');
+                //err();
+              }
+            },
+            function (data, status, headers, config) { 
+              err(data.data.message);
+              $scope.registrandoLoading = false;
+              $scope.botonesRegistro = true;
+            });
+          }); 
+        },
+        function (msg) {
+          err('error: ' + msg);
+        }
+    );
+  };
 })
 
 .controller('PerfilCtrl', function($scope, $webSql, $http, $ionicModal, $rootScope, $location, $state, $localStorage) {
@@ -333,132 +395,6 @@ angular.module('growify.controllers', [])
 		$(".home-list").show();
 	};
 
-})
-
-.controller('PrintConfigCtrl', function($scope, $ionicModal, $timeout, $location, $ionicLoading, $state, $localStorage) {
-
-  $scope.printerbox = {};
-  $scope.cargandoTitulo = true;
-  $scope.cargandoPrinters = true;
-  $scope.seleccioneTitulo = false;
-  $scope.noPrinterFound = false;
-  $scope.loading = "";
-
-  $scope.printSave = function() {
-    if ($localStorage.growify.impNN == "") {
-      if (confirmar('¿Desea continuar sin una impresora activa?')) {
-        $localStorage.growify.impNN = "";
-        $localStorage.growify.impID = "";
-        $state.go( "main.home" );
-      }
-    }
-    else {
-      //grabar printer activa
-      $scope.loading = $ionicLoading.show({
-        content: 'Cargando',
-        animation: 'fade-in',
-        showBackdrop: false,
-        maxWidth: 200,
-        showDelay: 0
-      });
-      $localStorage.growify.impID = $scope.printerbox.sel;
-
-      ble.connect($localStorage.growify.impID, function(peripheral) {
-        $state.go( "main.home" ); 
-        $ionicLoading.hide();
-      }, function() { 
-        err('Problemas al conectar a su impresora.');
-        $state.go( "main.home" );
-        $ionicLoading.hide();
-      });
-      
-    }
-  };
-
-  $scope.impActivar = function(item) {
-    $localStorage.growify.impNN = item.currentTarget.getAttribute("data-nombre");
-    $localStorage.growify.impID = $scope.printerbox.sel;
-  }
-  $scope.printRefresh = function() {
-
-    $scope.cargandoTitulo = true;
-    $scope.cargandoPrinters = true;
-    $scope.seleccioneTitulo = false;
-    $scope.noPrinterFound = false;
-    $scope.showName = "";
-    $scope.printerList=[];
-    printers = [];
-    $localStorage.growify.impNN = "";
-    $localStorage.growify.impID = "";
-
-    ble.startScan([], function(device) {
-      // OK
-      /*
-      printers = [];
-      printer = { nombre: device.name, id: device.id };
-      printers.push(printer);
-      */
-      if (device.name.toLowerCase().indexOf("abable")>=0) {
-        $localStorage.growify.impNN = device.name;
-        $localStorage.growify.impID = device.id;
-        $scope.showName = $localStorage.growify.impNN;
-      }
-    } , function() {
-      // ERR
-      err('Error en la búsqueda de impresora. Revise tener activo el Bluetooth');
-    });
-
-    $timeout(function() {
-
-      $scope.cargandoTitulo = false;
-      $scope.cargandoPrinters = false;
-      $scope.printerList=printers;
-
-      if ($localStorage.growify.impNN == "") {
-        $scope.noPrinterFound = true;
-      }
-      else {
-        $scope.seleccioneTitulo = true;
-      }
-      /*
-      if (printers.length == 0) {
-        $scope.noPrinterFound = true;
-      }
-      */
-      ble.stopScan(function() {}, function() {});
-
-    },5000)
-
-  };
-})
-
-.controller('FirstHolaCtrl', function($scope, $ionicModal, $timeout, $location, $state, $localStorage) {
-
-  $scope.app = $localStorage.growify;
-
-  if ($localStorage.growify.auth == 0) {
-      $state.go( "login" );
-  }
-
-  $timeout(function() {
-    jQuery("#firstHola_Nombre").show().addClass("animated slideInUp");
-  }, 700)
-
-  $timeout(function() {
-    jQuery("#firstHola_txt").show().addClass("animated slideInRight");
-  }, 1200)
-
-  $timeout(function() {
-    jQuery("#firstHola_botones").show().addClass("animated slideInLeft");
-  }, 2000)
-
-  $scope.skipConfig = function() {
-    $state.go( "main.home" );
-  }
-
-  $scope.printConfig = function() {
-    $state.go( "printConfig" );
-  }
 })
 
 .directive('onlyDigits', function () {

@@ -56,6 +56,10 @@
 
   </platform>
   
+  <gap:plugin name="cordova-plugin-googleplus" source="npm">
+    <param name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.667491307854-kscmugkqafi91lfh313242er4pkchvju" />
+  </gap:plugin>
+  
   <icon src="icon.png" gap:role="default" />
 
   <feature name="SplashScreen" >

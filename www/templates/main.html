@@ -5,7 +5,7 @@
       </ion-nav-back-button>
 
       <ion-nav-buttons side="right">
-        <button class="button button-icon button-clear ion-ios-gear-outline" menu-toggle="right"></button>
+        <a menu-toggle="right"><img src="img/gear.png" class="header-gear" /></a>
       </ion-nav-buttons>
     </ion-nav-bar>
 
@@ -14,17 +14,37 @@
 
     <ion-footer-bar class="bottom-banner">
       <div class="tabs" id="tabs_footer">
-        <li class="tab-item active"><button ng-click="gotoTiendas();" class="button button-icon button-clear ion-bag"><span>TIENDAS</span></button></li>
-        <li class="tab-item"><button ng-click="gotoPromos();" class="button button-icon button-clear ion-ios-pricetag-outline"><span>PROMOS</span></button></li>
-        <li class="tab-item"><button ng-click="gotoFavoritos();" class="button button-icon button-clear ion-ios-star-outline"><span>FAVORITOS</span></button></li>
-        <li class="tab-item"><button ng-click="gotoBuscar();" class="button button-icon button-clear ion-ios-search"><span>BUSCAR</span></button></li>
+        <li class="tab-item active">
+          <a ng-click="gotoTiendas();">
+            <div class="foot-icon bolsa"></div>
+            <div class="foot-text">TIENDAS</div>
+          </a>
+        </li>
+        <li class="tab-item">
+          <a ng-click="gotoPromos();">
+            <div class="foot-icon etiqueta"></div>
+            <div class="foot-text">PROMOS</div>
+          </a>
+        </li>
+        <li class="tab-item">
+          <a ng-click="gotoFavoritos();">
+            <div class="foot-icon fav"></div>
+            <div class="foot-text">FAVORITOS</div>
+          </a>
+        </li>
+        <li class="tab-item">
+          <a ng-click="gotoBuscar();">
+            <div class="foot-icon lupa"></div>
+            <div class="foot-text">BUSCAR</div>
+          </a>
+        </li>
       </div>
     </ion-footer-bar>
   </ion-side-menu-content>
 
   <ion-side-menu side="right">
     <ion-header-bar class="bar-stable header-bar">
-      <h3><i class="button button-icon button-clear ion-ios-gear-outline"></i> CONFIGURACIÓN</h3>
+      <h3><img src="img/gear2.png" class="header-gear2" /> CONFIGURACIÓN</h3>
       <button class="button button-icon button-clear ion-ios-close-empty byemenuright" menu-toggle="right"></button>
     </ion-header-bar>
     <ion-content>
@@ -57,10 +77,12 @@
           <option>Comuna</option>   
       </select>
     </div>
-    <br />
-    <button class="button button-growify2">GUARDAR</button>
-    <br /><br />
-    <button ng-click="gotoPerfil();" menu-toggle="right" class="button button-growify-line2">MI PERFIL <i class="button-icon button ion-ios-person-outline"></i></button>
+    <div class="config-guardar">
+      <a><img src="img/btn.guardar.png" /></a>
+    </div>
+    <div class="btn-perfil">
+      <a ng-click="gotoPerfil();" menu-toggle="right"><img src="img/btn.perfil.png" /></a>
+    </div>
 
     </ion-content>
   </ion-side-menu>

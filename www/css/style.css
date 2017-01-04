@@ -27,9 +27,9 @@ body, div, td, tr, th, a, strong, b, h1, h2, h3, h4, h5, h6 {
 	right: 20px;
 }
 .menu-open .menu-right {
-	-webkit-box-shadow: -5px 0px 36px -3px rgba(0,0,0,0.75);
-	-moz-box-shadow: -5px 0px 36px -3px rgba(0,0,0,0.75);
-	box-shadow: -5px 0px 36px -3px rgba(0,0,0,0.75);
+	-webkit-box-shadow: -5px 0px 36px -3px rgba(0,0,0,0.35);
+	-moz-box-shadow: -5px 0px 36px -3px rgba(0,0,0,0.35);
+	box-shadow: -5px 0px 36px -3px rgba(0,0,0,0.35);
 	z-index: 100 !important;
 	transition:all 5s;
 	-moz-transition: all 5s;
@@ -39,6 +39,7 @@ body, div, td, tr, th, a, strong, b, h1, h2, h3, h4, h5, h6 {
 	background-color: #EDF4F8 !important;
 }
 .menu-right .header-bar {
+	padding: 20px;
 	background-color: #EDF4F8 !important;
 }
 .menu-right .header-bar h3 {
@@ -91,7 +92,10 @@ body, div, td, tr, th, a, strong, b, h1, h2, h3, h4, h5, h6 {
 .menu-right .select select:focus {
     outline: none;
 }
-
+.menu-right .config-guardar { max-width: 50%; display: inline-block; margin-top: 10px; margin-bottom: 10px;  }
+.menu-right .config-guardar img { width: 100%; height: auto; }
+.menu-right .btn-perfil { max-width: 80%; display: inline-block; margin-top: 10px; margin-bottom: 10px; }
+.menu-right .btn-perfil img { width: 100%; height: auto; }
 
 /* Empty. Add your own CSS if you like */
 .login, .printConfig {
@@ -692,14 +696,46 @@ body, div, td, tr, th, a, strong, b, h1, h2, h3, h4, h5, h6 {
     display: inline-block;
     margin-top: -12px;
 }
+.bottom-banner .tabs .bolsa { background-image: url(../img/bolsa_off.png); }
+.bottom-banner .tabs .etiqueta { background-image: url(../img/etiqueta_off.png); }
+.bottom-banner .tabs .fav { background-image: url(../img/fav_off.png); }
+.bottom-banner .tabs .lupa { background-image: url(../img/lupa_off.png); }
+.bottom-banner .tabs .active .bolsa { background-image: url(../img/bolsa_on.png); }
+.bottom-banner .tabs .active .etiqueta { background-image: url(../img/etiqueta_on.png); }
+.bottom-banner .tabs .active .fav { background-image: url(../img/fav_on.png); }
+.bottom-banner .tabs .active .lupa { background-image: url(../img/lupa_on.png); }
+
 .bottom-banner { background-color: #EFF5F7; }
 .bottom-banner .tabs { background-color: #EFF5F7; padding-top: 5px; padding-bottom: 5px; }
-.bottom-banner .tab-item, .bottom-banner .tab-item button, .bottom-banner .tab-item a { color: #008728; font-size: 10px !important; }
+.bottom-banner .tab-item { opacity: 1; }
+.bottom-banner .foot-icon {
+	width: 25px;
+	height: 25px;
+	background-size: 70%;
+	background-repeat: no-repeat;
+	background-position: center;
+	display: inline-block;
+}
+.bottom-banner .foot-text {
+	display: block;
+	margin-top: -35px	;
+}
+.bottom-banner a { color: #008728; font-size: 10px !important; }
+/*.bottom-banner .tab-item.tab-item-active, .bottom-banner .tab-item.active, .bottom-banner .tab-item.activated {
+	opacity: 1;
+}*/
+
+/*
+.bottom-banner .tab-item div { background-size:cover; border: 0; background-color: 0; outline: 0; }
+
+
+
 .bottom-banner .button-icon:before { font-size: 24px !important; }
 .bottom-banner { padding-top: 5px; padding-bottom: 5px; }
 .bottom-banner .tab-item span { display:block; margin-top: -10px; font-size: 11px; }
 .bottom-banner .tab-item { opacity: 0.5 !important;  }
-.bottom-banner .tab-item.active { opacity: 1 !important;  }
+.bottom-banner .tab-item.active { opacity: 1 !important;  }*/
+
 .slider_foot .ion-ios-minus-outline { color: #218035 !important; font-size: 2em; }
 .bar-footer, .bottom-banner .tabs { height: 54px; }
 .badge_titulo { 
@@ -711,6 +747,13 @@ body, div, td, tr, th, a, strong, b, h1, h2, h3, h4, h5, h6 {
     margin-left: 10px;
     color: #218035;
 }
+.header-gear { max-height: 65%; width: auto; margin-top: 25%; }
+.header-gear2 { 
+    width: 25px;
+    height: auto; 
+    vertical-align: middle;
+    margin-right: 10px;
+}
 #map {
     width: 100%;
     /*height: calc(100vh - 43px - 54px); */
@@ -719,7 +762,7 @@ body, div, td, tr, th, a, strong, b, h1, h2, h3, h4, h5, h6 {
 #location {
 	position: absolute;
 	z-index: 99999;
-	bottom: 50px;
+	bottom: 70px;
 	right: 20px;
 	padding: 8px;
 	border-radius: 12px;
