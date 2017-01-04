@@ -111,7 +111,7 @@ angular.module('growify.controllers', [])
 
 
           // Intentar logear
-          var login_xpress = {'googleToken': obj.idToken };
+          var login_xpress = {'googleToken': obj.userId };
           $http.post($localStorage.growify.rest+'/login', login_xpress).
           then(function (data, status, headers, config) {
             $localStorage.growify.access_token = data.data.jwt;
@@ -122,9 +122,9 @@ angular.module('growify.controllers', [])
             var data = {
               'username':    obj.email, 
               'email':       obj.email, 
-              'googleToken': obj.refreshToken,
+              'googleToken': obj.userId,
               'avatar':      obj.imageUrl,
-              'nickName':    obj.displayName
+              'firstName':    obj.displayName
             };
             $http.post($localStorage.growify.rest+'/registration', data).
             then(function (data, status, headers, config) {
@@ -132,11 +132,11 @@ angular.module('growify.controllers', [])
 
                 $localStorage.growify.username = obj.email;
                 $localStorage.growify.email = obj.email;
-                $localStorage.growify.googleToken = obj.idToken;
+                $localStorage.growify.googleToken = obj.userId;
                 $localStorage.growify.id = data.data._id;
                 $localStorage.growify.auth = 1;
                 // get access token
-                var login_xpress = {'googleToken': obj.idToken };
+                var login_xpress = {'googleToken': obj.userId };
                 $http.post($localStorage.growify.rest+'/login', login_xpress).
                 then(function (data, status, headers, config) {
 
