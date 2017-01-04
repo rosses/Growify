@@ -100,6 +100,7 @@ angular.module('growify.controllers', [])
   };
 
   $scope.loginGoogle = function() {
+    $scope.showload();
     window.plugins.googleplus.login(
         {
           'scopes': '', // optional, space-separated list of scopes, If not included or empty, defaults to `profile` and `email`.
@@ -107,18 +108,18 @@ angular.module('growify.controllers', [])
           'offline': false, // optional, but requires the webClientId - if set to true the plugin will also return a serverAuthCode, which can be used to grant offline access to a non-Google server
         },
         function (obj) {
-          err(JSON.stringify(obj)); // Solo para test
-
+          //err(JSON.stringify(obj)); // Solo para test
 
           // Intentar logear
           var login_xpress = {'googleToken': obj.userId };
           $http.post($localStorage.growify.rest+'/login', login_xpress).
           then(function (data, status, headers, config) {
             $localStorage.growify.access_token = data.data.jwt;
-            err('Autologin OK');
+            //err('Autologin OK');
+            $scope.hideload();
             $state.go( "terms" );
           },function() {
-            err('No pude hacer autologin, cuenta nueva?');
+            //err('No pude hacer autologin, cuenta nueva?');
             var data = {
               'username':    obj.email, 
               'email':       obj.email, 
@@ -126,10 +127,10 @@ angular.module('growify.controllers', [])
               'avatar':      obj.imageUrl,
               'firstName':    obj.displayName
             };
+
             $http.post($localStorage.growify.rest+'/registration', data).
             then(function (data, status, headers, config) {
               if (data.data.active == true) { 
-
                 $localStorage.growify.username = obj.email;
                 $localStorage.growify.email = obj.email;
                 $localStorage.growify.googleToken = obj.userId;
@@ -139,17 +140,18 @@ angular.module('growify.controllers', [])
                 var login_xpress = {'googleToken': obj.userId };
                 $http.post($localStorage.growify.rest+'/login', login_xpress).
                 then(function (data, status, headers, config) {
-
+                  $scope.hideload();
                   $localStorage.growify.access_token = data.data.jwt;
                   $state.go( "terms" );
                 });        
               }
               else {
+                $scope.hideload();
                 err('No pudo acceder con Google a Growify, es posible que ya tenga una cuenta creada con el correo electrónico indicado');
-                //err();
               }
             },
-            function (data, status, headers, config) { 
+            function (data, status, headers, config) {
+              $scope.hideload(); 
               err(data.data.message);
               $scope.registrandoLoading = false;
               $scope.botonesRegistro = true;
@@ -157,6 +159,7 @@ angular.module('growify.controllers', [])
           }); 
         },
         function (msg) {
+          $scope.hideload();
           err('error: ' + msg);
         }
     );
