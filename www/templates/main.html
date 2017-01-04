@@ -1,0 +1,33 @@
+<ion-side-menus enable-menu-with-back-views="false">
+  <ion-side-menu-content>
+    <ion-nav-bar class="bar-stable">
+      <ion-nav-back-button>
+      </ion-nav-back-button>
+
+      <ion-nav-buttons side="right">
+        <button class="button button-icon button-clear ion-ios-gear-outline" menu-toggle="right"></button>
+      </ion-nav-buttons>
+    </ion-nav-bar>
+
+    <ion-nav-view name="menuContent"></ion-nav-view>
+
+
+    <ion-footer-bar class="bottom-banner">
+      <div class="tabs" id="tabs_footer">
+        <li class="tab-item active"><button ng-click="gotoTiendas();" class="button button-icon button-clear ion-bag"><span>TIENDAS</span></button></li>
+        <li class="tab-item"><button ng-click="gotoPromos();" class="button button-icon button-clear ion-ios-pricetag-outline"><span>PROMOS</span></button></li>
+        <li class="tab-item"><button ng-click="gotoFavoritos();" class="button button-icon button-clear ion-ios-star-outline"><span>FAVORITOS</span></button></li>
+        <li class="tab-item"><button ng-click="gotoBuscar();" class="button button-icon button-clear ion-ios-search"><span>BUSCAR</span></button></li>
+      </div>
+    </ion-footer-bar>
+  </ion-side-menu-content>
+
+  <ion-side-menu side="right">
+    <ion-header-bar class="bar-stable header-bar">
+      <h1 class="title">Nada</h1>
+    </ion-header-bar>
+    <ion-content>
+
+    </ion-content>
+  </ion-side-menu>
+</ion-side-menus>

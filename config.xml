@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<widget id="com.growify.app" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+  <name>Growify</name>
+  <description>
+        Growshop Chile
+    </description>
+  <author email="rosses@blanco-brand.com" href="http://www.blanco-brand.com/">
+      Blanco Brand
+  </author>
+  <plugin name="cordova-plugin-whitelist" version="1" />
+
+  <content src="index.html"/>
+  <access origin="*"/>
+  <preference name="webviewbounce" value="false"/>
+  <preference name="UIWebViewBounce" value="false"/>
+  <preference name="DisallowOverscroll" value="true"/>
+  <preference name="SplashScreen" value="screen" />
+  <preference name="SplashScreenDelay" value="3000" />
+  <preference name="FadeSplashScreenDuration" value="2000"/>
+  <preference name="android-minSdkVersion" value="16"/>
+  <preference name="BackupWebStorage" value="none"/>
+  <preference name="permissions" value="none"/>
+  <preference name="Orientation" value="landscape" />
+
+  <preference name="StatusBarOverlaysWebView" value="true" />
+  <preference name="StatusBarStyle" value="lightcontent" />
+
+  <preference name="android-build-tool" value="gradle" />
+  
+  <plugin name="org.apache.cordova.geolocation"/>
+  <plugin name="org.apache.cordova.globalization"/>
+  <plugin name="org.apache.cordova.inappbrowser"/>
+  <plugin name="org.apache.cordova.dialogs"/>
+  <plugin name="org.apache.cordova.camera"/>
+  <plugin name="org.apache.cordova.media-capture"/>
+  <plugin name="cordova-plugin-statusbar" />
+
+  <preference name="exit-on-suspend" value="false"/>
+  <preference name="android-windowSoftInputMode" value="stateHidden|adjustResize" />
+
+  <allow-intent href="http://*/*"/>
+  <allow-intent href="https://*/*"/>
+  <allow-intent href="tel:*"/>
+  <allow-intent href="sms:*"/>
+  <allow-intent href="mailto:*"/>
+  <allow-intent href="geo:*"/>
+  <allow-navigation href="*" />
+
+  <platform name="android">
+    <allow-intent href="market:*"/>
+  </platform>
+  <platform name="ios">
+    <allow-intent href="itms:*"/>
+    <allow-intent href="itms-apps:*"/>
+
+  </platform>
+  
+  <icon src="icon.png" gap:role="default" />
+
+</widget>

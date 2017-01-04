@@ -1,0 +1,41 @@
+
+
+<ion-view view-title="Registro" class="login">
+<ion-header>
+  <ion-nav-bar class="bar-stable">
+
+    <ion-nav-buttons side="left">
+      <a ng-href="#/login" class="button button-icon button-clear ion-ios-arrow-thin-left"></a>
+    </ion-nav-buttons>
+  </ion-nav-bar>
+</ion-header>
+  <ion-content>
+    <div class="text-center logo">
+      <img src="img/logo.png" />
+    </div>
+    <form ng-submit="doRegistro()">
+      <div class="login-form">
+        <label>
+          <input type="text" maxlength="10" ng-model="regData.username" placeholder="USUARIO">
+        </label>
+        <label>
+          <input type="password" ng-model="regData.password" placeholder="CONTRASEÑA">
+        </label>
+        <label>
+          <input type="email" ng-model="regData.email" placeholder="CORREO ELECTRÓNICO">
+        </label>
+        <label>
+          <input type="password" ng-model="regData.comuna" placeholder="COMUNA">
+        </label>
+        
+        <div class="loading" ng-show="registrandoLoading">
+          <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
+        </div>
+
+        <div class="botones" ng-show="botonesRegistro">
+          <button class="button button-growify" type="submit">REGISTRARME</button>
+        </div>
+      </div>
+    </form>
+  </ion-content>
+</ion-view>

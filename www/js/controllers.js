@@ -1,0 +1,422 @@
+angular.module('growify.controllers', [])
+
+.controller('LoginCtrl', function($scope, $webSql, $http, $ionicModal, $rootScope, $location, $state, $localStorage) {
+  
+  $rootScope.db = $webSql.openDatabase("growify", "1.1", "Aplicacion Growify", 5 * 1024 * 1024);
+  
+  /* REBOOT DATABASE AND STORAGE */ 
+  //$localStorage.growify = default_app;
+
+  if ($localStorage.growify && $localStorage.growify.auth == 1) {
+    $state.go("main.home");
+  } else {
+    $localStorage.growify = default_app;
+  }
+
+  $scope.goToTerms = function() { $state.go( "terms" ); }
+
+  $scope.loginData = {user: '', password: ''};
+  $scope.botonesLogin = true;
+  $scope.cargandoLogin = false;
+  $scope.doLogin = function() {
+    $scope.cargandoLogin = true;
+    $scope.botonesLogin = false;
+    var data = {'username': $scope.loginData.username, 'password': $scope.loginData.password };
+    $http.post($localStorage.growify.rest+'/login', data).
+    then(function (data, status, headers, config) {
+
+      if (data.data.jwt) { 
+        $localStorage.growify.username = $scope.loginData.username;
+        $localStorage.growify.email = data.data.profile.email;
+        $localStorage.growify.password = $scope.loginData.password;
+        $localStorage.growify.access_token = data.data.jwt;    	
+        $localStorage.growify.auth = 1;
+        $state.go( "terms" );
+      }
+      else {
+      	err();
+      }
+    },
+    function (data, status, headers, config) { 
+      err(data.data.message);
+      $scope.cargandoLogin = false;
+      $scope.botonesLogin = true;
+    });
+  };
+})
+
+
+.controller('RegistroCtrl', function($scope, $webSql, $http, $ionicModal, $rootScope, $location, $state, $localStorage) {
+
+  $scope.regData = {user: '', password: '', email: '', comuna: ''};
+  $scope.botonesRegistro = true;
+  $scope.registrandoLoading = false;
+  $scope.doRegistro = function() {
+    $scope.registrandoLoading = true;
+    $scope.botonesRegistro = false;
+    var data = {
+    	'username': 	$scope.regData.username, 
+    	'email': 			$scope.regData.email, 
+    	'password': 	$scope.regData.password,
+    	'city': 			$scope.regData.comuna
+    };
+    $http.post($localStorage.growify.rest+'/registration', data).
+    then(function (data, status, headers, config) {
+      if (data.data.active == true) { 
+        $localStorage.growify.username = $scope.regData.username;
+        $localStorage.growify.email = $scope.regData.email;
+        $localStorage.growify.password = $scope.regData.password;
+        $localStorage.growify.id = data.data._id;
+        $localStorage.growify.auth = 1;
+        // get access token
+	    var login_xpress = {'username': $scope.growify.username, 'password': $scope.growify.password };
+	    $http.post($localStorage.growify.rest+'/login', login_xpress).
+	    then(function (data, status, headers, config) {
+	    	$localStorage.growify.access_token = data.data.jwt;
+	    	$state.go( "terms" );
+	    });        
+      }
+      else {
+        err();
+        $scope.registrandoLoading = false;
+        $scope.botonesRegistro = true;
+      }
+    },
+    function (data, status, headers, config) { 
+      err(data.data.message);
+      $scope.registrandoLoading = false;
+      $scope.botonesRegistro = true;
+    });
+  };
+})
+
+.controller('termsCtrl', function($scope, $webSql, $http, $ionicModal, $rootScope, $location, $state, $localStorage) {
+
+})
+.controller('MainCtrl', function($scope, $webSql, $timeout, $location, $state, $ionicLoading, $localStorage, $state, $http, $rootScope, $ionicModal, $cordovaGeolocation, $interval) {
+
+  if (!$localStorage.growify) {
+      $state.go( "login" );
+  }
+
+  if (!$rootScope.db)
+    $rootScope.db = $webSql.openDatabase("growify", "1.1", "Aplicacion Growify", 5 * 1024 * 1024);
+
+  $scope.growify = $localStorage.growify;
+
+  $scope.showload = function() {
+    $ionicLoading.show({
+      template: '<ion-spinner></ion-spinner>'
+    }).then(function(){
+       //console.log("The loading indicator is now displayed");
+    });
+  };
+  $scope.hideload = function(){
+    $ionicLoading.hide().then(function(){
+       //console.log("The loading indicator is now hidden");
+    });
+  };
+
+  $scope.cerrarSesion = function() {
+    if (confirmar('¿Desea realmente cerrar su sesión?')) {
+      $localStorage.growify = default_app;
+      $state.go("login");
+    }
+  };
+
+
+	$scope.gotoTiendas = function() {
+		jQuery("#tabs_footer").find("li").removeClass("active");
+		jQuery(jQuery("#tabs_footer>li").get(0)).addClass("active");
+		$state.go("main.home");
+	};
+	$scope.gotoPromos = function() {
+		jQuery("#tabs_footer").find("li").removeClass("active");
+		jQuery(jQuery("#tabs_footer>li").get(1)).addClass("active");
+		$state.go("main.promociones");
+	};
+	$scope.gotoFavoritos = function() {
+		jQuery("#tabs_footer").find("li").removeClass("active");
+		jQuery(jQuery("#tabs_footer>li").get(2)).addClass("active");
+		$state.go("main.favoritos");
+	};
+	$scope.gotoBuscar = function() {
+		jQuery("#tabs_footer").find("li").removeClass("active");
+		jQuery(jQuery("#tabs_footer>li").get(3)).addClass("active");
+		$state.go("main.buscar");
+	};
+
+})
+
+.controller('PromocionesCtrl', function($rootScope, $scope, $state, $http, $ionicLoading, $ionicModal, $interval, $timeout, $location, $localStorage, $cordovaGeolocation, $ionicSlideBoxDelegate) {
+	$scope.offers = [];
+	$scope.getOffers = function() {
+		$scope.showload();
+	    $http.get($localStorage.growify.rest+'/get_offers', {
+	    	headers: { 'x-access-token': $localStorage.growify.access_token }
+	    }).
+	    then(function (data, status, headers, config) {
+	      $scope.hideload();
+	      for (var i = 0; i < data.data.length;i++) {
+	      	var offer = data.data[i];
+	        $scope.offers.push(offer);
+	      }
+	      console.log($scope.offers);
+	      //default_app.offersLoaded = 1;
+	    },
+	    function (data, status, headers, config) { 
+	      $scope.hideload();
+	      err(data.data.message);
+	    });
+	};
+
+	if (default_app.offersLoaded == 0) { 
+		$scope.getOffers();
+	}
+})
+
+.controller('FavoritosCtrl', function($rootScope, $scope, $state, $http, $ionicLoading, $ionicModal, $interval, $timeout, $location, $localStorage, $cordovaGeolocation, $ionicSlideBoxDelegate) {
+
+})
+
+.controller('BuscarCtrl', function($rootScope, $scope, $state, $http, $ionicLoading, $ionicModal, $interval, $timeout, $location, $localStorage, $cordovaGeolocation, $ionicSlideBoxDelegate) {
+
+})
+
+.controller('HomeCtrl', function($scope, $http, $ionicModal, $timeout, $state, $location, $localStorage, $cordovaGeolocation) {
+	$scope.mylat = 0;
+	$scope.mylng = 0;
+	var scl = new google.maps.LatLng(-33.447487,-70.673676);
+    var mapOptions = {
+      center: scl,
+      zoom: 12,
+      disableDefaultUI: true,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    var myLatLng = null;
+    $scope.stores = [];
+	$scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+    /* Mapa OK - Cargar sucursales y obtener mis coordenadas */ 
+    google.maps.event.addListenerOnce($scope.map, 'idle', function(){
+
+		var posOptions = {timeout: 10000, enableHighAccuracy: false};
+		$cordovaGeolocation.getCurrentPosition(posOptions).then(function (position) {
+			myLatLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+			$scope.mylat = position.coords.latitude;
+			$scope.mylng = position.coords.longitude;
+	        marker = new google.maps.Marker({
+	          map: $scope.map,
+	          animation: google.maps.Animation.DROP,
+	          position: myLatLng,
+	          icon: 'img/icon.me.png'
+	        });
+
+			if (default_app.storeLoaded == 0) {
+				$scope.getStores();
+			}
+		});
+
+	});
+    
+  $scope.followMe = function() {
+		$scope.map.setCenter(myLatLng);
+  };
+
+	$scope.getStores = function() {
+		$scope.showload();
+	    $http.get($localStorage.growify.rest+'/get_stores', {
+	    	headers: { 'x-access-token': $localStorage.growify.access_token }
+	    }).
+	    then(function (data, status, headers, config) {
+	      $scope.hideload();
+	      for (var i = 0; i < data.data.length;i++) {
+	      	var store = data.data[i];
+	      	var storeGeo = new google.maps.LatLng(store.geolocation.lat, store.geolocation.long);
+	        marker = new google.maps.Marker({
+	          map: $scope.map,
+	          animation: google.maps.Animation.DROP,
+	          position: storeGeo,
+	          icon: 'img/icon.grow.png'
+	        });
+
+	        if ($scope.mylng != 0 && $scope.mylat != 0) { 
+	        	store.miDistancia = (Math.round(distance($scope.mylat, $scope.mylng, store.geolocation.lat, store.geolocation.long) * 100) / 100) + " KM";
+	        }
+	        else {
+	        	store.miDistancia = "Distancia desconocida";	
+	        }
+
+	        $scope.stores.push(store);
+	      }
+	      default_app.storeLoaded = 1;
+	    },
+	    function (data, status, headers, config) { 
+	      $scope.hideload();
+	      err(data.data.message);
+	    });
+	};
+	
+	$scope.tiendasShowDivMapa = function() { 
+		$(".tienda_tab_lista").removeClass("active");
+		$(".tienda_tab_mapa").addClass("active");
+		$(".home-map").show();
+		$(".home-list").hide();
+	};
+
+	$scope.tiendasShowDivLista = function() { 
+		$(".tienda_tab_mapa").removeClass("active");
+		$(".tienda_tab_lista").addClass("active");
+		$(".home-map").hide();
+		$(".home-list").show();
+	};
+
+})
+
+.controller('PrintConfigCtrl', function($scope, $ionicModal, $timeout, $location, $ionicLoading, $state, $localStorage) {
+
+  $scope.printerbox = {};
+  $scope.cargandoTitulo = true;
+  $scope.cargandoPrinters = true;
+  $scope.seleccioneTitulo = false;
+  $scope.noPrinterFound = false;
+  $scope.loading = "";
+
+  $scope.printSave = function() {
+    if ($localStorage.growify.impNN == "") {
+      if (confirmar('¿Desea continuar sin una impresora activa?')) {
+        $localStorage.growify.impNN = "";
+        $localStorage.growify.impID = "";
+        $state.go( "main.home" );
+      }
+    }
+    else {
+      //grabar printer activa
+      $scope.loading = $ionicLoading.show({
+        content: 'Cargando',
+        animation: 'fade-in',
+        showBackdrop: false,
+        maxWidth: 200,
+        showDelay: 0
+      });
+      $localStorage.growify.impID = $scope.printerbox.sel;
+
+      ble.connect($localStorage.growify.impID, function(peripheral) {
+        $state.go( "main.home" ); 
+        $ionicLoading.hide();
+      }, function() { 
+        err('Problemas al conectar a su impresora.');
+        $state.go( "main.home" );
+        $ionicLoading.hide();
+      });
+      
+    }
+  };
+
+  $scope.impActivar = function(item) {
+    $localStorage.growify.impNN = item.currentTarget.getAttribute("data-nombre");
+    $localStorage.growify.impID = $scope.printerbox.sel;
+  }
+  $scope.printRefresh = function() {
+
+    $scope.cargandoTitulo = true;
+    $scope.cargandoPrinters = true;
+    $scope.seleccioneTitulo = false;
+    $scope.noPrinterFound = false;
+    $scope.showName = "";
+    $scope.printerList=[];
+    printers = [];
+    $localStorage.growify.impNN = "";
+    $localStorage.growify.impID = "";
+
+    ble.startScan([], function(device) {
+      // OK
+      /*
+      printers = [];
+      printer = { nombre: device.name, id: device.id };
+      printers.push(printer);
+      */
+      if (device.name.toLowerCase().indexOf("abable")>=0) {
+        $localStorage.growify.impNN = device.name;
+        $localStorage.growify.impID = device.id;
+        $scope.showName = $localStorage.growify.impNN;
+      }
+    } , function() {
+      // ERR
+      err('Error en la búsqueda de impresora. Revise tener activo el Bluetooth');
+    });
+
+    $timeout(function() {
+
+      $scope.cargandoTitulo = false;
+      $scope.cargandoPrinters = false;
+      $scope.printerList=printers;
+
+      if ($localStorage.growify.impNN == "") {
+        $scope.noPrinterFound = true;
+      }
+      else {
+        $scope.seleccioneTitulo = true;
+      }
+      /*
+      if (printers.length == 0) {
+        $scope.noPrinterFound = true;
+      }
+      */
+      ble.stopScan(function() {}, function() {});
+
+    },5000)
+
+  };
+})
+
+.controller('FirstHolaCtrl', function($scope, $ionicModal, $timeout, $location, $state, $localStorage) {
+
+  $scope.app = $localStorage.growify;
+
+  if ($localStorage.growify.auth == 0) {
+      $state.go( "login" );
+  }
+
+  $timeout(function() {
+    jQuery("#firstHola_Nombre").show().addClass("animated slideInUp");
+  }, 700)
+
+  $timeout(function() {
+    jQuery("#firstHola_txt").show().addClass("animated slideInRight");
+  }, 1200)
+
+  $timeout(function() {
+    jQuery("#firstHola_botones").show().addClass("animated slideInLeft");
+  }, 2000)
+
+  $scope.skipConfig = function() {
+    $state.go( "main.home" );
+  }
+
+  $scope.printConfig = function() {
+    $state.go( "printConfig" );
+  }
+})
+
+.directive('onlyDigits', function () {
+  return {
+    require: 'ngModel',
+    restrict: 'A',
+    link: function (scope, element, attr, ctrl) {
+      function inputValue(val) {
+        if (val) {
+          var digits = val.replace(/[^0-9]/g, '');
+
+          if (digits !== val) {
+            ctrl.$setViewValue(digits);
+            ctrl.$render();
+          }
+          return parseInt(digits,10);
+        }
+        return undefined;
+      }            
+      ctrl.$parsers.push(inputValue);
+    }
+  };
+});

@@ -1,0 +1,32 @@
+<ion-view view-title='TIENDAS'>
+  <ion-content scroll="false">
+    <div class="tabs-tiendas">
+       <div>
+          <a class="tab-i tienda_tab_mapa active" ng-click="tiendasShowDivMapa();">
+             MAPA
+          </a>
+            
+          <a class="tab-i tienda_tab_lista" ng-click="tiendasShowDivLista();">
+             LISTA
+          </a>
+       </div>
+    </div>
+
+    <ion-content scroll="true" class="home-map">
+        <div id="map" data-tap-disabled="true"></div>
+        <div id="location">
+            <a ng-click="followMe();"><i class="fa fa-location-arrow"></i></a>
+        </div>
+    </ion-content>
+    <ion-content scroll="true" class="home-list" style="display:none;">
+        <div ng-repeat="store in stores">
+            <ion-item>
+                <h2>{{store.name}}</h2>
+                <h3>{{store.miDistancia}}</h3>
+                <h4><img src="img/stars.{{store.rateAvg}}.png" /></h4>
+            </ion-item>
+        </div>
+    </ion-content>
+
+  </ion-content>
+</ion-view>

@@ -1,0 +1,11 @@
+<ion-view view-title='PROMOCIONES'>
+  <ion-content scroll="true">
+    <div ng-repeat="offer in offers">
+        <ion-item>
+            <h2>{{offer.name}}</h2>
+            <h3>{{(offer.miDistancia | currency:" ":2)}} KM</h3>
+            <h4><img src="img/stars.{{offer.rateValue}}.png" /></h4>
+        </ion-item>
+    </div>
+  </ion-content>
+</ion-view>
