@@ -119,16 +119,17 @@ angular.module('growify.controllers', [])
             $state.go( "terms" );
           },function() {
             err('No pude hacer autologin, cuenta nueva?');
-            // No pude, registrar cuenta
             var data = {
-              'username':   obj.email, 
-              'email':      obj.email, 
-              'googleToken':   obj.idToken
+              'username':    obj.email, 
+              'email':       obj.email, 
+              'googleToken': obj.refreshToken,
+              'avatar':      obj.imageUrl,
+              'nickName':    obj.displayName
             };
             $http.post($localStorage.growify.rest+'/registration', data).
             then(function (data, status, headers, config) {
               if (data.data.active == true) { 
-                err('Registro OK');
+
                 $localStorage.growify.username = obj.email;
                 $localStorage.growify.email = obj.email;
                 $localStorage.growify.googleToken = obj.idToken;
@@ -138,7 +139,7 @@ angular.module('growify.controllers', [])
                 var login_xpress = {'googleToken': obj.idToken };
                 $http.post($localStorage.growify.rest+'/login', login_xpress).
                 then(function (data, status, headers, config) {
-                  err('Ahora login');
+
                   $localStorage.growify.access_token = data.data.jwt;
                   $state.go( "terms" );
                 });        
