@@ -16,7 +16,7 @@
   <preference name="DisallowOverscroll" value="true"/>
   <preference name="SplashScreen" value="screen" />
   <preference name="SplashScreenDelay" value="3000" />
-  <preference name="FadeSplashScreenDuration" value="3000"/>
+  <preference name="FadeSplashScreenDuration" value="0"/>
   <preference name="android-minSdkVersion" value="16"/>
   <preference name="BackupWebStorage" value="none"/>
   <preference name="permissions" value="none"/>
@@ -59,7 +59,7 @@
   <gap:plugin name="cordova-plugin-googleplus" source="npm">
     <param name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.667491307854-kscmugkqafi91lfh313242er4pkchvju" />
   </gap:plugin>
-  
+
   <icon src="icon.png" gap:role="default" />
 
   <feature name="SplashScreen" >
@@ -113,7 +113,7 @@
       O ideal é usar um plugin para oculpar a splash
       screen quando seu app estiver pronto
     -->
-    <preference name="SplashScreenDelay" value="3000" />
+
     <splash density="land-hdpi" src="resources/android/splash/drawable-land-hdpi.png" />
     <splash density="land-ldpi" src="resources/android/splash/drawable-land-ldpi.png" />
     <splash density="land-mdpi" src="resources/android/splash/drawable-land-mdpi.png" />
