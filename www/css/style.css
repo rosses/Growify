@@ -236,7 +236,7 @@ body, div, td, tr, th, a, strong, b, h1, h2, h3, h4, h5, h6 {
 .c { clear: both; }
 
 .button-growify {
-	border-radius: 20px;
+	border-radius: 9px;
 	background-color: #73B72A;
 	color: #FFF !important;
 }
