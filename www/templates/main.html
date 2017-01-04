@@ -24,9 +24,43 @@
 
   <ion-side-menu side="right">
     <ion-header-bar class="bar-stable header-bar">
-      <h1 class="title">Nada</h1>
+      <h3><i class="button button-icon button-clear ion-ios-gear-outline"></i> CONFIGURACIÓN</h3>
+      <button class="button button-icon button-clear ion-ios-close-empty byemenuright" menu-toggle="right"></button>
     </ion-header-bar>
     <ion-content>
+    <div class="select">
+      <select>
+        <option>Tipo de tienda</option>      
+      </select>
+    </div>
+    
+    <div class="select">
+      <select>
+        <option>Tipo de entrega</option>
+        <option ng-repeat="sdt in growify.storeDeliveryTypes" value="{{sdt._id}}">
+          {{sdt.name}}
+        </option>       
+      </select>
+    </div>
+
+    <div class="select">
+      <select>
+        <option>Tiempos de despacho</option>
+        <option ng-repeat="sdt in growify.storeDeliveryTimes" value="{{sdt._id}}">
+          {{sdt.name}}
+        </option>       
+      </select>
+    </div>
+
+    <div class="select">
+       <select>
+          <option>Comuna</option>   
+      </select>
+    </div>
+    <br />
+    <button class="button button-growify2">GUARDAR</button>
+    <br /><br />
+    <button ng-click="gotoPerfil();" menu-toggle="right" class="button button-growify-line2">MI PERFIL <i class="button-icon button ion-ios-person-outline"></i></button>
 
     </ion-content>
   </ion-side-menu>

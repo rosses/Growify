@@ -17,6 +17,7 @@ angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.cont
 
 .run(function($rootScope,$ionicPlatform,$ionicSideMenuDelegate,$localStorage,$cordovaGeolocation) {
   $ionicPlatform.ready(function() {
+
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if (window.cordova && window.cordova.plugins.Keyboard) {
@@ -96,6 +97,15 @@ angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.cont
     }
   })
 
+  .state('main.perfil', {
+    url: '/perfil',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/perfil.html',
+        controller: 'PerfilCtrl'
+      }
+    }
+  })
 
   .state('main.buscar', {
     url: '/buscar',

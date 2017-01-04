@@ -1,19 +1,73 @@
 angular.module('growify.controllers', [])
 
-.controller('LoginCtrl', function($scope, $webSql, $http, $ionicModal, $rootScope, $location, $state, $localStorage) {
+.controller('LoginCtrl', function($scope, $webSql, $http, $ionicModal, $rootScope, $location, $state, $localStorage, $ionicLoading) {
   
   $rootScope.db = $webSql.openDatabase("growify", "1.1", "Aplicacion Growify", 5 * 1024 * 1024);
   
   /* REBOOT DATABASE AND STORAGE */ 
   //$localStorage.growify = default_app;
 
-  if ($localStorage.growify && $localStorage.growify.auth == 1) {
-    $state.go("main.home");
+  /* Preload Data */
+  $scope.showload = function(msg) {
+    $ionicLoading.show({template: '<ion-spinner></ion-spinner>'+(msg ? '<br>'+msg : '')}).then(function(){});
+  };
+  $scope.hideload = function(){
+    $ionicLoading.hide().then(function(){});
+  };
+  
+
+  if ($localStorage.growify && $localStorage.growify.auth == 1 && $localStorage.growify.username != "" && $localStorage.growify.password != "") {
+    var data = {'username': $localStorage.growify.username, 'password': $localStorage.growify.password };
+    $http.post($localStorage.growify.rest+'/login', data).
+    then(function (data, status, headers, config) {
+      console.log(data);
+      if (data.data.jwt) { 
+        $localStorage.growify.username = $scope.loginData.username;
+        $localStorage.growify.email = data.data.profile.email;
+        $localStorage.growify.city = data.data.profile.city;
+        $localStorage.growify.password = $scope.loginData.password;
+        $localStorage.growify.access_token = data.data.jwt;     
+        $localStorage.growify.auth = 1;
+        $state.go("main.home");
+      }
+      else {
+        err();
+      }
+    },
+    function (data, status, headers, config) { 
+      err(data.data.message);
+      $scope.cargandoLogin = false;
+      $scope.botonesLogin = true;
+    });
+
+    
   } else {
     $localStorage.growify = default_app;
   }
 
   $scope.goToTerms = function() { $state.go( "terms" ); }
+  $scope.reloadMaster = function() {
+    $scope.showload();
+    $http.get($localStorage.growify.rest+'/app-options').
+    then(function (data, status, headers, config) {
+      $scope.hideload();
+      $localStorage.growify.productBrands = [];
+      $localStorage.growify.productCategory = [];
+      $localStorage.growify.storeDeliveryTimes = [];
+      $localStorage.growify.storeDeliveryTypes = [];
+      var d = data.data;
+      
+      for (var i = 0; i < d.productBrands.length;i++) { $localStorage.growify.productBrands.push(d.productBrands[i]); }
+      for (var i = 0; i < d.productCategory.length;i++) { $localStorage.growify.productCategory.push(d.productCategory[i]); }
+      for (var i = 0; i < d.storeDeliveryTimes.length;i++) { $localStorage.growify.storeDeliveryTimes.push(d.storeDeliveryTimes[i]); }
+      for (var i = 0; i < d.storeDeliveryTypes.length;i++) { $localStorage.growify.storeDeliveryTypes.push(d.storeDeliveryTypes[i]); }
+      
+    },
+    function (data, status, headers, config) { 
+      $scope.hideload();
+    });
+  };
+  $scope.reloadMaster();
 
   $scope.loginData = {user: '', password: ''};
   $scope.botonesLogin = true;
@@ -28,6 +82,7 @@ angular.module('growify.controllers', [])
       if (data.data.jwt) { 
         $localStorage.growify.username = $scope.loginData.username;
         $localStorage.growify.email = data.data.profile.email;
+        $localStorage.growify.city = data.data.profile.city;
         $localStorage.growify.password = $scope.loginData.password;
         $localStorage.growify.access_token = data.data.jwt;    	
         $localStorage.growify.auth = 1;
@@ -45,6 +100,9 @@ angular.module('growify.controllers', [])
   };
 })
 
+.controller('PerfilCtrl', function($scope, $webSql, $http, $ionicModal, $rootScope, $location, $state, $localStorage) {
+
+})
 
 .controller('RegistroCtrl', function($scope, $webSql, $http, $ionicModal, $rootScope, $location, $state, $localStorage) {
 
@@ -102,6 +160,7 @@ angular.module('growify.controllers', [])
   if (!$rootScope.db)
     $rootScope.db = $webSql.openDatabase("growify", "1.1", "Aplicacion Growify", 5 * 1024 * 1024);
 
+
   $scope.growify = $localStorage.growify;
 
   $scope.showload = function() {
@@ -124,7 +183,10 @@ angular.module('growify.controllers', [])
     }
   };
 
-
+  $scope.gotoPerfil = function() {
+    jQuery("#tabs_footer").find("li").removeClass("active");
+    $state.go("main.perfil");
+  };
 	$scope.gotoTiendas = function() {
 		jQuery("#tabs_footer").find("li").removeClass("active");
 		jQuery(jQuery("#tabs_footer>li").get(0)).addClass("active");
@@ -152,22 +214,22 @@ angular.module('growify.controllers', [])
 	$scope.offers = [];
 	$scope.getOffers = function() {
 		$scope.showload();
-	    $http.get($localStorage.growify.rest+'/get_offers', {
-	    	headers: { 'x-access-token': $localStorage.growify.access_token }
-	    }).
-	    then(function (data, status, headers, config) {
-	      $scope.hideload();
-	      for (var i = 0; i < data.data.length;i++) {
-	      	var offer = data.data[i];
-	        $scope.offers.push(offer);
-	      }
-	      console.log($scope.offers);
-	      //default_app.offersLoaded = 1;
-	    },
-	    function (data, status, headers, config) { 
-	      $scope.hideload();
-	      err(data.data.message);
-	    });
+    $http.get($localStorage.growify.rest+'/get_offers', {
+    	headers: { 'x-access-token': $localStorage.growify.access_token }
+    }).
+    then(function (data, status, headers, config) {
+      $scope.hideload();
+      for (var i = 0; i < data.data.length;i++) {
+      	var offer = data.data[i];
+        $scope.offers.push(offer);
+      }
+      console.log($scope.offers);
+      //default_app.offersLoaded = 1;
+    },
+    function (data, status, headers, config) { 
+      $scope.hideload();
+      err(data.data.message);
+    });
 	};
 
 	if (default_app.offersLoaded == 0) { 

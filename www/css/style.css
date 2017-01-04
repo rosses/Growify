@@ -17,6 +17,82 @@
 body, div, td, tr, th, a, strong, b, h1, h2, h3, h4, h5, h6 {
 	font-family: 'Lato';
 }
+/* Menu Config lateral */
+.menu-content {
+	box-shadow: none;
+	transform: translate3d(0px, 0px, 0px) !important; 
+}
+.byemenuright {
+	position: absolute;
+	right: 20px;
+}
+.menu-open .menu-right {
+	-webkit-box-shadow: -5px 0px 36px -3px rgba(0,0,0,0.75);
+	-moz-box-shadow: -5px 0px 36px -3px rgba(0,0,0,0.75);
+	box-shadow: -5px 0px 36px -3px rgba(0,0,0,0.75);
+	z-index: 100 !important;
+	transition:all 5s;
+	-moz-transition: all 5s;
+	-webkit-transition: all 5s;
+}
+.menu-right .scroll-content {
+	background-color: #EDF4F8 !important;
+}
+.menu-right .header-bar {
+	background-color: #EDF4F8 !important;
+}
+.menu-right .header-bar h3 {
+	color: #279A4B;
+	font-size: 12px;
+	text-transform: uppercase;
+	line-height: 34px;
+}
+.menu-right .has-header {
+	top: 64px;
+}
+.menu-right .header-bar i {
+	color: #279A4B !important;
+}
+.menu-right .header-bar {
+	height: auto;
+    padding-top: 13px;
+    padding-bottom: 5px;
+}
+.menu-right .has-header {
+	text-align: center;
+}
+.menu-right .select {
+	margin:auto;
+	margin-top: 20px;
+	margin-bottom: 20px;
+    padding: 0;
+    border: 0;
+    width: 80%;
+    border-radius: 13px;
+    overflow: hidden;
+    background-color: #fff;
+    background: #fff url("../img/dropdown.png") no-repeat;
+    background-position: 90%;
+    background-size: 15%;
+}
+.menu-right .select select {
+	width: 100%;
+    padding: 12px;
+    color: #4C6271;
+    width: 130%;
+    border: 0;
+    box-shadow: none;
+    background-color: transparent;
+    background-image: none;
+    -webkit-appearance: none;
+       -moz-appearance: none;
+            appearance: none;
+}
+.menu-right .select select:focus {
+    outline: none;
+}
+
+
 /* Empty. Add your own CSS if you like */
 .login, .printConfig {
 	background-image: url(../img/loginbg.png);
@@ -45,9 +121,19 @@ body, div, td, tr, th, a, strong, b, h1, h2, h3, h4, h5, h6 {
 }
 
 .login-form label:after {clear: both;}
-
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  text-transform: uppercase;
+}
+::-moz-placeholder { /* Firefox 19+ */
+  text-transform: uppercase;
+}
+:-ms-input-placeholder { /* IE 10+ */
+  text-transform: uppercase;
+}
+:-moz-placeholder { /* Firefox 18- */
+  text-transform: uppercase;
+}
 .login-form input {
-	text-transform: uppercase;
 	background-color: transparent;
 	width: 100%;
 	border: 0;
@@ -102,6 +188,9 @@ body, div, td, tr, th, a, strong, b, h1, h2, h3, h4, h5, h6 {
 	display: block;
 	width: 70%;
 	margin: auto;
+}
+.login-form button.button-growify-line2 {
+	border: 1px solid ;
 }
 
 .login-form .loading {
@@ -168,12 +257,16 @@ body, div, td, tr, th, a, strong, b, h1, h2, h3, h4, h5, h6 {
 	background-color: #F16032;
 }
 .button-growify-line2 {
-	width: 120px;
-	border-radius: 15px;
-	border: 1px solid #F16032;
-	color: #F16032;
+	border-radius: 5px;
+	width: 80%;
+	border: 1px solid #1D8634;
+	color: #1D8634;
 	min-height: initial;
 	background-color: transparent;
+}
+.button-growify-line2 i {
+	color: #1D8634;
+	font-size: 28px;
 }
 .tabs-tiendas { position: absolute; z-index:9999; width:100%; background-color: transparent; text-align: center; }
 .tabs-tiendas div { background-color: transparent; padding-top: 0; }
@@ -637,4 +730,45 @@ body, div, td, tr, th, a, strong, b, h1, h2, h3, h4, h5, h6 {
 #location a {
 	color: white;
 	font-size: 18px;
+}
+.perfil-top {
+	height: 110px;
+	background-image: url(../img/bgperfil.png);
+	background-repeat: repeat-y;
+	background-size: 100% auto;
+}
+.perfil-image {
+	position: absolute;
+	width: 100%;
+	left: 0;
+	margin:auto;
+	text-align: center;
+	top: 40px;
+}
+.perfil-image img {
+	display: inline-block;
+	width: 120px;
+	height: 120px;
+	border-radius: 50%;
+	border: 7px solid white;
+	-webkit-box-shadow: 0px 0px 29px 0px rgba(0,0,0,0.75);
+	-moz-box-shadow: 0px 0px 29px 0px rgba(0,0,0,0.75);
+	box-shadow: 0px 0px 29px 0px rgba(0,0,0,0.75);
+}
+.perfil-form {
+	margin-top: 70px;
+	text-align: center;
+}
+.perfil-form input { 
+	background-image: url(../img/icon.lapiz.png);
+	background-repeat: no-repeat;
+	background-position: 90%;
+	background-size: 10%;
+	border-radius: 10px;
+	width: 60%;
+	padding: 18px;
+	margin-top: 15px;
+	margin-bottom: 15px;
+	border: 1px solid gray;
+	display: inline-block;
 }
