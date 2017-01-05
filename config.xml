@@ -28,7 +28,7 @@
 
   <preference name="StatusBarOverlaysWebView" value="true" />
   <preference name="StatusBarStyle" value="lightcontent" />
-
+  <preference name="AndroidPersistentFileLocation" value="Compatibility" />
   <preference name="android-build-tool" value="gradle" />
   
   <plugin name="org.apache.cordova.geolocation"/>
