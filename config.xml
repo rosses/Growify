@@ -65,7 +65,7 @@
   <gap:plugin name="cordova-plugin-googleplus" source="npm">
     <param name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.667491307854-kscmugkqafi91lfh313242er4pkchvju" />
   </gap:plugin>
-  <gap:plugin name="com.phonegap.plugins.facebookconnect" spec="0.9.0" source="pgb">
+  <gap:plugin name="com.phonegap.plugins.facebookconnect" spec="0.9.0" source="npm">
       <param name="APP_ID" value="171879819958840" />
       <param name="APP_NAME" value="Growifyfy" />
   </gap:plugin>
