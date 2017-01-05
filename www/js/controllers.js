@@ -168,73 +168,19 @@ angular.module('growify.controllers', [])
 
   $scope.loginFacebook = function() {
     $scope.showload();
-
-    facebookConnectPlugin.getLoginStatus(function(success){
-      if(success.status === 'connected'){
-        // The user is logged in and has authenticated your app, and response.authResponse supplies
-        // the user's ID, a valid access token, a signed request, and the time the access token
-        // and signed request each expire
-        console.log('getLoginStatus', success.status);
-
-        // Check if we have our user saved
-        var user = UserService.getUser('facebook');
-
-        if(!user.userID){
-          getFacebookProfileInfo(success.authResponse)
-          .then(function(profileInfo) {
-            // For the purpose of this example I will store user data on local storage
-            UserService.setUser({
-              authResponse: success.authResponse,
-              userID: profileInfo.id,
-              name: profileInfo.name,
-              email: profileInfo.email,
-              picture : "http://graph.facebook.com/" + success.authResponse.userID + "/picture?type=large"
-            });
-
-            $state.go('app.home');
-          }, function(fail){
-            // Fail get profile info
-            console.log('profile info fail', fail);
-          });
-        }else{
-          $state.go('app.home');
-        }
-      } else {
-        // If (success.status === 'not_authorized') the user is logged in to Facebook,
-        // but has not authenticated your app
-        // Else the person is not logged into Facebook,
-        // so we're not sure if they are logged into this app or not.
-
-        /*
-        console.log('getLoginStatus', success.status);
-
-        $ionicLoading.show({
-          template: 'Logging in...'
-        });
-        */
-
-        // Ask the permissions you need. You can learn more about
-        // FB permissions here: https://developers.facebook.com/docs/facebook-login/permissions/v2.4
-        facebookConnectPlugin.login(['email', 'public_profile'], fbLoginSuccess, fbLoginError);
-      }
-    });
-
-    facebookConnectPlugin.getLoginStatus(function(success){
-      if(success.status === 'connected'){
-        // The user is logged in and has authenticated your app, and response.authResponse supplies
-        // the user's ID, a valid access token, a signed request, and the time the access token
-        // and signed request each expire
-        console.log('getLoginStatus', success.status);
-
-        // Check if we have our user saved
-        var user = UserService.getUser('facebook');
-
-        if(!user.userID){
-          getFacebookProfileInfo(success.authResponse)
-          .then(function(profileInfo) {
-            
+    CordovaFacebook.login({
+       permissions: ['email', 'public_profile'],
+       onSuccess: function(result) {
+          if(result.declined.length > 0) {
+             err('Se ha rechazado la conexión con Facebook');
+          }
+          else if (result.success == 1) {
+            err(JSON.stringify(result));
+            //result.userID 
             // Intentar logear
-            var login_xpress = {'googleToken': profileInfo.id };
+
+            /*
+            var login_xpress = {'googleToken': result.userID };
             $http.post($localStorage.growify.rest+'/login', login_xpress).
             then(function (data, status, headers, config) {
               $localStorage.growify.access_token = data.data.jwt;
@@ -244,23 +190,23 @@ angular.module('growify.controllers', [])
             },function() {
               //err('No pude hacer autologin, cuenta nueva?');
               var data = {
-                'username':    profileInfo.email, 
-                'email':       profileInfo.email, 
-                'facebookToken': profileInfo.id,
-                'avatar':      "http://graph.facebook.com/" + profileInfo.id + "/picture?type=large",
-                'firstName':    profileInfo.name
+                'username':    obj.email, 
+                'email':       obj.email, 
+                'googleToken': result.userID,
+                'avatar':      obj.imageUrl,
+                'firstName':    obj.displayName
               };
 
               $http.post($localStorage.growify.rest+'/registration', data).
               then(function (data, status, headers, config) {
                 if (data.data.active == true) { 
-                  $localStorage.growify.username = profileInfo.emails
-                  $localStorage.growify.email = profileInfo.email;
-                  $localStorage.growify.facebookToken = profileInfo.id;
+                  $localStorage.growify.username = obj.email;
+                  $localStorage.growify.email = obj.email;
+                  $localStorage.growify.googleToken = result.userID;
                   $localStorage.growify.id = data.data._id;
                   $localStorage.growify.auth = 1;
                   // get access token
-                  var login_xpress = {'facebookToken': profileInfo.id };
+                  var login_xpress = {'googleToken': result.userID };
                   $http.post($localStorage.growify.rest+'/login', login_xpress).
                   then(function (data, status, headers, config) {
                     $scope.hideload();
@@ -270,7 +216,7 @@ angular.module('growify.controllers', [])
                 }
                 else {
                   $scope.hideload();
-                  err('No pudo acceder con Facebook a Growify, es posible que ya tenga una cuenta creada con el correo electrónico indicado');
+                  err('No pudo acceder con Google a Growify, es posible que ya tenga una cuenta creada con el correo electrónico indicado');
                 }
               },
               function (data, status, headers, config) {
@@ -280,32 +226,20 @@ angular.module('growify.controllers', [])
                 $scope.botonesRegistro = true;
               });
             }); 
-
-          }, function(fail){
-              $scope.hideload();
-              err('Falló la comunicación con Facebook. Intente nuevamente');
-          });
-        }else{
-          $state.go('app.home');
-        }
-      } else {
-        // If (success.status === 'not_authorized') the user is logged in to Facebook,
-        // but has not authenticated your app
-        // Else the person is not logged into Facebook,
-        // so we're not sure if they are logged into this app or not.
-
-        console.log('getLoginStatus', success.status);
-        /*
-        $ionicLoading.show({
-          template: 'Logging in...'
-        });
-        */
-        // Ask the permissions you need. You can learn more about
-        // FB permissions here: https://developers.facebook.com/docs/facebook-login/permissions/v2.4
-        facebookConnectPlugin.login(['email', 'public_profile'], fbLoginSuccess, fbLoginError);
-      }
+            */ 
+          }
+          else {
+            err('Error al intentar conectar con Facebook. Intente más tarde');
+          }
+       },
+       onFailure: function(result) {
+          if(result.cancelled) {
+             err('Operacion Cancelada')
+          } else if(result.error) {
+             alert("Error:" + result.errorLocalized);
+          }
+       }
     });
-
   };
 })
 
