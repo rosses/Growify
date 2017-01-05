@@ -1,0 +1,45 @@
+<ion-view view-title='TIENDAS'>
+  <ion-content scroll="true">
+  	<div class="tienda">
+  		<div class="tienda-foto">
+  			<img src="{{$root.default.cdn}}{{store.avatar}}" />
+  		</div>
+  		<div class="tienda-subfoto">
+  			<div class="tienda-subfoto-div">
+  				<h1>{{store.name}}</h1>
+  			</div>
+  			<div class="tienda-subfoto-div" align="right">
+  				<img src="img/stars.{{store.rateAvg}}.png" />
+  			</div>
+  			<div class="c"></div>
+  		</div>
+  		<div class="tienda-tools">
+  			<div class="tienda-tools-div-social">
+  				<a href=""><img src="img/btn.favorito.png" /></a>
+  			</div>
+  			<div class="tienda-tools-div-social">
+  				<a href=""><img src="img/btn.compartir.png" /></a>
+  			</div>
+  			<div class="tienda-tools-div-call">
+  				<a href="tel:{{product.phone}}"><img src="img/btn.llamar.png" /></a>
+  			</div>
+  			<div class="c"></div>
+  		</div>
+  	</div>
+
+  	<div class="productos">
+  		<div class="producto" ng-repeat="product in products">
+  		  <a href="#/main/vertiendaproducto/{{product.storeId._id}}/{{product.productId._id}}">
+  			<div ng-if="product.images.length"><img src="{{$root.default.cdn}}{{product.images[0]}}" /></div>
+  			<div ng-if="!product.images.length"><img src="img/index.png" /></div>
+			  <h3>{{product.productId.name}}</h3>
+			  <h2>{{(product.price | currency:"$ ":0)}}</h2>
+		  </a>
+  		</div>
+
+  		<div class="c"></div>
+
+  	</div>
+
+  </ion-content>
+</ion-view>

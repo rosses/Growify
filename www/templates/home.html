@@ -20,7 +20,8 @@
     </ion-content>
     <ion-content scroll="true" class="home-list" style="display:none;">
         <div ng-repeat="store in stores">
-            <ion-item>
+            <ion-item ng-href="#/main/vertienda/{{store._id}}/">
+                <img class="avatar" src="{{$root.default.cdn}}{{store.avatar}}" />
                 <h2>{{store.name}}</h2>
                 <h3>{{store.miDistancia}}</h3>
                 <h4><img src="img/stars.{{store.rateAvg}}.png" /></h4>

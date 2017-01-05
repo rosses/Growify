@@ -1,0 +1,47 @@
+<ion-view view-title='{{store.name}}'>
+  <ion-content scroll="true">
+  	<div class="pstore">
+  		<div class="pstore-foto">
+        <div ng-if="product.images.length"><img src="{{$root.default.cdn}}{{product.images[0]}}" /></div>
+        <div ng-if="!product.images.length"><img src="img/index.png" /></div>
+  		</div>
+  		<div class="pstore-categ">
+  			{{categName}}
+  		</div>
+      <div class="pstore-name">
+        {{product.productId.name}}
+      </div>
+      <div class="pstore-price">
+        {{(product.price | currency:"$ ":0)}}
+      </div>
+
+      <div class="pstore-tools">
+        <a href=""><img src="img/btn.favorito.png" style="border-right: 1px solid #CCC; padding-right: 10px;" /></a>
+        <a href=""><img src="img/btn.compartir.png" style="padding-bottom: 4px; padding-left: 10px;" /></a>
+      </div>
+
+
+      <div class="pstore-desc">
+      {{product.productId.description}}
+      </div>
+
+
+
+  	</div>
+
+  	<div class="productos">
+  		<div class="producto" ng-repeat="product in products">
+        <a href="#/vertiendaproducto/{{product.storeId._id}}/{{product.productId._id}}/">
+    			<div ng-if="product.images.length"><img src="{{$root.default.cdn}}{{product.images[0]}}" /></div>
+    			<div ng-if="!product.images.length"><img src="img/index.png" /></div>
+  			  <h3>{{product.productId.name}}</h3>
+  		    <h2>{{(product.price | currency:"$ ":0)}}</h2>
+        </a>
+  		</div>
+
+  		<div class="c"></div>
+  		
+  	</div>
+
+  </ion-content>
+</ion-view>

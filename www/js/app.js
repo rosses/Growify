@@ -2,6 +2,7 @@
 var default_app = {
     modo:"dev", 
     rest:"http://138.197.196.64:3002",
+    cdn: "http://138.197.196.64:3000",
     auth: 0,
     username: '',
     email: '',
@@ -9,7 +10,8 @@ var default_app = {
     id: '',
     access_token: '',
     storeLoaded: 0,
-    offersLoaded: 0
+    offersLoaded: 0,
+    searchLoaded: 0
 };
 
 
@@ -29,6 +31,11 @@ angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.cont
       // org.apache.cordova.statusbar required
       StatusBar.styleLightContent();
     }
+
+    setTimeout(function() {
+        navigator.splashscreen.hide();
+    }, 100);
+    
   });
   $ionicPlatform.registerBackButtonAction(function(e){
     //do your stuff
@@ -37,7 +44,7 @@ angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.cont
   },101); // prioridad 100 android, 101 lo pisa
 
   $rootScope.db = null;
-
+  $rootScope.default = default_app;
 })
 
 .config(function($stateProvider, $urlRouterProvider) {
@@ -47,19 +54,16 @@ angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.cont
     templateUrl: 'templates/login.html',
     controller: 'LoginCtrl'
   })
-
   .state('registro', {
     url: '/registro',
     templateUrl: 'templates/registro.html',
     controller: 'RegistroCtrl'
   })
-
   .state('terms', {
     url: '/terms',
     templateUrl: 'templates/terms.html',
     controller: 'termsCtrl'
   })
-
   .state('main', {
     url: '/main',
     abstract: true,
@@ -76,7 +80,6 @@ angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.cont
       }
     }
   })
-
   .state('main.promociones', {
     url: '/promociones',
     views: {
@@ -86,7 +89,6 @@ angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.cont
       }
     }
   })
-
   .state('main.favoritos', {
     url: '/favoritos',
     views: {
@@ -96,13 +98,30 @@ angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.cont
       }
     }
   })
-
   .state('main.perfil', {
     url: '/perfil',
     views: {
       'menuContent': {
         templateUrl: 'templates/perfil.html',
         controller: 'PerfilCtrl'
+      }
+    }
+  })
+  .state('main.vertiendaproducto', {
+    url: '/vertiendaproducto/{id:/?.*}/{pro:/?.*}',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/verproducto.html',
+        controller: 'VerTiendaProductoCtrl'
+      }
+    }
+  })
+  .state('main.vertienda', {
+    url: '/vertienda/{id:/?.*}',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/vertienda.html',
+        controller: 'VerTiendaCtrl'
       }
     }
   })

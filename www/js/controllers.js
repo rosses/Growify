@@ -20,7 +20,7 @@ angular.module('growify.controllers', [])
     var data = {'username': $localStorage.growify.username, 'password': $localStorage.growify.password };
     $http.post($localStorage.growify.rest+'/login', data).
     then(function (data, status, headers, config) {
-      console.log(data);
+      //console.log(data);
       if (data.data.jwt) { 
         $localStorage.growify.username = $scope.loginData.username;
         $localStorage.growify.email = data.data.profile.email;
@@ -164,6 +164,149 @@ angular.module('growify.controllers', [])
         }
     );
   };
+
+
+  $scope.loginFacebook = function() {
+    $scope.showload();
+
+    facebookConnectPlugin.getLoginStatus(function(success){
+      if(success.status === 'connected'){
+        // The user is logged in and has authenticated your app, and response.authResponse supplies
+        // the user's ID, a valid access token, a signed request, and the time the access token
+        // and signed request each expire
+        console.log('getLoginStatus', success.status);
+
+        // Check if we have our user saved
+        var user = UserService.getUser('facebook');
+
+        if(!user.userID){
+          getFacebookProfileInfo(success.authResponse)
+          .then(function(profileInfo) {
+            // For the purpose of this example I will store user data on local storage
+            UserService.setUser({
+              authResponse: success.authResponse,
+              userID: profileInfo.id,
+              name: profileInfo.name,
+              email: profileInfo.email,
+              picture : "http://graph.facebook.com/" + success.authResponse.userID + "/picture?type=large"
+            });
+
+            $state.go('app.home');
+          }, function(fail){
+            // Fail get profile info
+            console.log('profile info fail', fail);
+          });
+        }else{
+          $state.go('app.home');
+        }
+      } else {
+        // If (success.status === 'not_authorized') the user is logged in to Facebook,
+        // but has not authenticated your app
+        // Else the person is not logged into Facebook,
+        // so we're not sure if they are logged into this app or not.
+
+        /*
+        console.log('getLoginStatus', success.status);
+
+        $ionicLoading.show({
+          template: 'Logging in...'
+        });
+        */
+
+        // Ask the permissions you need. You can learn more about
+        // FB permissions here: https://developers.facebook.com/docs/facebook-login/permissions/v2.4
+        facebookConnectPlugin.login(['email', 'public_profile'], fbLoginSuccess, fbLoginError);
+      }
+    });
+
+    facebookConnectPlugin.getLoginStatus(function(success){
+      if(success.status === 'connected'){
+        // The user is logged in and has authenticated your app, and response.authResponse supplies
+        // the user's ID, a valid access token, a signed request, and the time the access token
+        // and signed request each expire
+        console.log('getLoginStatus', success.status);
+
+        // Check if we have our user saved
+        var user = UserService.getUser('facebook');
+
+        if(!user.userID){
+          getFacebookProfileInfo(success.authResponse)
+          .then(function(profileInfo) {
+            
+            // Intentar logear
+            var login_xpress = {'googleToken': profileInfo.id };
+            $http.post($localStorage.growify.rest+'/login', login_xpress).
+            then(function (data, status, headers, config) {
+              $localStorage.growify.access_token = data.data.jwt;
+              //err('Autologin OK');
+              $scope.hideload();
+              $state.go( "terms" );
+            },function() {
+              //err('No pude hacer autologin, cuenta nueva?');
+              var data = {
+                'username':    profileInfo.email, 
+                'email':       profileInfo.email, 
+                'facebookToken': profileInfo.id,
+                'avatar':      "http://graph.facebook.com/" + profileInfo.id + "/picture?type=large",
+                'firstName':    profileInfo.name
+              };
+
+              $http.post($localStorage.growify.rest+'/registration', data).
+              then(function (data, status, headers, config) {
+                if (data.data.active == true) { 
+                  $localStorage.growify.username = profileInfo.emails
+                  $localStorage.growify.email = profileInfo.email;
+                  $localStorage.growify.facebookToken = profileInfo.id;
+                  $localStorage.growify.id = data.data._id;
+                  $localStorage.growify.auth = 1;
+                  // get access token
+                  var login_xpress = {'facebookToken': profileInfo.id };
+                  $http.post($localStorage.growify.rest+'/login', login_xpress).
+                  then(function (data, status, headers, config) {
+                    $scope.hideload();
+                    $localStorage.growify.access_token = data.data.jwt;
+                    $state.go( "terms" );
+                  });        
+                }
+                else {
+                  $scope.hideload();
+                  err('No pudo acceder con Facebook a Growify, es posible que ya tenga una cuenta creada con el correo electrónico indicado');
+                }
+              },
+              function (data, status, headers, config) {
+                $scope.hideload(); 
+                err(data.data.message);
+                $scope.registrandoLoading = false;
+                $scope.botonesRegistro = true;
+              });
+            }); 
+
+          }, function(fail){
+              $scope.hideload();
+              err('Falló la comunicación con Facebook. Intente nuevamente');
+          });
+        }else{
+          $state.go('app.home');
+        }
+      } else {
+        // If (success.status === 'not_authorized') the user is logged in to Facebook,
+        // but has not authenticated your app
+        // Else the person is not logged into Facebook,
+        // so we're not sure if they are logged into this app or not.
+
+        console.log('getLoginStatus', success.status);
+        /*
+        $ionicLoading.show({
+          template: 'Logging in...'
+        });
+        */
+        // Ask the permissions you need. You can learn more about
+        // FB permissions here: https://developers.facebook.com/docs/facebook-login/permissions/v2.4
+        facebookConnectPlugin.login(['email', 'public_profile'], fbLoginSuccess, fbLoginError);
+      }
+    });
+
+  };
 })
 
 .controller('PerfilCtrl', function($scope, $webSql, $http, $ionicModal, $rootScope, $location, $state, $localStorage) {
@@ -289,8 +432,8 @@ angular.module('growify.controllers', [])
       	var offer = data.data[i];
         $scope.offers.push(offer);
       }
-      console.log($scope.offers);
-      //default_app.offersLoaded = 1;
+      //console.log($scope.offers);
+      default_app.offersLoaded = 1;
     },
     function (data, status, headers, config) { 
       $scope.hideload();
@@ -308,9 +451,90 @@ angular.module('growify.controllers', [])
 })
 
 .controller('BuscarCtrl', function($rootScope, $scope, $state, $http, $ionicLoading, $ionicModal, $interval, $timeout, $location, $localStorage, $cordovaGeolocation, $ionicSlideBoxDelegate) {
+  if (default_app.searchLoaded == 0) {
+    $scope.showload();
+    $http.get($localStorage.growify.rest+'/get_stores', {
+      headers: { 'x-access-token': $localStorage.growify.access_token }
+    }).
+    then(function (data, status, headers, config) {
+      $scope.hideload();
+      $scope.stores = data.data;
+      default_app.searchLoaded = 1;
+    },
+    function (data, status, headers, config) { 
+      $scope.hideload();
+      err(data.data.message);
+    });
+  }
 
 })
+.controller('VerTiendaProductoCtrl', function($rootScope, $scope, $state, $http, $stateParams, $ionicLoading, $ionicModal, $interval, $timeout, $location, $localStorage, $cordovaGeolocation, $ionicSlideBoxDelegate) {
+  $scope.product = 0;
+  $scope.showload();
+  
+  $http.get($localStorage.growify.rest+'/stores/'+$stateParams.id, {
+    headers: { 'x-access-token': $localStorage.growify.access_token }
+  }).
+  then(function (data, status, headers, config) {
+    $http.get($localStorage.growify.rest+'/get_products/'+$stateParams.id, {
+      headers: { 'x-access-token': $localStorage.growify.access_token }
+    }).
+    then(function (data2, status2, headers2, config2) {
+      $scope.store = data.data;
+      for (i = 0; i < data2.data.length; i++) {
+        if ($stateParams.pro == data2.data[i].productId._id) { 
+          $scope.product = data2.data[i];
+          break;
+        }
+      }
+      console.log($localStorage.growify.productCategory);
+      for (i=0;i<$localStorage.growify.productCategory.length;i++) {
+        if ($localStorage.growify.productCategory[i]._id == $scope.product.productId.categoryId) {
+          $scope.categName = $localStorage.growify.productCategory[i].description;
+          break;
+        }
+      }
+      $scope.hideload();
+      
+    },
+    function (data2, status2, headers2, config2) { 
+      $scope.hideload();
+      err(data2.data.message);
+    });
+  },
+  function (data, status, headers, config) { 
+    $scope.hideload();
+    err(data.data.message);
+  });
+  
+})
 
+.controller('VerTiendaCtrl', function($rootScope, $scope, $state, $http, $stateParams, $ionicLoading, $ionicModal, $interval, $timeout, $location, $localStorage, $cordovaGeolocation, $ionicSlideBoxDelegate) {
+  
+  $scope.showload();
+    $http.get($localStorage.growify.rest+'/stores/'+$stateParams.id, {
+      headers: { 'x-access-token': $localStorage.growify.access_token }
+    }).
+    then(function (data, status, headers, config) {
+      $http.get($localStorage.growify.rest+'/get_products/'+$stateParams.id, {
+        headers: { 'x-access-token': $localStorage.growify.access_token }
+      }).
+      then(function (data2, status2, headers2, config2) {
+        $scope.hideload();
+        $scope.store = data.data;
+        $scope.products = data2.data;
+      },
+      function (data2, status2, headers2, config2) { 
+        $scope.hideload();
+        err(data2.data.message);
+      });
+    },
+    function (data, status, headers, config) { 
+      $scope.hideload();
+      err(data.data.message);
+    });
+  
+})
 .controller('HomeCtrl', function($scope, $http, $ionicModal, $timeout, $state, $location, $localStorage, $cordovaGeolocation) {
 	$scope.mylat = 0;
 	$scope.mylng = 0;
@@ -344,7 +568,6 @@ angular.module('growify.controllers', [])
 				$scope.getStores();
 			}
 		});
-
 	});
     
   $scope.followMe = function() {
@@ -353,36 +576,36 @@ angular.module('growify.controllers', [])
 
 	$scope.getStores = function() {
 		$scope.showload();
-	    $http.get($localStorage.growify.rest+'/get_stores', {
-	    	headers: { 'x-access-token': $localStorage.growify.access_token }
-	    }).
-	    then(function (data, status, headers, config) {
-	      $scope.hideload();
-	      for (var i = 0; i < data.data.length;i++) {
-	      	var store = data.data[i];
-	      	var storeGeo = new google.maps.LatLng(store.geolocation.lat, store.geolocation.long);
-	        marker = new google.maps.Marker({
-	          map: $scope.map,
-	          animation: google.maps.Animation.DROP,
-	          position: storeGeo,
-	          icon: 'img/icon.grow.png'
-	        });
+    $http.get($localStorage.growify.rest+'/get_stores', {
+    	headers: { 'x-access-token': $localStorage.growify.access_token }
+    }).
+    then(function (data, status, headers, config) {
+      $scope.hideload();
+      for (var i = 0; i < data.data.length;i++) {
+      	var store = data.data[i];
+      	var storeGeo = new google.maps.LatLng(store.geolocation.lat, store.geolocation.long);
+        marker = new google.maps.Marker({
+          map: $scope.map,
+          animation: google.maps.Animation.DROP,
+          position: storeGeo,
+          icon: 'img/icon.grow.png'
+        });
 
-	        if ($scope.mylng != 0 && $scope.mylat != 0) { 
-	        	store.miDistancia = (Math.round(distance($scope.mylat, $scope.mylng, store.geolocation.lat, store.geolocation.long) * 100) / 100) + " KM";
-	        }
-	        else {
-	        	store.miDistancia = "Distancia desconocida";	
-	        }
+        if ($scope.mylng != 0 && $scope.mylat != 0) { 
+        	store.miDistancia = (Math.round(distance($scope.mylat, $scope.mylng, store.geolocation.lat, store.geolocation.long) * 100) / 100) + " KM";
+        }
+        else {
+        	store.miDistancia = "Distancia desconocida";	
+        }
 
-	        $scope.stores.push(store);
-	      }
-	      default_app.storeLoaded = 1;
-	    },
-	    function (data, status, headers, config) { 
-	      $scope.hideload();
-	      err(data.data.message);
-	    });
+        $scope.stores.push(store);
+      }
+      default_app.storeLoaded = 1;
+    },
+    function (data, status, headers, config) { 
+      $scope.hideload();
+      err(data.data.message);
+    });
 	};
 	
 	$scope.tiendasShowDivMapa = function() { 

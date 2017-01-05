@@ -1,6 +1,45 @@
 <ion-view view-title='BUSCAR'>
-  <ion-content scroll="true">
+  <ion-content scroll="true" class="search">
+  	<div class="search-top">
+  		<input placeholder="Ingresa tu búsqueda" />
+  	</div>
+  	
+  	<div class="search-filtro">
+  	
+    <div class="pstore-name">
+		FILTRAR POR
+	</div>
+    <div class="select">
+      <select>
+        <option>Categoria</option>
+        <option ng-repeat="pdc in growify.productCategory" value="{{pdc._id}}">
+          {{pdc.name}}
+        </option>      
+      </select>
+    </div>
+    
+    <div class="select">
+      <select>
+        <option>Marca</option>
+        <option ng-repeat="pdb in growify.productBrands" value="{{pdb._id}}">
+          {{pdb.name}}
+        </option>       
+      </select>
+    </div>
 
+    <div class="select">
+      <select>
+        <option>Tienda</option>
+        <option ng-repeat="st in stores" value="{{st._id}}">
+          {{st.name}}
+        </option>       
+      </select>
+    </div>
 
+    <div class="config-guardar">
+      <a><img src="img/btn.filtrar.png" /></a>
+    </div>
+
+    </div>
   </ion-content>
 </ion-view>
