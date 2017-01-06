@@ -71,7 +71,7 @@
   </platform>
 
   
-  <icon src="icon.png" gap:role="default" />
+  <icon src="icon.png" role="default" />
 
   <platform name="ios">
     <!-- images are determined by width and height. The following are supported -->
