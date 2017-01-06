@@ -176,6 +176,12 @@ angular.module('growify.controllers', [])
           }
           else if (result.success == 1) {
             err(JSON.stringify(result));
+            $http.get("https://graph.facebook.com/me?access_token="+result.accessToken, {}).
+            then(function (data, status, headers, config) {
+              err(JSON.stringify(data));
+              err(JSON.stringify(status));
+              err(JSON.stringify(headers));
+            });
             //result.userID 
             // Intentar logear
 
