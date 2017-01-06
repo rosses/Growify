@@ -57,19 +57,19 @@
   <platform name="ios">
     <allow-intent href="itms:*"/>
     <allow-intent href="itms-apps:*"/>
-
   </platform>
   
   <gap:plugin name="cordova-plugin-googleplus" source="npm">
     <param name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.667491307854-kscmugkqafi91lfh313242er4pkchvju" />
   </gap:plugin>
-  <plugin name="cordova-plugin-facebook">
+  <plugin name="cordova-plugin-facebook" source="npm">
       <param name="FACEBOOK_APP_ID" value="171879819958840" />
       <param name="FACEBOOK_DISPLAY_NAME" value="Growify" />
   </plugin>
 
   <gap:plugin name="cordova-plugin-x-socialsharing" source="npm" />
-
+  
+  <icon src="icon.png" gap:role="default" />
 
   <platform name="ios">
     <!-- images are determined by width and height. The following are supported -->
