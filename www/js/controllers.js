@@ -181,15 +181,15 @@ angular.module('growify.controllers', [])
             $http.post($localStorage.growify.rest+'/login', login_xpress).
             then(function (data, status, headers, config) {
               $localStorage.growify.access_token = data.data.jwt;
-              err('Autologin OK');
+              //err('Autologin OK');
               $scope.hideload();
               $state.go( "terms" );
             },function() {
-              err('No pude hacer autologin, cuenta nueva?');
+              //err('No pude hacer autologin, cuenta nueva?');
 
               $http.get("https://graph.facebook.com/me?fields=id,name,email,picture&access_token="+result.accessToken, {}).
               then(function (data, status, headers, config) {
-                alert(JSON.stringify(data));
+                //alert(JSON.stringify(data));
                 
                 var data = {
                   'username':    data.data.email, 
@@ -199,7 +199,7 @@ angular.module('growify.controllers', [])
                   'firstName':    data.data.name
                 };                
                 var fbkTokenId = data.data.id;
-                alert(JSON.stringify(data));
+                //alert(JSON.stringify(data));
 
                 $http.post($localStorage.growify.rest+'/registration', data).
                 then(function (data, status, headers, config) {
@@ -211,7 +211,7 @@ angular.module('growify.controllers', [])
                     $localStorage.growify.auth = 1;
                     // get access token
                     var login_xpress = {'facebookToken': fbkTokenId };
-                    alert(JSON.stringify(login_xpress));
+                    //alert(JSON.stringify(login_xpress));
 
                     $http.post($localStorage.growify.rest+'/login', login_xpress).
                     then(function (data, status, headers, config) {
