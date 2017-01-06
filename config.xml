@@ -72,10 +72,6 @@
   
   <icon src="icon.png" gap:role="default" />
 
-  <feature name="SplashScreen" >
-      <param name="android-package" value="org.apache.cordova.splashscreen.SplashScreen" />
-      <param name="onload" value="true" />
-  </feature>
   <platform name="ios">
     <!-- images are determined by width and height. The following are supported -->
     <splash src="resources/ios/splash/Default~iphone.png" width="320" height="480"/>
