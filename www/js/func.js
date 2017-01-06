@@ -24,19 +24,21 @@ function ok(msg) {
     );
   }
 }
-function confirmar(msg) {
+function confirmar(msg,callback) {
   console.log('Confirmar: '+msg);
-  //if (default_app.modo == "dev") {
-    return confirm(msg ? msg : '¿Desea continuar?');
-  /*}
+  if (default_app.modo == "dev") {
+    if (confirm(msg ? msg : '¿Desea continuar?')) {
+      callback();
+    }
+  }
   else {
-    return navigator.notification.confirm(
+    navigator.notification.confirm(
         (msg ? msg : '¿Desea continuar?'),  // message
-        function(boton) { if (boton == 1) { return true } else { return false; }},
+        function(boton) { if (boton == 1) { callback(); } else { }},
         'Confirmar',
         ['Si', 'No']
     );
-  }*/
+  }
 }
 function preguntar(msg) {
   console.log('Preguntar: '+msg);

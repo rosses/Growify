@@ -1,6 +1,6 @@
 angular.module('growify.controllers', [])
 
-.controller('LoginCtrl', function($scope, $webSql, $http, $ionicModal, $rootScope, $location, $state, $localStorage, $ionicLoading) {
+.controller('LoginCtrl', function($scope, $webSql, $http, $ionicModal, $route, $rootScope, $location, $state, $localStorage, $ionicLoading) {
   
   $rootScope.db = $webSql.openDatabase("growify", "1.1", "Aplicacion Growify", 5 * 1024 * 1024);
   
@@ -11,6 +11,7 @@ angular.module('growify.controllers', [])
   $scope.showload = function(msg) {
     $ionicLoading.show({template: '<ion-spinner></ion-spinner>'+(msg ? '<br>'+msg : '')}).then(function(){});
   };
+
   $scope.hideload = function(){
     $ionicLoading.hide().then(function(){});
   };
@@ -175,18 +176,13 @@ angular.module('growify.controllers', [])
              err('Se ha rechazado la conexión con Facebook');
           }
           else if (result.success == 1) {
-            err(JSON.stringify(result));
-            $http.get("https://graph.facebook.com/me?access_token="+result.accessToken, {}).
-            then(function (data, status, headers, config) {
-              err(JSON.stringify(data));
-              err(JSON.stringify(status));
-              err(JSON.stringify(headers));
-            });
+            //err(JSON.stringify(result));
+
             //result.userID 
             // Intentar logear
 
-            /*
-            var login_xpress = {'googleToken': result.userID };
+            
+            var login_xpress = {'facebookToken': result.userID };
             $http.post($localStorage.growify.rest+'/login', login_xpress).
             then(function (data, status, headers, config) {
               $localStorage.growify.access_token = data.data.jwt;
@@ -195,44 +191,40 @@ angular.module('growify.controllers', [])
               $state.go( "terms" );
             },function() {
               //err('No pude hacer autologin, cuenta nueva?');
-              var data = {
-                'username':    obj.email, 
-                'email':       obj.email, 
-                'googleToken': result.userID,
-                'avatar':      obj.imageUrl,
-                'firstName':    obj.displayName
-              };
 
-              $http.post($localStorage.growify.rest+'/registration', data).
+              $http.get("https://graph.facebook.com/me?fields=id,name,email&access_token="+result.accessToken, {}).
               then(function (data, status, headers, config) {
-                if (data.data.active == true) { 
-                  $localStorage.growify.username = obj.email;
-                  $localStorage.growify.email = obj.email;
-                  $localStorage.growify.googleToken = result.userID;
-                  $localStorage.growify.id = data.data._id;
-                  $localStorage.growify.auth = 1;
-                  // get access token
-                  var login_xpress = {'googleToken': result.userID };
-                  $http.post($localStorage.growify.rest+'/login', login_xpress).
-                  then(function (data, status, headers, config) {
+                $http.post($localStorage.growify.rest+'/registration', data).
+                then(function (data, status, headers, config) {
+                  if (data.data.active == true) { 
+                    $localStorage.growify.username = obj.email;
+                    $localStorage.growify.email = obj.email;
+                    $localStorage.growify.googleToken = result.userID;
+                    $localStorage.growify.id = data.data._id;
+                    $localStorage.growify.auth = 1;
+                    // get access token
+                    var login_xpress = {'facebookToken': result.userID };
+                    $http.post($localStorage.growify.rest+'/login', login_xpress).
+                    then(function (data, status, headers, config) {
+                      $scope.hideload();
+                      $localStorage.growify.access_token = data.data.jwt;
+                      $state.go( "terms" );
+                    });        
+                  }
+                  else {
                     $scope.hideload();
-                    $localStorage.growify.access_token = data.data.jwt;
-                    $state.go( "terms" );
-                  });        
-                }
-                else {
-                  $scope.hideload();
-                  err('No pudo acceder con Google a Growify, es posible que ya tenga una cuenta creada con el correo electrónico indicado');
-                }
-              },
-              function (data, status, headers, config) {
-                $scope.hideload(); 
-                err(data.data.message);
-                $scope.registrandoLoading = false;
-                $scope.botonesRegistro = true;
-              });
-            }); 
-            */ 
+                    err('No pudo acceder con Google a Growify, es posible que ya tenga una cuenta creada con el correo electrónico indicado');
+                  }
+                },
+                function (data, status, headers, config) {
+                  $scope.hideload(); 
+                  err(data.data.message);
+                  $scope.registrandoLoading = false;
+                  $scope.botonesRegistro = true;
+                });
+              }); 
+
+              });             
           }
           else {
             err('Error al intentar conectar con Facebook. Intente más tarde');
@@ -312,6 +304,17 @@ angular.module('growify.controllers', [])
 
   $scope.growify = $localStorage.growify;
 
+  $scope.share = function(name,url,msg){
+    var options = {
+      message: 'Les recomiendo este Growify Shop!', // not supported on some apps (Facebook, Instagram) 
+      subject: name, // fi. for email 
+      files: ['', ''], // an array of filenames either locally or remotely 
+      url: url,
+      chooserTitle: 'Growify' // Android only, you can override the default share sheet title 
+    }
+    window.plugins.socialsharing.shareWithOptions(options, onSuccess, onError);
+  }
+
   $scope.showload = function() {
     $ionicLoading.show({
       template: '<ion-spinner></ion-spinner>'
@@ -322,6 +325,14 @@ angular.module('growify.controllers', [])
   $scope.hideload = function(){
     $ionicLoading.hide().then(function(){
        //console.log("The loading indicator is now hidden");
+    });
+  };
+
+  $scope.showfav = function() {
+    $ionicLoading.show({
+      template: '<i class="icon ion-checkmark" style="font-size: 2em;"></i><br />Agregado a favoritos'
+    }).then(function(){
+       //console.log("The loading indicator is now displayed");
     });
   };
 
@@ -450,8 +461,52 @@ angular.module('growify.controllers', [])
 })
 
 .controller('VerTiendaCtrl', function($rootScope, $scope, $state, $http, $stateParams, $ionicLoading, $ionicModal, $interval, $timeout, $location, $localStorage, $cordovaGeolocation, $ionicSlideBoxDelegate) {
-  
-  $scope.showload();
+
+  $scope.range = function(min, max, step) {
+      step = step || 1;
+      var input = [];
+      for (var i = min; i <= max; i += step) {
+          input.push(i);
+      }
+      return input;
+  };
+
+
+  $scope.addFavorito = function(store,storename) {
+    confirmar('¿Agregar la tienda '+storename+' a favoritos?', function() {
+        $scope.showfav();
+        $timeout(function() {
+          $scope.hideload();
+        }, 2000);
+    });
+  };
+
+  $scope.rateStore = function(store, num) {
+    confirmar('¿Calificar con '+num+' estrellas a la tienda?', function() {
+      var data = {'storeId': store, 'value': num };
+      $http.post($localStorage.growify.rest+'/store-rate', data, {
+        headers: { 'x-access-token': $localStorage.growify.access_token }
+      }).
+      then(function (data, status, headers, config) {
+        if (data.data.success) {
+          ok('Gracias por tu calificación');
+        }
+        else {
+          err(data.data.message);
+        }
+        $scope.tiendaCargar();
+      },
+      function (data, status, headers, config) { 
+        err(data.data.message);
+        $scope.cargandoLogin = false;
+        $scope.botonesLogin = true;
+      });
+    });
+  };
+
+  $scope.tiendaCargar = function() {
+
+    $scope.showload();
     $http.get($localStorage.growify.rest+'/stores/'+$stateParams.id, {
       headers: { 'x-access-token': $localStorage.growify.access_token }
     }).
@@ -473,7 +528,10 @@ angular.module('growify.controllers', [])
       $scope.hideload();
       err(data.data.message);
     });
-  
+  };
+
+  $scope.tiendaCargar();
+
 })
 .controller('HomeCtrl', function($scope, $http, $ionicModal, $timeout, $state, $location, $localStorage, $cordovaGeolocation) {
 	$scope.mylat = 0;
@@ -503,7 +561,6 @@ angular.module('growify.controllers', [])
 	          position: myLatLng,
 	          icon: 'img/icon.me.png'
 	        });
-
 			if (default_app.storeLoaded == 0) {
 				$scope.getStores();
 			}
@@ -528,8 +585,14 @@ angular.module('growify.controllers', [])
           map: $scope.map,
           animation: google.maps.Animation.DROP,
           position: storeGeo,
-          icon: 'img/icon.grow.png'
+          icon: 'img/icon.grow.png',
+          url: '#/main/vertienda/'+store._id+'/'
         });
+
+        google.maps.event.addListener(marker, 'click', function() {
+          window.location.href = marker.url;
+        });
+
 
         if ($scope.mylng != 0 && $scope.mylat != 0) { 
         	store.miDistancia = (Math.round(distance($scope.mylat, $scope.mylng, store.geolocation.lat, store.geolocation.long) * 100) / 100) + " KM";

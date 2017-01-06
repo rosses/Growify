@@ -20,7 +20,7 @@ body, div, td, tr, th, a, strong, b, h1, h2, h3, h4, h5, h6 {
 /* Menu Config lateral */
 .menu-content {
 	box-shadow: none;
-	transform: translate3d(0px, 0px, 0px) !important; 
+	/*transform: translate3d(0px, 0px, 0px) !important; */
 }
 .byemenuright {
 	position: absolute;
@@ -383,12 +383,18 @@ body, div, td, tr, th, a, strong, b, h1, h2, h3, h4, h5, h6 {
 	border-bottom: 1px solid #CCC;
 	text-align: center;
 }
-.tienda-subfoto-div {
+.tienda-subfoto-div-1 {
 	float: left;
-	width: 50%;
+	width: 40%;
 	display: inline-block;
 }
-.tienda-subfoto-div h1 {
+.tienda-subfoto-div-2 {
+	float: left;
+	width: 60%;
+	display: inline-block;
+}
+
+.tienda-subfoto-div-1 h1 {
 	text-transform: uppercase;
 	font-weight: bold;
 	font-size: 15px;
@@ -396,8 +402,11 @@ body, div, td, tr, th, a, strong, b, h1, h2, h3, h4, h5, h6 {
 	text-align: left;
 	color: #4C6271;
 }
-.tienda-subfoto-div img {
-	max-width: 150px;
+.tienda-subfoto-div-2 img {
+	max-width: 32px;
+}
+.tienda-subfoto-div-2 a {
+	text-decoration: none;
 }
 .tienda-tools {
 	margin-top: 10px;
@@ -692,3 +701,16 @@ body, div, td, tr, th, a, strong, b, h1, h2, h3, h4, h5, h6 {
 	font-weight: bold;
 	line-height: 16px;
 }
+
+a.activated img {
+	transform: scale(0.9);
+	-webkit-transform: scale(0.9);
+	-moz-transform: scale(0.9);
+}
+.no_favoritos {
+	font-size: 30px;
+    margin-top: 80px;
+    line-height: 40px;
+    text-align: center;
+}
+.no_favoritos i { color: #AC0000; font-size: 120px; }

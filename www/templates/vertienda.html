@@ -5,23 +5,25 @@
   			<img src="{{$root.default.cdn}}{{store.avatar}}" />
   		</div>
   		<div class="tienda-subfoto">
-  			<div class="tienda-subfoto-div">
+  			<div class="tienda-subfoto-div-1">
   				<h1>{{store.name}}</h1>
   			</div>
-  			<div class="tienda-subfoto-div" align="right">
-  				<img src="img/stars.{{store.rateAvg}}.png" />
+  			<div class="tienda-subfoto-div-2" align="right">
+          <a href ng-click="rateStore(store._id,{{n}})" ng-repeat="n in range(1,5)">
+            <img ng-src="{{n <= store.rateAvg && 'img/stars.on.png' || 'img/stars.off.png'}}" />
+          </a>
   			</div>
   			<div class="c"></div>
   		</div>
   		<div class="tienda-tools">
   			<div class="tienda-tools-div-social">
-  				<a href=""><img src="img/btn.favorito.png" /></a>
+  				<a ng-click="addFavorito(store._id, store.name)"><img src="img/btn.favorito.png" /></a>
   			</div>
   			<div class="tienda-tools-div-social">
-  				<a href=""><img src="img/btn.compartir.png" /></a>
+  				<a data-ng-click="share('{{store.name}}','https://www.google.com/maps/preview/@{{store.geolocation.lat}},{{store.geolocation.long}},11z','Les recomiendo este Growify Shop!')"><img src="img/btn.compartir.png" /></a>
   			</div>
   			<div class="tienda-tools-div-call">
-  				<a href="tel:{{product.phone}}"><img src="img/btn.llamar.png" /></a>
+  				<a href="tel:{{store.phone}}"><img src="img/btn.llamar.png" /></a>
   			</div>
   			<div class="c"></div>
   		</div>
@@ -36,6 +38,10 @@
 			  <h2>{{(product.price | currency:"$ ":0)}}</h2>
 		  </a>
   		</div>
+
+      <div class="no_productos" ng-show="!products.length">
+        <h5>La tienda no tiene productos por ahora.<br />Inténtalo más tarde.</h5>
+      </div>
 
   		<div class="c"></div>
 

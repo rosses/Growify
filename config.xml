@@ -15,7 +15,7 @@
   <preference name="UIWebViewBounce" value="false"/>
   <preference name="DisallowOverscroll" value="true"/>
   
-  <preference name="SplashScreenDelay" value="3000" />
+  <preference name="SplashScreenDelay" value="2000" />
   <preference name="SplashScreen" value="screen" />
   <preference name="AutoHideSplashScreen" value="true" />
   <preference name="ShowSplashScreenSpinner" value="false" />
@@ -67,6 +67,9 @@
       <param name="FACEBOOK_APP_ID" value="171879819958840" />
       <param name="FACEBOOK_DISPLAY_NAME" value="Growifyfy" />
   </plugin>
+
+  <gap:plugin name="cordova-plugin-x-socialsharing" source="npm" />
+  
   <icon src="icon.png" gap:role="default" />
 
   <feature name="SplashScreen" >

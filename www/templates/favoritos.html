@@ -1,6 +1,12 @@
 <ion-view view-title='FAVORITOS'>
   <ion-content scroll="true">
 
+      <div class="no_favoritos" ng-show="!favoritos.length">
+      	<i class="icon ion-heart-broken"></i>
+      	<br /><br />
+        No tienes tiendas o productos favoritos
+      </div>
+
 
   </ion-content>
 </ion-view>
