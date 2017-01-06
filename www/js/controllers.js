@@ -194,10 +194,11 @@ angular.module('growify.controllers', [])
                 var data = {
                   'username':    data.data.email, 
                   'email':       data.data.email, 
-                  'facebookToken': result.userId,
+                  'facebookToken': data.data.id,
                   'picture':      data.data.picture.data.url,
                   'firstName':    data.data.name
                 };                
+                var fbkTokenId = data.data.id;
                 alert(JSON.stringify(data));
 
                 $http.post($localStorage.growify.rest+'/registration', data).
@@ -205,13 +206,13 @@ angular.module('growify.controllers', [])
                   if (data.data.active == true) { 
                     $localStorage.growify.username = result.email;
                     $localStorage.growify.email = result.email;
-                    $localStorage.growify.googleToken = result.userID;
+                    $localStorage.growify.facebookToken = fbkTokenId;
                     $localStorage.growify.id = data.data._id;
                     $localStorage.growify.auth = 1;
                     // get access token
-                    var login_xpress = {'facebookToken': result.userID };
+                    var login_xpress = {'facebookToken': fbkTokenId };
                     alert(JSON.stringify(login_xpress));
-                    
+
                     $http.post($localStorage.growify.rest+'/login', login_xpress).
                     then(function (data, status, headers, config) {
                       $scope.hideload();

@@ -707,6 +707,9 @@ a.activated img {
 	-webkit-transform: scale(0.9);
 	-moz-transform: scale(0.9);
 }
+a.activated i {
+	zoom: 0.8;
+}
 .no_favoritos {
 	font-size: 30px;
     margin-top: 80px;
