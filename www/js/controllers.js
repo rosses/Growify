@@ -233,7 +233,7 @@ angular.module('growify.controllers', [])
                 */
               }); 
 
-              });             
+            });             
           }
           else {
             err('Error al intentar conectar con Facebook. Intente más tarde');
