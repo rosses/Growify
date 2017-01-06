@@ -189,8 +189,8 @@ angular.module('growify.controllers', [])
 
               $http.get("https://graph.facebook.com/me?fields=id,name,email,picture&access_token="+result.accessToken, {}).
               then(function (data, status, headers, config) {
-                alert(JSON.stringify(data));
-                /*
+                //alert(JSON.stringify(data));
+                
 
 
                 var data = {
@@ -230,7 +230,7 @@ angular.module('growify.controllers', [])
                   $scope.botonesRegistro = true;
                 });
 
-                */
+                
               }); 
 
             });             
