@@ -1,6 +1,6 @@
 angular.module('growify.controllers', [])
 
-.controller('LoginCtrl', function($scope, $webSql, $http, $ionicModal, $route, $rootScope, $location, $state, $localStorage, $ionicLoading) {
+.controller('LoginCtrl', function($scope, $webSql, $http, $ionicModal, $rootScope, $location, $state, $localStorage, $ionicLoading) {
   
   $rootScope.db = $webSql.openDatabase("growify", "1.1", "Aplicacion Growify", 5 * 1024 * 1024);
   
@@ -422,6 +422,15 @@ angular.module('growify.controllers', [])
 .controller('VerTiendaProductoCtrl', function($rootScope, $scope, $state, $http, $stateParams, $ionicLoading, $ionicModal, $interval, $timeout, $location, $localStorage, $cordovaGeolocation, $ionicSlideBoxDelegate) {
   $scope.product = 0;
   $scope.showload();
+
+  $scope.addFavorito = function(product,prodname) {
+    confirmar('¿Agregar producto '+prodname+' a favoritos?', function() {
+        $scope.showfav();
+        $timeout(function() {
+          $scope.hideload();
+        }, 2000);
+    });
+  };
   
   $http.get($localStorage.growify.rest+'/stores/'+$stateParams.id, {
     headers: { 'x-access-token': $localStorage.growify.access_token }
@@ -581,7 +590,7 @@ angular.module('growify.controllers', [])
       for (var i = 0; i < data.data.length;i++) {
       	var store = data.data[i];
       	var storeGeo = new google.maps.LatLng(store.geolocation.lat, store.geolocation.long);
-        marker = new google.maps.Marker({
+        marker[i] = new google.maps.Marker({
           map: $scope.map,
           animation: google.maps.Animation.DROP,
           position: storeGeo,
@@ -589,8 +598,8 @@ angular.module('growify.controllers', [])
           url: '#/main/vertienda/'+store._id+'/'
         });
 
-        google.maps.event.addListener(marker, 'click', function() {
-          window.location.href = marker.url;
+        google.maps.event.addListener(marker[i], 'click', function() {
+          window.location.href = this.url;
         });
 
 
