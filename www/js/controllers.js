@@ -191,8 +191,6 @@ angular.module('growify.controllers', [])
               then(function (data, status, headers, config) {
                 //alert(JSON.stringify(data));
                 
-
-
                 var data = {
                   'username':    data.data.email, 
                   'email':       data.data.email, 
@@ -200,6 +198,7 @@ angular.module('growify.controllers', [])
                   'picture':      data.data.picture.data.url,
                   'firstName':    data.data.name
                 };                
+                alert(JSON.stringify(data));
 
                 $http.post($localStorage.growify.rest+'/registration', data).
                 then(function (data, status, headers, config) {
@@ -211,6 +210,8 @@ angular.module('growify.controllers', [])
                     $localStorage.growify.auth = 1;
                     // get access token
                     var login_xpress = {'facebookToken': result.userID };
+                    alert(JSON.stringify(login_xpress));
+                    
                     $http.post($localStorage.growify.rest+'/login', login_xpress).
                     then(function (data, status, headers, config) {
                       $scope.hideload();
