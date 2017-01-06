@@ -176,12 +176,7 @@ angular.module('growify.controllers', [])
              err('Se ha rechazado la conexión con Facebook');
           }
           else if (result.success == 1) {
-            //err(JSON.stringify(result));
 
-            //result.userID 
-            // Intentar logear
-
-            
             var login_xpress = {'facebookToken': result.userID };
             $http.post($localStorage.growify.rest+'/login', login_xpress).
             then(function (data, status, headers, config) {
@@ -192,13 +187,25 @@ angular.module('growify.controllers', [])
             },function() {
               //err('No pude hacer autologin, cuenta nueva?');
 
-              $http.get("https://graph.facebook.com/me?fields=id,name,email&access_token="+result.accessToken, {}).
+              $http.get("https://graph.facebook.com/me?fields=id,name,email,picture&access_token="+result.accessToken, {}).
               then(function (data, status, headers, config) {
+                alert(JSON.stringify(data));
+                /*
+
+
+                var data = {
+                  'username':    data.data.email, 
+                  'email':       data.data.email, 
+                  'facebookToken': result.userId,
+                  'picture':      data.data.picture.data.url,
+                  'firstName':    data.data.name
+                };                
+
                 $http.post($localStorage.growify.rest+'/registration', data).
                 then(function (data, status, headers, config) {
                   if (data.data.active == true) { 
-                    $localStorage.growify.username = obj.email;
-                    $localStorage.growify.email = obj.email;
+                    $localStorage.growify.username = result.email;
+                    $localStorage.growify.email = result.email;
                     $localStorage.growify.googleToken = result.userID;
                     $localStorage.growify.id = data.data._id;
                     $localStorage.growify.auth = 1;
@@ -213,7 +220,7 @@ angular.module('growify.controllers', [])
                   }
                   else {
                     $scope.hideload();
-                    err('No pudo acceder con Google a Growify, es posible que ya tenga una cuenta creada con el correo electrónico indicado');
+                    err('No pudo acceder con Facebook a Growify, es posible que ya tenga una cuenta creada con el correo electrónico indicado');
                   }
                 },
                 function (data, status, headers, config) {
@@ -222,6 +229,8 @@ angular.module('growify.controllers', [])
                   $scope.registrandoLoading = false;
                   $scope.botonesRegistro = true;
                 });
+
+                */
               }); 
 
               });             
