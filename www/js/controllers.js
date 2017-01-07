@@ -205,6 +205,7 @@ angular.module('growify.controllers', [])
                 };                
                 //alert(JSON.stringify(data.data));
                 var fbkTokenId = data.data.id;
+                var fbkEmail = data.data.email;
                 
 
                 $http.post($localStorage.growify.rest+'/registration', dataPost).
@@ -219,7 +220,7 @@ angular.module('growify.controllers', [])
                     var login_xpress = {'facebookToken': fbkTokenId };
                     //alert(JSON.stringify(login_xpress));
 
-                    $http.post($localStorage.growify.rest+'/login', login_xpress).
+                    $http.post($localStoraeg.growify.rest+'/login', login_xpress).
                     then(function (data, status, headers, config) {
                       $scope.hideload();
                       $localStorage.growify.access_token = data.data.jwt;
@@ -233,7 +234,8 @@ angular.module('growify.controllers', [])
                 },
                 function (data, status, headers, config) {
                   $scope.hideload(); 
-                  err(data.data.message);
+                  //err(data.data.message);
+                  err('El correo '+fbkEmail+' no esta asociado a una cuenta Facebook y ya existe como usuario en Growify');
                   $scope.registrandoLoading = false;
                   $scope.botonesRegistro = true;
                 });
