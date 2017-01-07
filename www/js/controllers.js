@@ -402,12 +402,12 @@ angular.module('growify.controllers', [])
         $localStorage.growify.id = data.data._id;
         $localStorage.growify.auth = 1;
         // get access token
-	    var login_xpress = {'username': $scope.growify.username, 'password': $scope.growify.password };
-	    $http.post($localStorage.growify.rest+'/login', login_xpress).
-	    then(function (data, status, headers, config) {
-	    	$localStorage.growify.access_token = data.data.jwt;
-	    	$state.go( "terms" );
-	    });        
+  	    var login_xpress = {'username': $localStorage.growify.username, 'password': $localStorage.growify.password };
+  	    $http.post($localStorage.growify.rest+'/login', login_xpress).
+  	    then(function (data, status, headers, config) {
+  	    	$localStorage.growify.access_token = data.data.jwt;
+  	    	$state.go( "terms" );
+  	    });        
       }
       else {
         err();
@@ -442,7 +442,7 @@ angular.module('growify.controllers', [])
     var options = {
       message: 'Les recomiendo este Growify Shop!', // not supported on some apps (Facebook, Instagram) 
       subject: name, // fi. for email 
-      files: ['', ''], // an array of filenames either locally or remotely 
+      files: null, // an array of filenames either locally or remotely 
       url: url,
       chooserTitle: 'Growify' // Android only, you can override the default share sheet title 
     }
@@ -465,19 +465,6 @@ angular.module('growify.controllers', [])
   $scope.showfav = function() {
     $ionicLoading.show({
       template: '<i class="icon ion-checkmark" style="font-size: 2em;"></i><br />Agregado a favoritos',
-      duration: 2500
-    }).then(function(){
-       //console.log("The loading indicator is now displayed");
-    });
-  };
-
-  $scope.showvote = function(n) { //
-    var stars = "";
-    for (i=0;i<=parseInt(n);i++) {
-      stars += "<i class='ion-ios-star'></i>";
-    }
-    $ionicLoading.show({
-      template: stars+'<br />Votado con éxito',
       duration: 2500
     }).then(function(){
        //console.log("The loading indicator is now displayed");
@@ -650,6 +637,23 @@ angular.module('growify.controllers', [])
     });*/
   };
 
+
+  $scope.showvote = function(n) { //
+    var stars = "";
+    for (i=0;i<parseInt(n);i++) {
+      stars += "<i class='ion-ios-star'></i>";
+    }
+    $ionicLoading.show({
+      template: stars+'<br />Gracias por votar'
+    }).then(function(){
+       $timeout(function() {
+        $ionicLoading.hide().then(function(){
+           $scope.tiendaCargar();
+        });
+       }, 2500);
+    });
+  };
+
   $scope.rateStore = function(store, num) {
     if ($localStorage.growify.id != 0) {
       var data = {'storeId': store, 'value': num };
@@ -657,13 +661,14 @@ angular.module('growify.controllers', [])
         headers: { 'x-access-token': $localStorage.growify.access_token }
       }).
       then(function (data, status, headers, config) {
-        if (data.data.success) {
-          $scope.showvote();
+        //alert(JSON.stringify(data.data));
+        if (data.data.value) {
+          $scope.showvote(parseInt(data.data.value));
         }
         else {
-          err(data.data.message);
+          err('Ya has votado esta tienda anteriormente');
         }
-        $scope.tiendaCargar();
+        
       },
       function (data, status, headers, config) { 
         err(data.data.message);

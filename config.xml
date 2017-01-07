@@ -61,6 +61,7 @@
   <allow-intent href="sms:*"/>
   <allow-intent href="mailto:*"/>
   <allow-intent href="geo:*"/>
+  <allow-intent href="fb:*"/>
   <allow-navigation href="*" />
 
   <platform name="android">
@@ -112,6 +113,21 @@
     <!-- iPad Spotlight and Settings Icon -->
     <icon src="resources/ios/icon/icon-50.png" width="50" height="50" />
     <icon src="resources/ios/icon/icon-50@2x.png" width="100" height="100" />
+
+    <feature name="SocialSharing">
+      <param name="ios-package" value="SocialSharing" />
+    </feature>
+
+    <config-file target="*-Info.plist">
+      <key>LSApplicationQueriesSchemes</key>
+      <array>
+        <string>fb</string>
+      </array>
+      <array>
+          <string>whatsapp</string>
+          <!-- add more query scheme strings -->
+      </array>
+    </config-file>
   </platform>
 
   <platform name="android">
@@ -129,6 +145,10 @@
     <icon density="mdpi" src="resources/android/icon/drawable-mdpi-icon.png" />
     <icon density="hdpi" src="resources/android/icon/drawable-hdpi-icon.png" />
     <icon density="xhdpi" src="resources/android/icon/drawable-xhdpi-icon.png" />
+
+    <feature name="SocialSharing">
+      <param name="android-package" value="nl.xservices.plugins.SocialSharing" />
+    </feature>
   </platform>
 
 </widget>
