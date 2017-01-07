@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "667491307854",
+    "project_id": "firebase-growify"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:667491307854:android:d7adf45f702b9876",
+        "android_client_info": {
+          "package_name": "com.growify.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "667491307854-2gvj3ks0j6ihe2cki5fhu7adb3mrn3h2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.growify.app",
+            "certificate_hash": "F9AF084EF375FA0384C81539426E657970A101E1"
+          }
+        },
+        {
+          "client_id": "667491307854-34kohad1b5ra23tf212530qmug16cp35.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzl-ztpnWn1OBuBn-tGRsNATpWSVeV6pM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

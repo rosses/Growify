@@ -189,7 +189,11 @@ angular.module('growify.controllers', [])
 
               $http.get("https://graph.facebook.com/me?fields=id,name,email,picture&access_token="+result.accessToken, {}).
               then(function (data, status, headers, config) {
-                //alert(JSON.stringify(data));
+                alert(JSON.stringify(data));
+                alert(data.data.email);
+                alert(data.data.id);
+                alert(data.data.picture.data.url);
+                alert(data.data.name);
                 
                 var data = {
                   'username':    data.data.email, 
@@ -198,8 +202,9 @@ angular.module('growify.controllers', [])
                   'picture':      data.data.picture.data.url,
                   'firstName':    data.data.name
                 };                
+                alert(JSON.stringify(data.data));
                 var fbkTokenId = data.data.id;
-                //alert(JSON.stringify(data));
+                
 
                 $http.post($localStorage.growify.rest+'/registration', data).
                 then(function (data, status, headers, config) {
