@@ -224,8 +224,8 @@ angular.module('growify.controllers', [])
                 $http.post($localStorage.growify.rest+'/registration', dataPost).
                 then(function (data, status, headers, config) {
                   if (data.data.active == true) { 
-                    $localStorage.growify.username = result.email;
-                    $localStorage.growify.email = result.email;
+                    $localStorage.growify.username = fbkEmail;
+                    $localStorage.growify.email = fbkEmail;
                     $localStorage.growify.facebookToken = fbkTokenId;
                     $localStorage.growify.id = data.data._id;
                     $localStorage.growify.auth = 1;
