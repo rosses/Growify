@@ -40,6 +40,7 @@
   <plugin name="org.apache.cordova.dialogs"/>
   <plugin name="org.apache.cordova.camera"/>
   <plugin name="org.apache.cordova.media-capture"/>
+  <plugin name="cordova-plugin-file-transfer"/>
   <plugin name="cordova-plugin-statusbar" />
   <plugin name="cordova-plugin-splashscreen" />
 

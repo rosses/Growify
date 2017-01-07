@@ -1,12 +1,17 @@
 <ion-view view-title='FAVORITOS'>
   <ion-content scroll="true">
-
-      <div class="no_favoritos" ng-show="!favoritos.length">
+  	<div class="fav_list">
+      <div class="no_favoritos" ng-show="!favoritos.length && growify.id != 0">
       	<i class="icon ion-heart-broken"></i>
       	<br /><br />
         No tienes tiendas o productos favoritos
       </div>
 
-
+      <div class="no_puede_favoritos" ng-show="!favoritos.length && growify.id == 0">
+      	<i class="icon ion-person"></i>
+      	<br /><br />
+        Solo los usuarios registrados pueden tener favoritos en su móvil.
+      </div>
+    </div>
   </ion-content>
 </ion-view>

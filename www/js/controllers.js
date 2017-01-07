@@ -17,36 +17,49 @@ angular.module('growify.controllers', [])
   };
   
 
-  if ($localStorage.growify && $localStorage.growify.auth == 1 && $localStorage.growify.username != "" && $localStorage.growify.password != "") {
-    var data = {'username': $localStorage.growify.username, 'password': $localStorage.growify.password };
-    $http.post($localStorage.growify.rest+'/login', data).
-    then(function (data, status, headers, config) {
-      //console.log(data);
-      if (data.data.jwt) { 
-        $localStorage.growify.username = $scope.loginData.username;
-        $localStorage.growify.email = data.data.profile.email;
-        $localStorage.growify.city = data.data.profile.city;
-        $localStorage.growify.password = $scope.loginData.password;
-        $localStorage.growify.access_token = data.data.jwt;     
-        $localStorage.growify.auth = 1;
-        $state.go("main.home");
-      }
-      else {
-        err();
-      }
-    },
-    function (data, status, headers, config) { 
-      err(data.data.message);
-      $scope.cargandoLogin = false;
-      $scope.botonesLogin = true;
-    });
+  if ($localStorage.growify && $localStorage.growify.auth == 1) {
+    var goLogin = 0;
+    if ($localStorage.growify.username != "" && $localStorage.growify.password != "") {
+      var data = {'username': $localStorage.growify.username, 'password': $localStorage.growify.password };
+      goLogin=1;
+    }
+   
 
-    
+    if (goLogin) {
+      $http.post($localStorage.growify.rest+'/login', data).
+      then(function (data, status, headers, config) {
+        //console.log(data);
+        if (data.data.jwt) { 
+          $localStorage.growify.username = $scope.loginData.username;
+          $localStorage.growify.email = data.data.profile.email;
+          $localStorage.growify.city = data.data.profile.city;
+          $localStorage.growify.password = $scope.loginData.password;
+          $localStorage.growify.access_token = data.data.jwt;     
+          $localStorage.growify.auth = 1;
+          $state.go("main.home");
+        }
+        else {
+          err();
+        }
+      },
+      function (data, status, headers, config) { 
+        err(data.data.message);
+        $scope.cargandoLogin = false;
+        $scope.botonesLogin = true;
+      });
+    }
   } else {
     $localStorage.growify = default_app;
   }
 
-  $scope.goToTerms = function() { $state.go( "terms" ); }
+  $scope.goToTermsNoReg = function() { 
+    $localStorage.growify.username = "";
+    $localStorage.growify.email = "";
+    $localStorage.growify.facebookToken = "";
+    $localStorage.growify.id = 0;
+    $localStorage.growify.auth = 0;
+    $state.go( "terms" ); 
+  }
   $scope.reloadMaster = function() {
     $scope.showload();
     $http.get($localStorage.growify.rest+'/app-options').
@@ -225,7 +238,7 @@ angular.module('growify.controllers', [])
                       $scope.hideload();
                       $localStorage.growify.access_token = data.data.jwt;
                       $state.go( "terms" );
-                    });        
+                    }, function (data, status, headers, config) { err(data.data.message); });        
                   }
                   else {
                     $scope.hideload();
@@ -260,7 +273,109 @@ angular.module('growify.controllers', [])
   };
 })
 
-.controller('PerfilCtrl', function($scope, $webSql, $http, $ionicModal, $rootScope, $location, $state, $localStorage) {
+.controller('PerfilCtrl', function($scope, $ionicPopup, $cordovaCamera, $webSql, $http, $ionicModal, $rootScope, $location, $state, $localStorage) {
+
+
+  $scope.takePicture = function() {
+    var options = {
+        quality: 50,
+        destinationType: Camera.DestinationType.FILE_URL,
+        sourceType: Camera.PictureSourceType.CAMERA
+      };
+    $cordovaCamera.getPicture(options).then(
+    function(imageData) {
+      $scope.picData = imageData;
+      $scope.ftLoad = true;
+      $localStorage.fotoUp = imageData;
+      //$ionicLoading.show({template: 'Foto acquisita...', duration:500});
+      alert('listo');
+      alert(imageData);
+    },
+    function(err){
+      $ionicLoading.show({template: 'Error al acceder a tu cámara', duration:500});
+    })
+  }
+
+  $scope.setImage = function() {
+    $ionicPopup.show({
+      template: '',
+      title: 'Actualizar imagen',
+      subTitle: 'Seleccione origen de imagen',
+      scope: $scope,
+      buttons: [
+        {
+          text: '<b>Cámara</b>',
+          type: 'button-grow',
+          onTap: function(e) {
+            $scope.takePicture();
+          }
+        },
+        {
+          text: '<b>Libreria</b>',
+          type: 'button-grow',
+          onTap: function(e) {
+            $scope.selectPicture();
+          }
+        },
+        { 
+          text: '<i class="icon ion-close-circled"></i>',
+          type:'popclose'
+        }
+      ]
+    });
+  };
+
+  $scope.selectPicture = function() { 
+    var options = {
+      quality: 50,
+      destinationType: Camera.DestinationType.FILE_URI,
+      sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+      targetWidth: 400,
+      targetHeight: 400
+    };
+
+    $cordovaCamera.getPicture(options).then(
+      function(imageURI) {
+        window.resolveLocalFileSystemURI(imageURI, function(fileEntry) {
+          //$scope.picData = fileEntry.nativeURL;
+          $scope.ftLoad = true;
+          alert(JSON.stringify(fileEntry));
+          alert(fileEntry.nativeURL);
+          /*
+          var image = document.getElementById('myImage');
+          image.src = fileEntry.nativeURL;
+          */
+          });
+      },
+      function(err){
+        $ionicLoading.show({template: 'Error al acceder a tu libreria', duration:500});
+      })
+  };
+
+  $scope.uploadPicture = function() {
+    $ionicLoading.show({template: '<ion-spinner></ion-spinner><br />actualizando imagen...'});
+    var fileURL = $scope.picData;
+    var options = new FileUploadOptions();
+    options.fileKey = "file";
+    options.fileName = fileURL.substr(fileURL.lastIndexOf('/') + 1);
+    options.mimeType = "image/jpeg";
+    options.chunkedMode = true;
+
+    var params = {};
+    params.value1 = "someparams";
+    params.value2 = "otherparams";
+
+    options.params = params;
+
+    var ft = new FileTransfer();
+    ft.upload(fileURL, encodeURI("http://www.yourdomain.com/upload.php"), function(ok) { 
+      $ionicLoading.show({template: '<i class="icon ion-checkmark" style="font-size: 2em;"></i>'});
+      $ionicLoading.hide();      
+    }, function(error) {
+      $ionicLoading.show({template: 'Error al subir imagen'});
+      $ionicLoading.hide();
+    }, options);
+  }
 
 })
 
@@ -349,7 +464,21 @@ angular.module('growify.controllers', [])
 
   $scope.showfav = function() {
     $ionicLoading.show({
-      template: '<i class="icon ion-checkmark" style="font-size: 2em;"></i><br />Agregado a favoritos'
+      template: '<i class="icon ion-checkmark" style="font-size: 2em;"></i><br />Agregado a favoritos',
+      duration: 2500
+    }).then(function(){
+       //console.log("The loading indicator is now displayed");
+    });
+  };
+
+  $scope.showvote = function(n) { //
+    var stars = "";
+    for (i=0;i<=parseInt(n);i++) {
+      stars += "<i class='ion-ios-star'></i>";
+    }
+    $ionicLoading.show({
+      template: stars+'<br />Votado con éxito',
+      duration: 2500
     }).then(function(){
        //console.log("The loading indicator is now displayed");
     });
@@ -443,12 +572,17 @@ angular.module('growify.controllers', [])
   $scope.showload();
 
   $scope.addFavorito = function(product,prodname) {
-    confirmar('¿Agregar producto '+prodname+' a favoritos?', function() {
-        $scope.showfav();
-        $timeout(function() {
-          $scope.hideload();
-        }, 2000);
-    });
+
+    if ($localStorage.growify.id == 0) {
+      err('Solo usuarios registrados pueden agregar elementos a favoritos');
+    }
+    else {
+      $scope.showfav();
+    }
+    /*confirmar('¿Agregar producto '+prodname+' a favoritos?', function() {
+
+
+    });*/
   };
   
   $http.get($localStorage.growify.rest+'/stores/'+$stateParams.id, {
@@ -501,23 +635,30 @@ angular.module('growify.controllers', [])
 
 
   $scope.addFavorito = function(store,storename) {
+    if ($localStorage.growify.id == 0) {
+      err('Solo usuarios registrados pueden agregar elementos a favoritos');
+    }
+    else {
+      $scope.showfav();
+    }
+    /*
     confirmar('¿Agregar la tienda '+storename+' a favoritos?', function() {
         $scope.showfav();
         $timeout(function() {
           $scope.hideload();
         }, 2000);
-    });
+    });*/
   };
 
   $scope.rateStore = function(store, num) {
-    confirmar('¿Calificar con '+num+' estrellas a la tienda?', function() {
+    if ($localStorage.growify.id != 0) {
       var data = {'storeId': store, 'value': num };
       $http.post($localStorage.growify.rest+'/store-rate', data, {
         headers: { 'x-access-token': $localStorage.growify.access_token }
       }).
       then(function (data, status, headers, config) {
         if (data.data.success) {
-          ok('Gracias por tu calificación');
+          $scope.showvote();
         }
         else {
           err(data.data.message);
@@ -529,7 +670,10 @@ angular.module('growify.controllers', [])
         $scope.cargandoLogin = false;
         $scope.botonesLogin = true;
       });
-    });
+    }
+    else {
+      err('Solo usuarios registrados pueden calificar tiendas');
+    }
   };
 
   $scope.tiendaCargar = function() {

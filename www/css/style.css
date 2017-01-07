@@ -182,6 +182,21 @@ body, div, td, tr, th, a, strong, b, h1, h2, h3, h4, h5, h6 {
 .login-form .botones .inner li.itw { background-color: #78CBEF; }
 .login-form .botones .inner li.ifb { background-color: #547BBC; }
 
+button.button-grow {
+    border-color: transparent;
+    background-color: #218035;
+    color: #fff;
+}
+.popclose {
+	text-align: right;
+	position: absolute;
+	top: -7px;
+	right: 1px;
+	z-index:1000;
+	color: #000000 !important;
+	padding: 0px !important;
+	background-color: transparent !important; 
+}
 .login-form button.button-growify {
 	display:block;
 	width: 50%;
@@ -602,7 +617,7 @@ body, div, td, tr, th, a, strong, b, h1, h2, h3, h4, h5, h6 {
 	border:0;
 	background-color: white;
 	color: #4C6271;
-	width: calc(100% - 47px);
+	width: 100%;
 	padding-right: 35px;
 }
 .bar .title.title-left { text-align: center; }
@@ -711,10 +726,15 @@ a.activated img {
 a.activated i {
 	zoom: 0.8;
 }
-.no_favoritos {
+.no_favoritos, .no_puede_favoritos {
 	font-size: 30px;
     margin-top: 80px;
     line-height: 40px;
     text-align: center;
 }
 .no_favoritos i { color: #AC0000; font-size: 120px; }
+.no_puede_favoritos i { color: #218035; font-size: 120px; }
+
+.fav_list { 
+	padding: 15px; 
+}
