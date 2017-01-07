@@ -373,6 +373,7 @@ body, div, td, tr, th, a, strong, b, h1, h2, h3, h4, h5, h6 {
 	padding: 15px;
 }
 .tienda-foto img {
+	width: 100%;
 	max-width: 100%;
 	height: auto;
 }
