@@ -17,7 +17,8 @@
   		</div>
   		<div class="tienda-tools">
   			<div class="tienda-tools-div-social">
-  				<a ng-click="addFavorito(store._id, store.name)"><img src="img/btn.favorito.png" /></a>
+        	  <a ng-show="!isFavorito" ng-click="addFavorito(store._id, store.name)"><img src="img/btn.favorito.png" /></a>
+        	  <a ng-show="isFavorito" ng-click="delFavorito(store._id, store.name)"><img src="img/btn.favoritofull.png" /></a>
   			</div>
   			<div class="tienda-tools-div-social">
   				<a data-ng-click="share('{{store.name}}','https://www.google.com/maps/preview/@{{store.geolocation.lat}},{{store.geolocation.long}},11z','Les recomiendo este Growify Shop!')"><img src="img/btn.compartir.png" /></a>
@@ -32,8 +33,8 @@
   	<div class="productos">
   		<div class="producto" ng-repeat="product in products">
   		  <a href="#/main/vertiendaproducto/{{product.storeId._id}}/{{product.productId._id}}">
-  			<div ng-if="product.images.length"><img src="{{$root.default.cdn}}{{product.images[0]}}" /></div>
-  			<div ng-if="!product.images.length"><img src="img/index.png" /></div>
+  			<div ng-if="product.productId.images.length"><img src="{{$root.default.cdn}}/assets/uploads/{{product.productId.images[0]}}" /></div>
+  			<div ng-if="!product.productId.images.length"><img src="img/index.png" /></div>
 			  <h3>{{product.productId.name}}</h3>
 			  <h2>{{(product.price | currency:"$ ":0)}}</h2>
 		  </a>

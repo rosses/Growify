@@ -17,7 +17,7 @@ var default_app = {
 
 angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.controllers', 'ngStorage', 'slickCarousel'])
 
-.run(function($rootScope,$ionicPlatform,$ionicSideMenuDelegate,$localStorage,$cordovaGeolocation) {
+.run(function($rootScope,$ionicPlatform,$ionicSideMenuDelegate,$localStorage,$cordovaGeolocation,$webSql) {
   $ionicPlatform.ready(function() {
 
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -43,7 +43,7 @@ angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.cont
     return false;
   },101); // prioridad 100 android, 101 lo pisa
 
-  $rootScope.db = null;
+  $rootScope.db = $webSql.openDatabase("growify", "1.1", "Aplicacion Growify", 5 * 1024 * 1024);
   $rootScope.default = default_app;
 })
 

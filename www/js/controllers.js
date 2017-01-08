@@ -2,10 +2,19 @@ angular.module('growify.controllers', [])
 
 .controller('LoginCtrl', function($scope, $webSql, $http, $ionicModal, $rootScope, $location, $state, $localStorage, $ionicLoading) {
   
-  $rootScope.db = $webSql.openDatabase("growify", "1.1", "Aplicacion Growify", 5 * 1024 * 1024);
-  
   /* REBOOT DATABASE AND STORAGE */ 
   //$localStorage.growify = default_app;
+  //$rootScope.db.dropTable('FAV');
+
+
+  $rootScope.db.createTable(
+    'FAV', {
+      "userEmail":{ "type": "TEXT" },
+      "tipoElemento":{ "type": "TEXT" },
+      "id": { "type": "TEXT" },
+      "subid": { "type": "TEXT" }
+      }
+  );
 
   /* Preload Data */
   $scope.showload = function(msg) {
@@ -437,7 +446,7 @@ angular.module('growify.controllers', [])
 
 
   $scope.growify = $localStorage.growify;
-
+  console.log($scope.growify);
   $scope.share = function(name,url,msg){
     var options = {
       message: 'Les recomiendo este Growify Shop!', // not supported on some apps (Facebook, Instagram) 
@@ -534,6 +543,76 @@ angular.module('growify.controllers', [])
 
 .controller('FavoritosCtrl', function($rootScope, $scope, $state, $http, $ionicLoading, $ionicModal, $interval, $timeout, $location, $localStorage, $cordovaGeolocation, $ionicSlideBoxDelegate) {
 
+  $scope.tiendas = [];
+  $scope.productos = [];
+  $scope.totalFavoritos = 0;
+
+  $rootScope.db.executeQuery("SELECT * FROM FAV WHERE userEmail = ?", [$localStorage.growify.email]
+  ).then(function(results) {
+
+    for(i=0; i < results.rows.length; i++){
+      var row = results.rows.item(i);
+      if (row.tipoElemento == 'tienda') {
+        $scope.tiendas.push(row);  
+      }
+      if (row.tipoElemento == 'tiendaProducto') {
+        $scope.productos.push(row);  
+      }
+    }
+    $scope.totalFavoritos = $scope.tiendas.length + $scope.productos.length;
+    if ($scope.totalFavoritos > 0) {
+      $scope.showload();
+    }
+    p = [];
+    $http.get($localStorage.growify.rest+'/get_stores', {
+      headers: { 'x-access-token': $localStorage.growify.access_token }
+    }).
+    then(function (data, status, headers, config) {
+      
+      // search in tiendas
+      var myname = "";
+      for (i=0;i<$scope.tiendas.length;i++) { 
+        for (i2=0;i2<data.data.length;i2++) {
+          if ($scope.tiendas[i].id == data.data[i2]._id) {
+            $scope.tiendas[i].avatar = data.data[i2].avatar;
+            $scope.tiendas[i].name = data.data[i2].name;
+            myname = data.data[i2].name
+          }
+
+          var x = $http.get($localStorage.growify.rest+'/get_products/'+data.data[i2]._id, {
+            headers: { 'x-access-token': $localStorage.growify.access_token }
+          }).
+          then(function (data2, status2, headers2, config2) {
+            //console.log('hecho para una tienda');
+            for (j = 0; j < $scope.productos.length; j++) {
+              for (j2=0;j2<data2.data.length;j2++) {
+                //console.log(data2.data[j2]);
+                //console.log('Foto '+data2.data[j2].productId.images[0]);
+                if (data2.data[j2].productId.images[0] != null) {
+                  if ($scope.productos[j].subid == data2.data[j2].productId._id) { 
+                    $scope.productos[j].avatar = data2.data[j2].productId.images[0];
+                    $scope.productos[j].name = data2.data[j2].productId.name;
+                    $scope.productos[j].local = myname;
+                    break; // no recorrer mas productos ya la encontro.
+                  }
+                }
+              }
+            }
+          });
+
+          p.push(x);
+        }
+      }
+    });  
+    if ($scope.totalFavoritos > 0) {
+      console.log('APPLY');
+      $.when.apply(null, p).then(function() {
+        console.log('TERMINO TODO');
+        $scope.hideload();
+      });
+    }  
+  });
+
 })
 
 .controller('BuscarCtrl', function($rootScope, $scope, $state, $http, $ionicLoading, $ionicModal, $interval, $timeout, $location, $localStorage, $cordovaGeolocation, $ionicSlideBoxDelegate) {
@@ -556,22 +635,36 @@ angular.module('growify.controllers', [])
 })
 .controller('VerTiendaProductoCtrl', function($rootScope, $scope, $state, $http, $stateParams, $ionicLoading, $ionicModal, $interval, $timeout, $location, $localStorage, $cordovaGeolocation, $ionicSlideBoxDelegate) {
   $scope.product = 0;
+  $scope.isFavorito = 0;
   $scope.showload();
 
   $scope.addFavorito = function(product,prodname) {
-
     if ($localStorage.growify.id == 0) {
       err('Solo usuarios registrados pueden agregar elementos a favoritos');
     }
     else {
       $scope.showfav();
+      $rootScope.db.insert('FAV', {
+       userEmail: $localStorage.growify.email,
+       tipoElemento: 'tiendaProducto',
+       id: $stateParams.id.replace("/",""),
+       subid: $stateParams.pro.replace("/","")
+      });
+      $scope.isFavorito = 1;
     }
-    /*confirmar('¿Agregar producto '+prodname+' a favoritos?', function() {
-
-
-    });*/
   };
-  
+
+  $scope.delFavorito = function(product,prodname) {
+
+    if ($localStorage.growify.id == 0) {
+      err('Solo usuarios registrados pueden manipular elementos favoritos');
+    }
+    else {
+      $rootScope.db.executeQuery('DELETE FROM FAV WHERE userEmail = ? AND tipoElemento = ? AND id = ? AND subid = ?', [$localStorage.growify.email, 'tiendaProducto', $stateParams.id, $stateParams.pro]);
+      $scope.isFavorito = 0;
+    }
+  };
+
   $http.get($localStorage.growify.rest+'/stores/'+$stateParams.id, {
     headers: { 'x-access-token': $localStorage.growify.access_token }
   }).
@@ -584,17 +677,25 @@ angular.module('growify.controllers', [])
       for (i = 0; i < data2.data.length; i++) {
         if ($stateParams.pro == data2.data[i].productId._id) { 
           $scope.product = data2.data[i];
+          //console.log($scope.product);
           break;
         }
       }
-      console.log($localStorage.growify.productCategory);
+      //console.log($localStorage.growify.productCategory);
       for (i=0;i<$localStorage.growify.productCategory.length;i++) {
         if ($localStorage.growify.productCategory[i]._id == $scope.product.productId.categoryId) {
           $scope.categName = $localStorage.growify.productCategory[i].description;
           break;
         }
       }
-      $scope.hideload();
+
+      $rootScope.db.executeQuery("SELECT * FROM FAV WHERE userEmail = ? AND tipoElemento = ? AND id = ? AND subid = ?", 
+        [$localStorage.growify.email, 'tiendaProducto', $stateParams.id, $stateParams.pro]
+      ).then(function(results) {
+        $scope.isFavorito = results.rows.length;
+        $scope.hideload();
+      });
+      
       
     },
     function (data2, status2, headers2, config2) { 
@@ -621,21 +722,32 @@ angular.module('growify.controllers', [])
   };
 
 
-  $scope.addFavorito = function(store,storename) {
+  $scope.addFavorito = function(product,prodname) {
     if ($localStorage.growify.id == 0) {
       err('Solo usuarios registrados pueden agregar elementos a favoritos');
     }
     else {
       $scope.showfav();
+      $rootScope.db.insert('FAV', {
+       userEmail: $localStorage.growify.email,
+       tipoElemento: 'tienda',
+       id: $stateParams.id.replace("/",""),
+       subid: ''
+      });
+      $scope.isFavorito = 1;
     }
-    /*
-    confirmar('¿Agregar la tienda '+storename+' a favoritos?', function() {
-        $scope.showfav();
-        $timeout(function() {
-          $scope.hideload();
-        }, 2000);
-    });*/
   };
+
+  $scope.delFavorito = function(product,prodname) {
+    if ($localStorage.growify.id == 0) {
+      err('Solo usuarios registrados pueden manipular elementos favoritos');
+    }
+    else {
+      $rootScope.db.executeQuery('DELETE FROM FAV WHERE userEmail = ? AND tipoElemento = ? AND id = ? AND subid = ?', [$localStorage.growify.email, 'tienda', $stateParams.id, '']);
+      $scope.isFavorito = 0;
+    }
+  };
+
 
 
   $scope.showvote = function(n) { //
@@ -692,9 +804,14 @@ angular.module('growify.controllers', [])
         headers: { 'x-access-token': $localStorage.growify.access_token }
       }).
       then(function (data2, status2, headers2, config2) {
-        $scope.hideload();
         $scope.store = data.data;
         $scope.products = data2.data;
+        $rootScope.db.executeQuery("SELECT * FROM FAV WHERE userEmail = ? AND tipoElemento = ? AND id = ? AND subid = ?", 
+          [$localStorage.growify.email, 'tienda', $stateParams.id, '']
+        ).then(function(results) {
+          $scope.isFavorito = results.rows.length;
+          $scope.hideload();
+        });
       },
       function (data2, status2, headers2, config2) { 
         $scope.hideload();
@@ -707,6 +824,7 @@ angular.module('growify.controllers', [])
     });
   };
 
+  $scope.isFavorito = 0;
   $scope.tiendaCargar();
 
 })

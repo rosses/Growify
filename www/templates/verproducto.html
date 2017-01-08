@@ -2,8 +2,8 @@
   <ion-content scroll="true">
   	<div class="pstore">
   		<div class="pstore-foto">
-        <div ng-if="product.images.length"><img src="{{$root.default.cdn}}{{product.images[0]}}" /></div>
-        <div ng-if="!product.images.length"><img src="img/index.png" /></div>
+        <div ng-if="product.productId.images.length"><img src="{{$root.default.cdn}}/assets/uploads/{{product.productId.images[0]}}" /></div>
+        <div ng-if="!product.productId.images.length"><img src="img/index.png" /></div>
   		</div>
   		<div class="pstore-categ">
   			{{categName}}
@@ -16,7 +16,8 @@
       </div>
 
       <div class="pstore-tools">
-        <a ng-click="addFavorito(product._id, product.productId.name)"><img src="img/btn.favorito.png" style="border-right: 1px solid #CCC; padding-right: 10px;" /></a>
+        <a ng-show="!isFavorito" ng-click="addFavorito(product._id, product.productId.name)"><img src="img/btn.favorito.png" style="border-right: 1px solid #CCC; padding-right: 10px;" /></a>
+        <a ng-show="isFavorito" ng-click="delFavorito(product._id, product.productId.name)"><img src="img/btn.favoritofull.png" style="border-right: 1px solid #CCC; padding-right: 10px;" /></a>
         <a data-ng-click="share('{{product.productId.name}}','{{product.images[0]}}','Les recomiendo este producto de Growify!')"><img src="img/btn.compartir.png" style="padding-bottom: 4px; padding-left: 10px;" /></a>
       </div>
 
@@ -31,8 +32,8 @@
   	<div class="productos">
   		<div class="producto" ng-repeat="product in products">
         <a href="#/vertiendaproducto/{{product.storeId._id}}/{{product.productId._id}}/">
-    			<div ng-if="product.images.length"><img src="{{$root.default.cdn}}{{product.images[0]}}" /></div>
-    			<div ng-if="!product.images.length"><img src="img/index.png" /></div>
+    			<div ng-if="product.productId.images.length"><img src="{{$root.default.cdn}}/assets/uploads/{{product.productId.images[0]}}" /></div>
+    			<div ng-if="!product.productId.images.length"><img src="img/index.png" /></div>
   			  <h3>{{product.productId.name}}</h3>
   		    <h2>{{(product.price | currency:"$ ":0)}}</h2>
         </a>
