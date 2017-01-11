@@ -17,7 +17,7 @@ var default_app = {
 
 angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.controllers', 'ngStorage', 'slickCarousel'])
 
-.run(function($rootScope,$ionicPlatform,$ionicSideMenuDelegate,$localStorage,$cordovaGeolocation,$webSql) {
+.run(function($rootScope,$ionicPlatform,$ionicSideMenuDelegate,$localStorage,$cordovaGeolocation,$webSql, $cordovaSplashscreen) {
   $ionicPlatform.ready(function() {
 
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -33,8 +33,9 @@ angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.cont
     }
 
     setTimeout(function() {
-        navigator.splashscreen.hide();
-    }, 3000);
+        //navigator.splashscreen.hide();
+        $cordovaSplashscreen.hide()
+    }, 1000);
     
   });
   $ionicPlatform.registerBackButtonAction(function(e){
