@@ -34,7 +34,7 @@ angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.cont
 
     setTimeout(function() {
         //navigator.splashscreen.hide();
-        $cordovaSplashscreen.hide()
+       // $cordovaSplashscreen.hide()
     }, 1000);
     
   });
