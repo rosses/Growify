@@ -399,8 +399,7 @@ angular.module('growify.controllers', [])
     var data = {
     	'username': 	$scope.regData.username, 
     	'email': 			$scope.regData.email, 
-    	'password': 	$scope.regData.password,
-    	'city': 			$scope.regData.comuna
+    	'password': 	$scope.regData.password
     };
     $http.post($localStorage.growify.rest+'/registration', data).
     then(function (data, status, headers, config) {
@@ -849,6 +848,7 @@ angular.module('growify.controllers', [])
 		var posOptions = {timeout: 10000, enableHighAccuracy: false};
 		$cordovaGeolocation.getCurrentPosition(posOptions).then(function (position) {
 			myLatLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+      $scope.followMe();
 			$scope.mylat = position.coords.latitude;
 			$scope.mylng = position.coords.longitude;
 	        marker = new google.maps.Marker({
