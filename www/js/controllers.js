@@ -489,6 +489,7 @@ angular.module('growify.controllers', [])
 
   $scope.gotoPerfil = function() {
     jQuery("#tabs_footer").find("li").removeClass("active");
+    $scope.closeDrawer();
     $state.go("main.perfil");
   };
 	$scope.gotoTiendas = function() {
@@ -895,7 +896,7 @@ angular.module('growify.controllers', [])
         else {
         	store.miDistancia = "Distancia desconocida";	
         }
-
+        store.rateAvg = Math.round(store.rateAvg);
         $scope.stores.push(store);
       }
       default_app.storeLoaded = 1;

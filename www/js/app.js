@@ -15,7 +15,7 @@ var default_app = {
 };
 
 
-angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.controllers', 'ngStorage', 'slickCarousel'])
+angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.controllers', 'ngStorage', 'slickCarousel', 'ionic.contrib.drawer'])
 
 .run(function($rootScope,$ionicPlatform,$ionicSideMenuDelegate,$localStorage,$cordovaGeolocation,$webSql, $cordovaSplashscreen) {
   $ionicPlatform.ready(function() {

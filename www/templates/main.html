@@ -5,7 +5,7 @@
       </ion-nav-back-button>
 
       <ion-nav-buttons side="right">
-        <a menu-toggle="right"><img src="img/gear.png" class="header-gear" /></a>
+        <a ng-click="openDrawer();"><img src="img/gear.png" class="header-gear" /></a>
       </ion-nav-buttons>
     </ion-nav-bar>
 
@@ -40,11 +40,11 @@
       </div>
     </ion-footer-bar>
   </ion-side-menu-content>
-
-  <ion-side-menu side="right" drag-content="false">
+  <drawer side="right">
+  <!--<ion-side-menu side="right" drag-content="false">-->
     <ion-header-bar class="bar-stable header-bar">
       <h3><img src="img/gear2.png" class="header-gear2" /> CONFIGURACIÓN</h3>
-      <button class="button button-icon button-clear ion-ios-close-empty byemenuright" menu-toggle="right"></button>
+      <button class="button button-icon button-clear ion-ios-close-empty byemenuright" ng-click="closeDrawer();"></button>
     </ion-header-bar>
     <ion-content>
     <div class="select">
@@ -84,5 +84,6 @@
     </div>
 
     </ion-content>
-  </ion-side-menu>
+  </drawer>
+  <!--</ion-side-menu>-->
 </ion-side-menus>

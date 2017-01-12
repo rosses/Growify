@@ -17,6 +17,11 @@
 body, div, td, tr, th, a, strong, b, h1, h2, h3, h4, h5, h6 {
 	font-family: 'Lato';
 }
+
+.bar .title {
+	font-size: 15px;
+	padding-top: 10px;
+}
 /* Menu Config lateral */
 .menu-content {
 	box-shadow: none;
@@ -26,57 +31,61 @@ body, div, td, tr, th, a, strong, b, h1, h2, h3, h4, h5, h6 {
 	position: absolute;
 	right: 20px;
 }
-.menu-open .menu-right {
-	-webkit-box-shadow: -5px 0px 36px -3px rgba(0,0,0,0.35);
-	-moz-box-shadow: -5px 0px 36px -3px rgba(0,0,0,0.35);
-	box-shadow: -5px 0px 36px -3px rgba(0,0,0,0.35);
+drawer {
+	-webkit-transform: translate3d(100%, 0, 0);
+	transform: translate3d(100%, 0, 0);
 	z-index: 100 !important;
 	transition:all 5s;
 	-moz-transition: all 5s;
 	-webkit-transition: all 5s;
 }
-.menu-right .scroll-content {
+drawer.isOpen {
+	-webkit-box-shadow: -5px 0px 36px -3px rgba(0,0,0,0.35);
+	-moz-box-shadow: -5px 0px 36px -3px rgba(0,0,0,0.35);
+	box-shadow: -5px 0px 36px -3px rgba(0,0,0,0.35);
+}
+drawer .scroll-content {
 	background-color: #EDF4F8 !important;
 }
-.menu-right .header-bar {
+drawer .header-bar {
 	padding: 20px;
 	background-color: #EDF4F8 !important;
 }
-.menu-right .header-bar h3 {
+drawer .header-bar h3 {
 	color: #279A4B;
 	font-size: 12px;
 	text-transform: uppercase;
 	line-height: 34px;
 }
-.menu-right .has-header {
+drawer .has-header {
 	top: 64px;
 }
-.menu-right .header-bar i {
+drawer .header-bar i {
 	color: #279A4B !important;
 }
-.menu-right .header-bar {
+drawer .header-bar {
 	height: auto;
     padding-top: 13px;
     padding-bottom: 5px;
 }
-.menu-right .has-header {
+drawer .has-header {
 	text-align: center;
 }
-.menu-right .select {
+drawer .select {
 	margin:auto;
 	margin-top: 20px;
 	margin-bottom: 20px;
     padding: 0;
     border: 0;
     width: 80%;
-    border-radius: 13px;
+    border-radius: 5px;
     overflow: hidden;
     background-color: #fff;
     background: #fff url("../img/dropdown.png") no-repeat;
     background-position: 90%;
     background-size: 15%;
 }
-.menu-right .select select {
+drawer .select select {
 	width: 100%;
     padding: 12px;
     color: #4C6271;
@@ -89,13 +98,13 @@ body, div, td, tr, th, a, strong, b, h1, h2, h3, h4, h5, h6 {
        -moz-appearance: none;
             appearance: none;
 }
-.menu-right .select select:focus {
+drawer .select select:focus {
     outline: none;
 }
-.menu-right .config-guardar { max-width: 50%; display: inline-block; margin-top: 10px; margin-bottom: 10px;  }
-.menu-right .config-guardar img { width: 100%; height: auto; }
-.menu-right .btn-perfil { max-width: 80%; display: inline-block; margin-top: 10px; margin-bottom: 10px; }
-.menu-right .btn-perfil img { width: 100%; height: auto; }
+drawer .config-guardar { max-width: 50%; display: inline-block; margin-top: 10px; margin-bottom: 10px;  }
+drawer .config-guardar img { width: 100%; height: auto; }
+drawer .btn-perfil { max-width: 80%; display: inline-block; margin-top: 10px; margin-bottom: 10px; }
+drawer .btn-perfil img { width: 100%; height: auto; }
 
 /* Empty. Add your own CSS if you like */
 .login, .printConfig {
@@ -296,12 +305,16 @@ button.button-grow {
 .tabs-tiendas div a.tab-i:last-child { border-bottom-right-radius: 5px; }
 
 .home-list { margin-top: 40px; margin-bottom: 40px; }
-.home-list img.avatar { float: left; width: 35%; height: auto; margin-right: 20px; }
+.home-list .img {  float: left;  overflow: hidden; width: 35%; height: 100px; margin-right: 20px; }
+.home-list img.avatar { height: auto; max-width: 100%; }
 .home-list h2 { margin:0; padding:0; font-size: 17px; text-transform: uppercase; }
 .home-list h3 { margin:0; padding:0; font-size: 15px; color: #2E9744; }
-.home-list h4 { margin:0; padding:0; margin-top: 10px; padding-bottom: 10px; border-bottom: 1px solid #CCC; }
-.home-list h4 img { max-width: 150px; height: auto; }
+.home-list h4 { margin:0; padding:0; margin-top: 10px; padding-bottom: 10px; padding-top: 10px; border-bottom: 1px solid #CCC; }
+.home-list h4 img { max-width: 100px; height: auto; }
 .home-list .item { border: 0; }
+.home-list .item-complex .item-content,.home-list .item-radio .item-content {
+	padding: 16px 49px 0px 16px;
+}
 
 .bar-header { background-color:#218035 !important; }
 .title-center { text-transform: uppercase; }
@@ -383,14 +396,26 @@ button.button-grow {
 	margin: auto;
 }
 .tienda {
+
+}
+.tienda-foto-sup {
+	padding: 15px;
 }
 .tienda-foto {
-	padding: 15px;
+	height: 197px;
+	overflow: hidden;
+	margin-bottom: 10px;
+	border-radius: 2px;
+	width: 100%;
+	-webkit-box-shadow: 0px 0px 5px 0px rgba(88,88,88,0.50);
+	-moz-box-shadow: 0px 0px 5px 0px rgba(88,88,88,0.50);
+	box-shadow: 0px 0px 5px 0px rgba(88,88,88,0.50);
 }
 .tienda-foto img {
 	width: 100%;
 	max-width: 100%;
 	height: auto;
+	border-radius: 2px;
 }
 .tienda-subfoto {
 	padding: 15px;
@@ -513,7 +538,18 @@ button.button-grow {
 .bottom-banner .tabs .active .lupa { background-image: url(../img/lupa_on.png); }
 
 .bottom-banner { background-color: #EFF5F7; }
-.bottom-banner .tabs { background-color: #EFF5F7; padding-top: 5px; padding-bottom: 5px; }
+.bottom-banner .tabs { 
+	background-color: #EFF5F7; 
+	padding-top: 5px; 
+	padding-bottom: 11px; 
+	background-image: none; 
+}
+.bar.bar-footer {
+	-webkit-box-shadow: 0px 0px 10px 0px rgba(88,88,88,0.40);
+	-moz-box-shadow: 0px 0px 10px 0px rgba(88,88,88,0.40);
+	box-shadow: 0px 0px 10px 0px rgba(88,88,88,0.40);
+
+}
 .bottom-banner .tab-item { opacity: 1; }
 .bottom-banner .foot-icon {
 	width: 25px;
@@ -527,20 +563,24 @@ button.button-grow {
 	display: block;
 	margin-top: -35px	;
 }
-.bottom-banner a { color: #008728; font-size: 10px !important; }
+.bottom-banner a { color: #218035; font-size: 10px !important; }
 
 
 .slider_foot .ion-ios-minus-outline { color: #218035 !important; font-size: 2em; }
-.bar-footer, .bottom-banner .tabs { height: 54px; }
+.bar-footer, .bottom-banner .tabs { height: 60px; }
+.back-button { padding-top: 10px !important; }
 
-
-.header-gear { max-width: 23px; height: auto; margin-top: 5px; margin-right: 10px; }
+.header-gear { max-width: 23px; height: auto; margin-top: 15px; margin-right: 10px; }
 .header-gear2 { 
     width: 25px;
     height: auto; 
     vertical-align: middle;
     margin-right: 10px;
+    margin-top: 5px;
 }
+.has-header { top: 60px; }
+.has-footer { bottom: 60px; }
+
 #map {
     width: 100%;
     /*height: calc(100vh - 43px - 54px); */
@@ -573,20 +613,20 @@ button.button-grow {
 	left: 0;
 	margin:auto;
 	text-align: center;
-	top: 40px;
+	top: 30px;
 }
 .perfil-image img {
 	display: inline-block;
-	width: 120px;
-	height: 120px;
+	width: 190px;
+	height: 190px;
 	border-radius: 50%;
 	border: 7px solid white;
-	-webkit-box-shadow: 0px 0px 29px 0px rgba(0,0,0,0.35);
-	-moz-box-shadow: 0px 0px 29px 0px rgba(0,0,0,0.35);
-	box-shadow: 0px 0px 29px 0px rgba(0,0,0,0.35);
+	-webkit-box-shadow: 0px 0px 15px 0px rgba(88,88,88,0.50);
+	-moz-box-shadow: 0px 0px 15px 0px rgba(88,88,88,0.50);
+	box-shadow: 0px 0px 15px 0px rgba(88,88,88,0.50);
 }
 .perfil-form {
-	margin-top: 70px;
+	margin-top: 120px;
 	text-align: center;
 }
 .perfil-form input { 
@@ -594,12 +634,12 @@ button.button-grow {
 	background-repeat: no-repeat;
 	background-position: 90%;
 	background-size: 10%;
-	border-radius: 10px;
-	width: 60%;
-	padding: 18px;
+	border-radius: 8px;
+	width: 240px;
+	padding: 20px;
 	margin-top: 15px;
 	margin-bottom: 15px;
-	border: 1px solid gray;
+	border: 1px solid #D7D7d7;
 	display: inline-block;
 }
 
@@ -610,15 +650,15 @@ button.button-grow {
 .search-top input {
 	background-image: url(../img/icon.lupa.png);
 	background-repeat: no-repeat;
-	background-position: right 10px center;
+	background-position: right 20px center;
 	background-size: 25px;
-	border-radius: 15px;
+	border-radius: 33px;
 	padding: 12px;
 	border:0;
 	background-color: white;
 	color: #4C6271;
 	width: 100%;
-	padding-right: 35px;
+	padding-right: 45px;
 }
 .bar .title.title-left { text-align: center; }
 
@@ -638,7 +678,7 @@ button.button-grow {
     padding: 0;
     border: 0;
     width: 80%;
-    border-radius: 13px;
+    border-radius: 5px;
     overflow: hidden;
     background-color: #EDF4F8;
     background: #EDF4F8 url("../img/dropdown.png") no-repeat;
@@ -737,4 +777,8 @@ a.activated i {
 
 .fav_list { 
 	padding: 15px; 
+}
+
+.bar { 
+	height: 60px;
 }
