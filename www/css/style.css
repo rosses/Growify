@@ -20,7 +20,7 @@ body, div, td, tr, th, a, strong, b, h1, h2, h3, h4, h5, h6 {
 
 .bar .title {
 	font-size: 15px;
-	padding-top: 10px;
+	/*padding-top: 10px;*/
 }
 /* Menu Config lateral */
 .menu-content {
@@ -228,7 +228,13 @@ button.button-grow {
 
 .left-buttons a { color: white !important; }
 
-
+.fullsize {
+	height: 100%;
+	width: 100%;
+}
+.fullsize .scroll {
+	height: calc(100% - 90px);
+}
 .terms {
 	background-color: #45A843;
 }
@@ -242,6 +248,11 @@ button.button-grow {
 	margin:auto;
 	margin-top: 20px;
 	margin-bottom: 20px;
+	position: absolute;
+    -webkit-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
 }
 .terms img { text-align: center; max-width: 15vw; height: auto; margin-top: 15px; margin-bottom: 15px; } 
 .terms .box h1 { 
@@ -568,9 +579,9 @@ button.button-grow {
 
 .slider_foot .ion-ios-minus-outline { color: #218035 !important; font-size: 2em; }
 .bar-footer, .bottom-banner .tabs { height: 60px; }
-.back-button { padding-top: 10px !important; }
 
-.header-gear { max-width: 23px; height: auto; margin-top: 15px; margin-right: 10px; }
+.header-gear { max-width: 23px; height: auto; margin-top: 5px; margin-right: 10px; }
+/*.back-button { padding-top: 10px !important; }*/
 .header-gear2 { 
     width: 25px;
     height: auto; 
