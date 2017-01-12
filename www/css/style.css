@@ -38,6 +38,7 @@ drawer {
 	transition:all 5s;
 	-moz-transition: all 5s;
 	-webkit-transition: all 5s;
+	background-color: transparent;
 }
 drawer.isOpen {
 	-webkit-box-shadow: -5px 0px 36px -3px rgba(0,0,0,0.35);
@@ -46,8 +47,10 @@ drawer.isOpen {
 }
 drawer .scroll-content {
 	background-color: #EDF4F8 !important;
+	padding-top: 20px;
 }
 drawer .header-bar {
+	margin-top: 20px;
 	padding: 20px;
 	background-color: #EDF4F8 !important;
 }
