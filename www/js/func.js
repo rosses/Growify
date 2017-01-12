@@ -156,7 +156,7 @@ document.addEventListener("deviceready", onDeviceReadyPG, false);
 
 function onDeviceReadyPG() {
     setTimeout(function() {
-      alert(JSON.stringify(navigator.splashscreen));
+      //alert(JSON.stringify(navigator.splashscreen));
       navigator.splashscreen.hide();
     }, 2000);
 }

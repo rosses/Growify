@@ -454,7 +454,7 @@ angular.module('growify.controllers', [])
       url: url,
       chooserTitle: 'Growify' 
     }
-    window.plugins.socialsharing.shareWithOptions(options, function() { alert('success'); }, function() { alert('nothing'); });
+    window.plugins.socialsharing.shareWithOptions(options, function() { }, function() { });
   }
 
   $scope.showload = function() {
