@@ -15,10 +15,10 @@
   <preference name="UIWebViewBounce" value="false"/>
   <preference name="DisallowOverscroll" value="true"/>
   
-  <preference name="SplashScreenDelay" value="4000" />
+  <preference name="SplashScreenDelay" value="2000" />
   <preference name="SplashScreen" value="screen" />
-  <preference name="AutoHideSplashScreen" value="true" />
-  <preference name="auto-hide-splash-screen" value="true" />
+  <preference name="AutoHideSplashScreen" value="false" />
+  <preference name="auto-hide-splash-screen" value="false" />
   <preference name="ShowSplashScreenSpinner" value="false" />
 
   <preference name="android-minSdkVersion" value="16"/>
@@ -77,6 +77,10 @@
   <icon src="icon.png" role="default" />
 
   <platform name="ios">
+    <feature name="SplashScreen">
+        <param name="android-package" value="org.apache.cordova.splashscreen.SplashScreen" />
+        <param name="onload" value="true" />
+    </feature>
     <!-- images are determined by width and height. The following are supported -->
     <splash src="resources/ios/splash/Default~iphone.png" width="320" height="480"/>
     <splash src="resources/ios/splash/Default@2x~iphone.png" width="640" height="960"/>
@@ -122,11 +126,7 @@
     <config-file target="*-Info.plist">
       <key>LSApplicationQueriesSchemes</key>
       <array>
-        <string>fb</string>
-      </array>
-      <array>
-          <string>whatsapp</string>
-          <!-- add more query scheme strings -->
+          <string>fb</string>
       </array>
     </config-file>
   </platform>

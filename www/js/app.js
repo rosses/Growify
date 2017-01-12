@@ -31,11 +31,6 @@ angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.cont
       // org.apache.cordova.statusbar required
       StatusBar.styleLightContent();
     }
-
-    setTimeout(function() {
-        //navigator.splashscreen.hide();
-       // $cordovaSplashscreen.hide()
-    }, 1000);
     
   });
   $ionicPlatform.registerBackButtonAction(function(e){

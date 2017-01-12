@@ -448,13 +448,13 @@ angular.module('growify.controllers', [])
   console.log($scope.growify);
   $scope.share = function(name,url,msg){
     var options = {
-      message: 'Les recomiendo este Growify Shop!', // not supported on some apps (Facebook, Instagram) 
-      subject: name, // fi. for email 
-      files: null, // an array of filenames either locally or remotely 
+      message: 'Les recomiendo este Growify Shop!', 
+      subject: name,
+      files: [], 
       url: url,
-      chooserTitle: 'Growify' // Android only, you can override the default share sheet title 
+      chooserTitle: 'Growify' 
     }
-    window.plugins.socialsharing.shareWithOptions(options, onSuccess, onError);
+    window.plugins.socialsharing.shareWithOptions(options, function() { alert('success'); }, function() { alert('nothing'); });
   }
 
   $scope.showload = function() {
