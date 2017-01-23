@@ -60,6 +60,11 @@ angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.cont
     templateUrl: 'templates/terms.html',
     controller: 'termsCtrl'
   })
+  .state('recover', {
+    url: '/recover',
+    templateUrl: 'templates/recover.html',
+    controller: 'recoverCtrl'
+  })
   .state('main', {
     url: '/main',
     abstract: true,

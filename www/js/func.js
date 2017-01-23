@@ -1,4 +1,5 @@
 function err(msg) {
+  console.log('ERR: '+msg);
   if (default_app.modo == "dev") {
     alert(msg ? msg : 'Error al consultar el servicio. Intente más tarde');
   }
@@ -12,6 +13,7 @@ function err(msg) {
   }
 }
 function ok(msg) {
+  console.log('OK: '+msg);
   if (default_app.modo == "dev") {
     alert(msg);
   }

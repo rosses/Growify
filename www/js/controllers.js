@@ -24,6 +24,8 @@ angular.module('growify.controllers', [])
   $scope.hideload = function(){
     $ionicLoading.hide().then(function(){});
   };
+
+  $scope.urlImg = "img/loginbg.png";
   
 
   if ($localStorage.growify && $localStorage.growify.auth == 1) {
@@ -61,6 +63,16 @@ angular.module('growify.controllers', [])
     $localStorage.growify = default_app;
   }
 
+
+
+  $scope.goToRecover = function() { 
+    $localStorage.growify.username = "";
+    $localStorage.growify.email = "";
+    $localStorage.growify.facebookToken = "";
+    $localStorage.growify.id = 0;
+    $localStorage.growify.auth = 0;
+    $state.go( "recover" ); 
+  }
   $scope.goToTermsNoReg = function() { 
     $localStorage.growify.username = "";
     $localStorage.growify.email = "";
@@ -71,8 +83,35 @@ angular.module('growify.controllers', [])
   }
   $scope.reloadMaster = function() {
     $scope.showload();
+
+    if (!$localStorage.growify_comunas) {
+      $http.get($localStorage.growify.rest+'/locations').
+      then(function (data, status, headers, config) {
+        $localStorage.growify_comunas = data.data.communes;
+        $rootScope.growify_comunas = $localStorage.growify_comunas;
+        function compare(a,b) {
+          if (a.name < b.name)
+            return -1;
+          if (a.name > b.name)
+            return 1;
+          return 0;
+        }
+
+        $rootScope.growify_comunas = $rootScope.growify_comunas.sort(compare);
+      });
+    }
+    else {
+      $rootScope.growify_comunas = $localStorage.growify_comunas;
+    }
+
+
     $http.get($localStorage.growify.rest+'/app-options').
     then(function (data, status, headers, config) {
+      console.log(data.data);
+      //$scope.urlImg = "../img/loginbg.png";
+      if (data.data.backgroundImage != "") {
+        $scope.urlImg = data.data.backgroundImage;
+      }
       $scope.hideload();
       $localStorage.growify.productBrands = [];
       $localStorage.growify.productCategory = [];
@@ -434,6 +473,28 @@ angular.module('growify.controllers', [])
 .controller('termsCtrl', function($scope, $webSql, $http, $ionicModal, $rootScope, $location, $state, $localStorage) {
 
 })
+.controller('recoverCtrl', function($scope, $webSql, $http, $ionicModal, $rootScope, $location, $state, $localStorage) {
+  $scope.lostData = {email: ''};
+  $scope.botonesRegistro = true;
+  $scope.recuperandoLoading = false;
+  $scope.doRecover = function() {
+    $scope.recuperandoLoading = true;
+    $scope.botonesRegistro = false;
+    var data = {
+      'email':      $scope.lostData.email
+    };
+    $http.post($localStorage.growify.rest+'/reset-password', data).
+    then(function (data, status, headers, config) {
+      ok('Hemos enviado una nueva clave a tu correo!');
+      $state.go("login");
+    },
+    function (data, status, headers, config) { 
+      err('No hemos encontrado tu usuario, verifica que el correo ingresado sea el correcto');
+      $scope.registrandoLoading = false;
+      $scope.botonesRegistro = true;
+    });
+  };
+})
 .controller('MainCtrl', function($scope, $webSql, $timeout, $location, $state, $ionicLoading, $localStorage, $state, $http, $rootScope, $ionicModal, $cordovaGeolocation, $interval) {
 
   if (!$localStorage.growify) {
@@ -504,7 +565,7 @@ angular.module('growify.controllers', [])
 	$scope.gotoFavoritos = function() {
 		jQuery("#tabs_footer").find("li").removeClass("active");
 		jQuery(jQuery("#tabs_footer>li").get(2)).addClass("active");
-		$state.go("main.favoritos");
+		$state.go("main.favoritos", {}, {reload:true});
 	};
 	$scope.gotoBuscar = function() {
 		jQuery("#tabs_footer").find("li").removeClass("active");
@@ -552,6 +613,7 @@ angular.module('growify.controllers', [])
 
     for(i=0; i < results.rows.length; i++){
       var row = results.rows.item(i);
+      //console.log(row);
       if (row.tipoElemento == 'tienda') {
         $scope.tiendas.push(row);  
       }
@@ -568,46 +630,43 @@ angular.module('growify.controllers', [])
       headers: { 'x-access-token': $localStorage.growify.access_token }
     }).
     then(function (data, status, headers, config) {
-      
-      // search in tiendas
-      var myname = "";
-      for (i=0;i<$scope.tiendas.length;i++) { 
-        for (i2=0;i2<data.data.length;i2++) {
+      // Recorrer tiendas
+      for (i2=0;i2<data.data.length;i2++) {
+        myname = data.data[i2].name
+
+        // Si tengo tiendas favoritas
+        for (i=0;i<$scope.tiendas.length;i++) { 
           if ($scope.tiendas[i].id == data.data[i2]._id) {
             $scope.tiendas[i].avatar = data.data[i2].avatar;
             $scope.tiendas[i].name = data.data[i2].name;
-            myname = data.data[i2].name
           }
+        }
 
-          var x = $http.get($localStorage.growify.rest+'/get_products/'+data.data[i2]._id, {
-            headers: { 'x-access-token': $localStorage.growify.access_token }
-          }).
-          then(function (data2, status2, headers2, config2) {
-            //console.log('hecho para una tienda');
-            for (j = 0; j < $scope.productos.length; j++) {
-              for (j2=0;j2<data2.data.length;j2++) {
-                //console.log(data2.data[j2]);
-                //console.log('Foto '+data2.data[j2].productId.images[0]);
-                if (data2.data[j2].productId.images[0] != null) {
-                  if ($scope.productos[j].subid == data2.data[j2].productId._id) { 
-                    $scope.productos[j].avatar = data2.data[j2].productId.images[0];
-                    $scope.productos[j].name = data2.data[j2].productId.name;
-                    $scope.productos[j].local = myname;
-                    break; // no recorrer mas productos ya la encontro.
-                  }
+        // Recorrer productos de la tienda
+        var x = $http.get($localStorage.growify.rest+'/get_products/'+data.data[i2]._id, {
+          headers: { 'x-access-token': $localStorage.growify.access_token }
+        }).
+        then(function (data2, status2, headers2, config2) {
+          // Si tengo productos favoritos
+          for (j = 0; j < $scope.productos.length; j++) {
+            for (j2=0;j2<data2.data.length;j2++) {
+              if (data2.data[j2].productId.images[0] != null) {
+                if ($scope.productos[j].subid == data2.data[j2].productId._id) { 
+                  $scope.productos[j].avatar = data2.data[j2].productId.images[0];
+                  $scope.productos[j].name = data2.data[j2].productId.name;
+                  $scope.productos[j].local = myname;
+                  $scope.productos[j].localdir = data2.data[j2].storeId.address;
+                  break; // no recorrer mas productos ya la encontro.
                 }
               }
             }
-          });
-
-          p.push(x);
-        }
+          }
+        });
+        p.push(x);
       }
     });  
     if ($scope.totalFavoritos > 0) {
-      console.log('APPLY');
       $.when.apply(null, p).then(function() {
-        console.log('TERMINO TODO');
         $scope.hideload();
       });
     }  
@@ -639,10 +698,10 @@ angular.module('growify.controllers', [])
   $scope.showload();
 
   $scope.addFavorito = function(product,prodname) {
-    if ($localStorage.growify.id == 0) {
+    /*if ($localStorage.growify.id == 0) {
       err('Solo usuarios registrados pueden agregar elementos a favoritos');
     }
-    else {
+    else {*/
       $scope.showfav();
       $rootScope.db.insert('FAV', {
        userEmail: $localStorage.growify.email,
@@ -651,18 +710,18 @@ angular.module('growify.controllers', [])
        subid: $stateParams.pro.replace("/","")
       });
       $scope.isFavorito = 1;
-    }
+    /*}*/
   };
 
   $scope.delFavorito = function(product,prodname) {
 
-    if ($localStorage.growify.id == 0) {
+    /*if ($localStorage.growify.id == 0) {
       err('Solo usuarios registrados pueden manipular elementos favoritos');
     }
-    else {
+    else {*/
       $rootScope.db.executeQuery('DELETE FROM FAV WHERE userEmail = ? AND tipoElemento = ? AND id = ? AND subid = ?', [$localStorage.growify.email, 'tiendaProducto', $stateParams.id, $stateParams.pro]);
       $scope.isFavorito = 0;
-    }
+    /*}*/
   };
 
   $http.get($localStorage.growify.rest+'/stores/'+$stateParams.id, {
@@ -695,8 +754,27 @@ angular.module('growify.controllers', [])
         $scope.isFavorito = results.rows.length;
         $scope.hideload();
       });
+
+      if ($localStorage.growify.id == 0) {
+        $http.post($localStorage.growify.rest+'/tracker', {
+          'type': 'product', 
+          'productStoreId': $stateParams.pro.replace('/',''),
+          'productId': $scope.product.productId,
+          'storeId': $stateParams.id.replace('/','')
+        }, { }).then(function (data) { },function (data) { });
+      }
+      else {
+        $http.post($localStorage.growify.rest+'/tracker', {
+          'type': 'product', 
+          'productStoreId': $stateParams.pro.replace('/',''),
+          'productId': $scope.product.productId,
+          'storeId': $stateParams.id.replace('/',''),
+          'userId': $localStorage.growify.id
+        }, { }).then(function (data) { },function (data) { }); 
+      }
       
-      
+
+
     },
     function (data2, status2, headers2, config2) { 
       $scope.hideload();
@@ -707,7 +785,7 @@ angular.module('growify.controllers', [])
     $scope.hideload();
     err(data.data.message);
   });
-  
+
 })
 
 .controller('VerTiendaCtrl', function($rootScope, $scope, $state, $http, $stateParams, $ionicLoading, $ionicModal, $interval, $timeout, $location, $localStorage, $cordovaGeolocation, $ionicSlideBoxDelegate) {
@@ -723,10 +801,10 @@ angular.module('growify.controllers', [])
 
 
   $scope.addFavorito = function(product,prodname) {
-    if ($localStorage.growify.id == 0) {
+    /*if ($localStorage.growify.id == 0) {
       err('Solo usuarios registrados pueden agregar elementos a favoritos');
     }
-    else {
+    else {*/
       $scope.showfav();
       $rootScope.db.insert('FAV', {
        userEmail: $localStorage.growify.email,
@@ -735,17 +813,17 @@ angular.module('growify.controllers', [])
        subid: ''
       });
       $scope.isFavorito = 1;
-    }
+    /*}*/
   };
 
   $scope.delFavorito = function(product,prodname) {
-    if ($localStorage.growify.id == 0) {
+    /*if ($localStorage.growify.id == 0) {
       err('Solo usuarios registrados pueden manipular elementos favoritos');
     }
-    else {
+    else {*/
       $rootScope.db.executeQuery('DELETE FROM FAV WHERE userEmail = ? AND tipoElemento = ? AND id = ? AND subid = ?', [$localStorage.growify.email, 'tienda', $stateParams.id, '']);
       $scope.isFavorito = 0;
-    }
+    /*}*/
   };
 
 
@@ -826,6 +904,8 @@ angular.module('growify.controllers', [])
 
   $scope.isFavorito = 0;
   $scope.tiendaCargar();
+
+  $http.post($localStorage.growify.rest+'/tracker', {'type': 'store', 'storeId': $stateParams.id.replace('/','') }, { }).then(function (data) { },function (data) { });
 
 })
 .controller('HomeCtrl', function($scope, $http, $ionicModal, $timeout, $state, $location, $localStorage, $cordovaGeolocation) {

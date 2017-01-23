@@ -73,7 +73,7 @@
 
     <div class="select">
        <select>
-          <option>Comuna</option>   
+          <option ng-repeat="comuna in $root.growify_comunas">{{comuna.name}}</option>
       </select>
     </div>
     <div class="config-guardar">

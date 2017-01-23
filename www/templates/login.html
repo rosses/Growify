@@ -1,5 +1,5 @@
-<ion-view view-title="Login" class="login">
-  <ion-content>
+<ion-view view-title="Login" class="login" style="background-image: url({{urlImg}});">
+  <ion-content scroll="false">
     <div class="text-center logo animated slideInDown">
       <img src="img/logo.png" />
     </div>
@@ -33,6 +33,8 @@
             </ul>
           </div>
           <button ng-click="goToTermsNoReg();" class="button button-growify-line" type="button">CONTINUAR SIN REGISTRO</button>
+          <br />
+          <button ng-click="goToRecover();" class="button button-growify-line" type="button">RECUPERA TU CLAVE</button>
           <div class="inner">
             ¿No tienes una cuenta?<br />
             <a style="font-weight: bold;" ng-href="#/registro">REGISTRATE AQUÍ</a>

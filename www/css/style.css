@@ -115,14 +115,14 @@ drawer .btn-perfil img { width: 100%; height: auto; }
 
 /* Empty. Add your own CSS if you like */
 .login, .printConfig {
-	background-image: url(../img/loginbg.png);
+	/*background-image: url(../img/loginbg.png);*/
 	background-size: cover;
 	background-position: center center;
 	background-repeat: none;
 }
 
 .login .logo {
-	padding-top: 70px;
+	padding-top: 30px;
 }
 .login .logo img {
 	max-width: 65%;
@@ -130,14 +130,19 @@ drawer .btn-perfil img { width: 100%; height: auto; }
 }
 .login-form label {
 	margin: auto;
-	margin-top: 20px;
-	margin-bottom: 20px;
+	margin-top: 12px;
+	margin-bottom: 12px;
 	display: block;
 	width: 70%;
 	background-color: #FFF;
 	border:0;
 	border-radius: 10px;
 	padding: 8px;
+}
+
+.login-form p {
+	color: white;
+	text-align:center;
 }
 
 .login-form label:after {clear: both;}
@@ -166,13 +171,13 @@ drawer .btn-perfil img { width: 100%; height: auto; }
 .login-form input:-ms-input-placeholder { color: #279A4B; }
 
 .login-form .botones {
-	margin-top: 40px;
+	margin-top: 20px;
 }
 .login-form .botones .inner {
-	margin-top: 30px;
+	margin-top: 15px;
 	text-align: center;
 	color: #FFF;
-	margin-bottom: 30px;
+	margin-bottom: 15px;
 }
 .login-form .botones .inner ul {
 	border: 0;
@@ -217,7 +222,7 @@ button.button-grow {
 	display:block;
 	width: 50%;
 	margin: auto;
-	margin-bottom: 30px;
+	margin-bottom: 15px;
 }
 .login-form button.button-growify-line {
 	display: block;
@@ -252,9 +257,11 @@ button.button-grow {
 	width: calc(90% - 20px);
 	padding: 20px;
 	background-color: #FFF;
-	margin:auto;
+	/*margin:auto;
 	margin-top: 20px;
-	margin-bottom: 20px;
+	margin-bottom: 20px;*/
+	margin: 0;
+	margin-top: 40px;
 	position: absolute;
     -webkit-transform: translate(-50%,-50%);
     transform: translate(-50%,-50%);
@@ -756,6 +763,16 @@ button.button-grow {
 	font-size: 16px;
 	line-height: 16px;
 }
+.offer-local {
+	padding-top: 5px;
+	font-size: 12px;
+	font-weight: normal;
+}
+.offer-localdir {
+	font-size: 11px;
+	font-weight: normal;
+}
+
 .offer-tienda {
 	color: #1F9044;
 	text-transform: uppercase;
