@@ -107,7 +107,7 @@ angular.module('growify.controllers', [])
 
     $http.get($localStorage.growify.rest+'/app-options').
     then(function (data, status, headers, config) {
-      console.log(data.data);
+      //console.log(data.data);
       //$scope.urlImg = "../img/loginbg.png";
       if (data.data.backgroundImage != "") {
         $scope.urlImg = data.data.backgroundImage;
