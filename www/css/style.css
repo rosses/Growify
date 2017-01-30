@@ -52,6 +52,7 @@ drawer.isOpen {
 drawer .scroll-content {
 	background-color: #EDF4F8 !important;
 	padding-top: 20px;
+	min-height: 100%;
 }
 drawer .header-bar {
 	margin-top: 20px;
@@ -400,6 +401,16 @@ button.button-grow {
 	margin-bottom: 10px;
 	font-weight: bold;
 }
+.pstore-rate {
+	text-align: center;
+	width: 80%;
+	margin:auto;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+.pstore-rate a {
+	text-decoration: none;
+}
 .pstore-tools {
 	border: 1px solid #CCC;
 	width: 70%;
@@ -696,6 +707,9 @@ button.button-grow {
 .search .search-filtro {
 	text-align: center;
 }
+.seearch .search-notfound {
+	font-size: 14px;
+}
 .search .select {
 	margin:auto;
 	margin-top: 20px;
@@ -817,3 +831,11 @@ a.activated i {
 .bar { 
 	height: 60px;
 }
+.tiendaLinker {
+	font-size: 18px;
+	font-weight: bold;
+	color: #218035;
+	text-decoration: none;
+}
+.siteLinker p { margin:0; padding:0; padding-top: 5px; padding-bottom: 5px; }
+.siteLinker h4 { margin:0; padding:0; padding-top: 5px; padding-bottom: 5px; }

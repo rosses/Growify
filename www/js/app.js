@@ -13,7 +13,8 @@ var default_app = {
     offersLoaded: 0,
     searchLoaded: 0
 };
-
+infowindow = [];
+infowindowOpened = 666;
 
 angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.controllers', 'ngStorage', 'slickCarousel', 'ionic.contrib.drawer'])
 

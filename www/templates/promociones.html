@@ -5,20 +5,20 @@
         <ion-item>
         	<div class="offer-por">-{{offer.percentage}}%</div>
         	<div class="offer-foto">
-				<div ng-if="offer.productId.images.length"><img src="{{$root.default.cdn}}{{offer.productId.images[0]}}" /></div>
-				<div ng-if="!offer.productId.images.length"><img src="img/index.png" /></div>
-			</div>
+  				  <div ng-if="offer.productId.images.length"><img src="{{$root.default.cdn}}{{offer.productId.images[0]}}" /></div>
+  		    	<div ng-if="!offer.productId.images.length"><img src="img/index.png" /></div>
+     		  </div>
 
-			<div class="offer-right">
-				<div class="offer-name">{{offer.productId.name}}</div>
-				<div class="offer-tienda">{{offer.storeId.name}}</div>
-	  		    <div class="offer-price-old">{{(offer.productStoreId.price | currency:"$ ":0)}}</div>
-	  		    <div class="offer-price-new">{{( (offer.productStoreId.price * ((100 - offer.percentage) / 100)) | currency:"$ ":0)}}</div>
-  		    </div>
+    			<div class="offer-right">
+    				<div class="offer-name">{{offer.productId.name}}</div>
+    				<div class="offer-tienda">{{offer.storeId.name}}</div>
+    	  	  <div class="offer-price-old">{{(offer.productStoreId.price | currency:"$ ":0)}}</div>
+    	  	  <div class="offer-price-new">{{( (offer.productStoreId.price * ((100 - offer.percentage) / 100)) | currency:"$ ":0)}}</div>
+      		</div>
 
   		    <div class="c"></div>
         </ion-item>
-        </a>
+      </a>
     </div>
   </ion-content>
 </ion-view>

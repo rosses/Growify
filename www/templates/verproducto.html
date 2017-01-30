@@ -15,6 +15,12 @@
         {{(product.price | currency:"$ ":0)}}
       </div>
 
+      <div class="pstore-rate">
+        <a href ng-click="rateProduct(product.productId._id,{{n}})" ng-repeat="n in range(1,5)">
+          <img ng-src="{{n <= product.productId.rateAvg && 'img/stars.on.png' || 'img/stars.off.png'}}" />
+        </a>
+      </div>
+
       <div class="pstore-tools">
         <a ng-show="!isFavorito" ng-click="addFavorito(product._id, product.productId.name)"><img src="img/btn.favorito.png" style="border-right: 1px solid #CCC; padding-right: 10px;" /></a>
         <a ng-show="isFavorito" ng-click="delFavorito(product._id, product.productId.name)"><img src="img/btn.favoritofull.png" style="border-right: 1px solid #CCC; padding-right: 10px;" /></a>
