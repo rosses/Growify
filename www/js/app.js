@@ -1,8 +1,8 @@
 /* Configuracion */
 var default_app = {
-    modo:"test", 
-    rest:"http://138.197.196.64:3002",
-    cdn: "http://138.197.196.64:3000",
+    modo:"prod", 
+    rest:"http://104.131.133.69:3002",
+    cdn: "http://104.131.133.69:3000",
     auth: 0,
     username: '',
     email: '',
