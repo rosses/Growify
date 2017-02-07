@@ -430,7 +430,7 @@ angular.module('growify.controllers', [])
 })
 
 .controller('RegistroCtrl', function($scope, $webSql, $http, $ionicModal, $rootScope, $location, $state, $localStorage) {
-
+  $scope.urlImg = "img/loginbg.png";
   $scope.regData = {user: '', password: '', email: '', comuna: ''};
   $scope.botonesRegistro = true;
   $scope.registrandoLoading = false;
@@ -476,6 +476,7 @@ angular.module('growify.controllers', [])
 
 })
 .controller('recoverCtrl', function($scope, $webSql, $http, $ionicModal, $rootScope, $location, $state, $localStorage) {
+  $scope.urlImg = "img/loginbg.png";
   $scope.lostData = {email: ''};
   $scope.botonesRegistro = true;
   $scope.recuperandoLoading = false;
