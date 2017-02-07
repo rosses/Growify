@@ -38,7 +38,11 @@
   <plugin name="org.apache.cordova.globalization"/>
   <plugin name="org.apache.cordova.inappbrowser"/>
   <plugin name="org.apache.cordova.dialogs"/>
-  <plugin name="org.apache.cordova.camera"/>
+  <plugin name="cordova-plugin-media-capture">
+    <variable name="CAMERA_USAGE_DESCRIPTION" value="La app requiere acceso a tu cámara" />
+    <variable name="MICROPHONE_USAGE_DESCRIPTION" value="La app requiere acceso a tu micrófono" />
+    <variable name="PHOTOLIBRARY_USAGE_DESCRIPTION" value="La app requiere acceso a tus fotos" />
+  </plugin>
   <plugin name="org.apache.cordova.media-capture"/>
   <plugin name="org.apache.cordova.splashscreen"/>
   <plugin name="cordova-plugin-file-transfer"/>
