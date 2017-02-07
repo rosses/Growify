@@ -43,6 +43,7 @@
   <plugin name="org.apache.cordova.splashscreen"/>
   <plugin name="cordova-plugin-file-transfer"/>
   <plugin name="cordova-plugin-statusbar" />
+  <plugin name="cordova-plugin-settings-hook" />
   <!--<plugin name="cordova-plugin-splashscreen" />-->
 
   
