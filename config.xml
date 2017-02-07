@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.growify.app" version="1.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.growify.app" version="1.2" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>Growify</name>
   <description>
         Growshop Chile
@@ -128,10 +128,25 @@
       <array>
           <string>fb</string>
       </array>
-      <key>NSPhotoLibraryUsageDescription</key>
-      <array>
-          <string>Cambia tu foto de perfil con Growify</string>
-      </array>
+    </config-file>
+
+    <config-file target="*-Info.plist" parent="NSCameraUsageDescription">
+        <string>Esta app necesita acceso a la cámara</string>
+    </config-file>
+    <config-file target="*-Info.plist" parent="NSPhotoLibraryUsageDescription">
+        <string>Esta app necesita acceso a la librería</string>
+    </config-file>
+    <config-file target="*-Info.plist" parent="NSMicrophoneUsageDescription">
+        <string>Esta app necesita acceso al micrófono</string>
+    </config-file>
+    <config-file target="*-Info.plist" parent="NSLocationUsageDescription">
+        <string>Esta app necesita acceso a tu ubicación</string>
+    </config-file>
+    <config-file target="*-Info.plist" parent="NSLocationAlwaysUsageDescription">
+        <string>Esta app necesita acceso a tu ubicación (siempre)</string>
+    </config-file>
+    <config-file target="*-Info.plist" parent="NSLocationWhenInUseUsageDescription">
+        <string>Esta app necesita acceso a tu ubicación (en uso)</string>
     </config-file>
   </platform>
 
