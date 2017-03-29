@@ -189,11 +189,12 @@ drawer .btn-perfil img { width: 100%; height: auto; }
 .login-form .botones .inner li {
 	display: inline-block;
 	border-radius: 50%;
-	line-height: 35px;
-	min-width: 35px;
+	line-height: 55px;
+	min-width: 55px;
 	text-align: center;
-	margin-left: 10px;
-	margin-right: 10px;
+	margin-left: 15px;
+	margin-right: 15px;
+    font-size: 1.5em;
 }
 .login-form .botones .inner a { 
 	font-size: 1.2em;
