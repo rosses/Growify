@@ -17,15 +17,24 @@
           </a>
   			</div>
   			<div class="c"></div>
+        <h2>DIRECCIÓN: {{store.address}}</h2>
   		</div>
+      
+
   		<div class="tienda-tools">
   			<div class="tienda-tools-div-social">
         	  <a ng-show="!isFavorito" ng-click="addFavorito(store._id, store.name)"><img src="img/btn.favorito.png" /></a>
         	  <a ng-show="isFavorito" ng-click="delFavorito(store._id, store.name)"><img src="img/btn.favoritofull.png" /></a>
+            
+            <a data-ng-click="share('{{store.name}}','https://www.google.com/maps/preview/@{{store.geolocation.lat}},{{store.geolocation.long}},11z','Les recomiendo este Growify Shop!')"><img src="img/btn.compartir.png" /></a>
+            
+            <a ng-if="store.mobile != ''" data-ng-click="whatsapp('{{store.mobilefix}}')"><img src="img/btn.whatsapp.png" /></a>
+
   			</div>
-  			<div class="tienda-tools-div-social">
-  				<a data-ng-click="share('{{store.name}}','https://www.google.com/maps/preview/@{{store.geolocation.lat}},{{store.geolocation.long}},11z','Les recomiendo este Growify Shop!')"><img src="img/btn.compartir.png" /></a>
-  			</div>
+  			<!--
+        <div class="tienda-tools-div-social">
+  				
+  			</div>-->
   			<div class="tienda-tools-div-call">
   				<a href="tel:{{store.phone}}"><img src="img/btn.llamar.png" /></a>
   			</div>
@@ -33,7 +42,15 @@
   		</div>
   	</div>
 
-  	<div class="productos">
+    <div class="filtros">
+      <div class="select">
+        <select>
+          <option>Todas las categorias</option>      
+        </select>
+      </div>
+    </div>
+  	
+    <div class="productos">
   		<div class="producto" ng-repeat="product in products">
   		  <a href="#/main/vertiendaproducto/{{product.storeId._id}}/{{product.productId._id}}">
   			<div ng-if="product.productId.images.length"><img src="{{$root.default.cdn}}/assets/uploads/{{product.productId.images[0]}}" /></div>

@@ -1,6 +1,6 @@
 function err(msg) {
   console.log('ERR: '+msg);
-  if (default_app.modo == "dev") {
+  if (!isCordovaApp) {
     alert(msg ? msg : 'Error al consultar el servicio. Intente más tarde');
   }
   else {
@@ -14,7 +14,7 @@ function err(msg) {
 }
 function ok(msg) {
   console.log('OK: '+msg);
-  if (default_app.modo == "dev") {
+  if (!isCordovaApp) {
     alert(msg);
   }
   else {
@@ -28,7 +28,7 @@ function ok(msg) {
 }
 function confirmar(msg,callback) {
   console.log('Confirmar: '+msg);
-  if (default_app.modo == "dev") {
+  if (!isCordovaApp) {
     if (confirm(msg ? msg : '¿Desea continuar?')) {
       callback();
     }
@@ -44,7 +44,7 @@ function confirmar(msg,callback) {
 }
 function preguntar(msg) {
   console.log('Preguntar: '+msg);
-  if (default_app.modo == "dev") {
+  if (!isCordovaApp) {
     return prompt(msg);
   }
   else {

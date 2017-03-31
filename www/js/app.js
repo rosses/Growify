@@ -11,10 +11,13 @@ var default_app = {
     access_token: '',
     storeLoaded: 0,
     offersLoaded: 0,
-    searchLoaded: 0
+    searchLoaded: 0,
+    facebookId: 0,
+    googleId: 0
 };
 infowindow = [];
 infowindowOpened = 666;
+isCordovaApp = !!window.cordova;
 
 angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.controllers', 'ngStorage', 'slickCarousel', 'ionic.contrib.drawer'])
 

@@ -31,23 +31,29 @@ angular.module('growify.controllers', [])
   if ($localStorage.growify && $localStorage.growify.auth == 1) {
     var goLogin = 0;
     if ($localStorage.growify.username != "" && $localStorage.growify.password != "") {
-      var data = {'username': $localStorage.growify.username, 'password': $localStorage.growify.password };
+      var data = {'username': $localStorage.growify.email, 'password': $localStorage.growify.password };
       goLogin=1;
     }
    
 
     if (goLogin) {
+      $scope.showload();
       $http.post($localStorage.growify.rest+'/login', data).
       then(function (data, status, headers, config) {
-        //console.log(data);
+        $scope.hideload();
         if (data.data.jwt) { 
           $localStorage.growify.username = $scope.loginData.username;
           $localStorage.growify.email = data.data.profile.email;
           $localStorage.growify.city = data.data.profile.city;
+
+          if (data.data.profile.facebookId) { $localStorage.growify.facebookId = data.data.profile.facebookId; }
+          if (data.data.profile.googleId) { $localStorage.growify.googleId = data.data.profile.googleId; }
+
           $localStorage.growify.password = $scope.loginData.password;
           $localStorage.growify.access_token = data.data.jwt;     
           $localStorage.growify.auth = 1;
           $localStorage.growify.id = data.data.profile._id;
+
           $state.go("main.home");
         }
         else {
@@ -150,6 +156,9 @@ angular.module('growify.controllers', [])
         $localStorage.growify.access_token = data.data.jwt;    	
         $localStorage.growify.auth = 1;
         $localStorage.growify.id = data.data.profile._id;
+        $scope.cargandoLogin = false;
+        $scope.botonesLogin = true;
+        $scope.loginData = {user: '', password: ''};
         $state.go( "terms" );
       }
       else {
@@ -172,57 +181,38 @@ angular.module('growify.controllers', [])
           'offline': false, // optional, but requires the webClientId - if set to true the plugin will also return a serverAuthCode, which can be used to grant offline access to a non-Google server
         },
         function (obj) {
-          // Intentar logear
-          var login_xpress = {'googleToken': obj.userId };
-          $http.post($localStorage.growify.rest+'/login', login_xpress).
-          then(function (data, status, headers, config) {
-            $localStorage.growify.access_token = data.data.jwt;
-            $localStorage.growify.username = obj.email;
-            $localStorage.growify.email = obj.email;
-            $localStorage.growify.googleToken = obj.userId;
-            $localStorage.growify.id = data.data._id;
-            $localStorage.growify.auth = 1;
-            $scope.hideload();
-            $state.go( "terms" );
-          },function() {
-            //err('No pude hacer autologin, cuenta nueva?');
-            var data = {
-              'username':    obj.email, 
-              'email':       obj.email, 
-              'googleToken': obj.userId,
-              'avatar':      obj.imageUrl,
-              'firstName':    obj.displayName
-            };
 
-            $http.post($localStorage.growify.rest+'/registration', data).
-            then(function (data, status, headers, config) {
-              if (data.data.active == true) { 
-                $localStorage.growify.username = obj.email;
-                $localStorage.growify.email = obj.email;
-                $localStorage.growify.googleToken = obj.userId;
-                $localStorage.growify.id = data.data._id;
-                $localStorage.growify.auth = 1;
-                // get access token
-                var login_xpress = {'googleToken': obj.userId };
-                $http.post($localStorage.growify.rest+'/login', login_xpress).
-                then(function (data, status, headers, config) {
-                  $scope.hideload();
-                  $localStorage.growify.access_token = data.data.jwt;
-                  $state.go( "terms" );
-                });        
-              }
-              else {
-                $scope.hideload();
-                err('No pudo acceder con Google a Growify, es posible que ya tenga una cuenta creada con el correo electrónico indicado');
-              }
-            },
-            function (data, status, headers, config) {
-              $scope.hideload(); 
-              err(data.data.message);
-              $scope.registrandoLoading = false;
-              $scope.botonesRegistro = true;
-            });
-          }); 
+          var data = {
+            'username':   obj.email, 
+            'email':      obj.email, 
+            'googleId':   obj.userId,
+            'avatar':     obj.imageUrl,
+            'firstName':  obj.displayName
+          };
+
+          $http.post($localStorage.growify.rest+'/registration', data).
+          then(function (data, status, headers, config) {
+
+            if (data.data.jwt) { 
+              $localStorage.growify.username = $scope.loginData.username;
+              $localStorage.growify.email = data.data.profile.email;
+              $localStorage.growify.city = data.data.profile.city;
+              $localStorage.growify.password = $scope.loginData.password;
+              $localStorage.growify.googleId = data.data.profile.googleId;
+              $localStorage.growify.access_token = data.data.jwt;     
+              $localStorage.growify.auth = 1;
+              $localStorage.growify.id = data.data.profile._id;
+
+              $state.go( "terms" );
+            }
+            else {
+              err();
+            }
+          },
+          function (data, status, headers, config) { 
+            err(data.data.message);
+          });
+
         },
         function (msg) {
           $scope.hideload();
@@ -234,6 +224,7 @@ angular.module('growify.controllers', [])
 
   $scope.loginFacebook = function() {
     $scope.showload();
+
     CordovaFacebook.login({
        permissions: ['email', 'public_profile'],
        onSuccess: function(result) {
@@ -242,71 +233,44 @@ angular.module('growify.controllers', [])
           }
           else if (result.success == 1) {
 
-            var login_xpress = {'facebookToken': result.userID };
-            $http.post($localStorage.growify.rest+'/login', login_xpress).
+            $http.get("https://graph.facebook.com/me?fields=id,name,email,picture&access_token="+result.accessToken, {}).
             then(function (data, status, headers, config) {
-              // LOGIN OK
-              $localStorage.growify.access_token = data.data.jwt;
-              $localStorage.growify.username = data.data.profile.email;
-              $localStorage.growify.email = data.data.profile.email;
-              $localStorage.growify.facebookToken = result.userID;
-              $localStorage.growify.id = data.data.profile._id;
-              $localStorage.growify.auth = 1;
-              $scope.hideload();
-              $state.go( "terms" );
-            },function() {
-              //err('No pude hacer autologin, cuenta nueva?');
-
-              $http.get("https://graph.facebook.com/me?fields=id,name,email,picture&access_token="+result.accessToken, {}).
-              then(function (data, status, headers, config) {
+              
                 var dataPost = {
                   'username':    data.data.email, 
+                  'firstName':   data.data.name, 
                   'email':       data.data.email, 
-                  'facebookToken': data.data.id,
-                  'picture':      data.data.picture.data.url,
-                  'firstName':    data.data.name
-                };                
+                  'facebookId':  data.data.id,
+                  'picture':     data.data.picture.data.url,
+                  'firstName':   data.data.name
+                };
 
-                var fbkTokenId = data.data.id;
-                var fbkEmail = data.data.email;
-                
-
-                $http.post($localStorage.growify.rest+'/registration', dataPost).
+                $http.post($localStorage.growify.rest+'/registration', data).
                 then(function (data, status, headers, config) {
-                  if (data.data.active == true) { 
-                    $localStorage.growify.username = fbkEmail;
-                    $localStorage.growify.email = fbkEmail;
-                    $localStorage.growify.facebookToken = fbkTokenId;
-                    $localStorage.growify.id = data.data._id;
-                    $localStorage.growify.auth = 1;
-                    // get access token
-                    var login_xpress = {'facebookToken': fbkTokenId };
-                    //alert(JSON.stringify(login_xpress));
 
-                    $http.post($localStoraeg.growify.rest+'/login', login_xpress).
-                    then(function (data, status, headers, config) {
-                      $scope.hideload();
-                      $localStorage.growify.access_token = data.data.jwt;
-                      $state.go( "terms" );
-                    }, function (data, status, headers, config) { err(data.data.message); });        
+                  if (data.data.jwt) { 
+                    $localStorage.growify.username = $scope.loginData.username;
+                    $localStorage.growify.email = data.data.profile.email;
+                    $localStorage.growify.city = data.data.profile.city;
+                    $localStorage.growify.password = $scope.loginData.password;
+                    $localStorage.growify.facebookId = data.data.profile.facebookId;
+                    $localStorage.growify.access_token = data.data.jwt;     
+                    $localStorage.growify.auth = 1;
+                    $localStorage.growify.id = data.data.profile._id;
+                    $state.go( "terms" );
                   }
                   else {
-                    $scope.hideload();
-                    err('No pudo acceder con Facebook a Growify, es posible que ya tenga una cuenta creada con el correo electrónico indicado');
+                    err();
                   }
                 },
-                function (data, status, headers, config) {
-                  $scope.hideload(); 
-                  //err(data.data.message);
-                  err('El correo '+fbkEmail+' no esta asociado a una cuenta Facebook y ya existe como usuario en Growify');
-                  $scope.registrandoLoading = false;
-                  $scope.botonesRegistro = true;
+                function (data, status, headers, config) { 
+                  err(data.data.message);
                 });
 
-                
-              }); 
+            },function() {
+              err('No fue posible obtener la información desde Facebook');
+            });
 
-            });             
           }
           else {
             err('Error al intentar conectar con Facebook. Intente más tarde');
@@ -314,7 +278,7 @@ angular.module('growify.controllers', [])
        },
        onFailure: function(result) {
           if(result.cancelled) {
-             err('Operacion Cancelada')
+             err('No has autorizado Growify en tu cuenta de Facebook');
           } else if(result.error) {
              alert("Error:" + result.errorLocalized);
           }
@@ -375,6 +339,12 @@ angular.module('growify.controllers', [])
     });
   };
 
+  $scope.cerrarSesion = function() {
+    confirmar('¿Desea realmente cerrar su sesión?', function() {
+      $localStorage.growify = default_app;
+      $state.go("login");
+    });
+  };  
   $scope.selectPicture = function() { 
     var options = {
       quality: 50,
@@ -434,24 +404,25 @@ angular.module('growify.controllers', [])
   $scope.regData = {user: '', password: '', email: '', comuna: ''};
   $scope.botonesRegistro = true;
   $scope.registrandoLoading = false;
+
   $scope.doRegistro = function() {
     $scope.registrandoLoading = true;
     $scope.botonesRegistro = false;
     var data = {
-    	'username': 	$scope.regData.username, 
-    	'email': 			$scope.regData.email, 
-    	'password': 	$scope.regData.password
+    	'email': 	     $scope.regData.email, 
+    	'firstName': 	 $scope.regData.username, 
+    	'password': 	 $scope.regData.password
     };
     $http.post($localStorage.growify.rest+'/registration', data).
     then(function (data, status, headers, config) {
-      if (data.data.active == true) { 
+      if (data.data.profile.active == true) {
         $localStorage.growify.username = $scope.regData.username;
         $localStorage.growify.email = $scope.regData.email;
         $localStorage.growify.password = $scope.regData.password;
         $localStorage.growify.id = data.data._id;
         $localStorage.growify.auth = 1;
         // get access token
-  	    var login_xpress = {'username': $localStorage.growify.username, 'password': $localStorage.growify.password };
+  	    var login_xpress = {'username': $localStorage.growify.email, 'password': $localStorage.growify.password };
   	    $http.post($localStorage.growify.rest+'/login', login_xpress).
   	    then(function (data, status, headers, config) {
   	    	$localStorage.growify.access_token = data.data.jwt;
@@ -544,10 +515,10 @@ angular.module('growify.controllers', [])
   };
 
   $scope.cerrarSesion = function() {
-    if (confirmar('¿Desea realmente cerrar su sesión?')) {
+    confirmar('¿Desea realmente cerrar su sesión?',function() {
       $localStorage.growify = default_app;
       $state.go("login");
-    }
+    });
   };
 
   $scope.gotoPerfil = function() {
