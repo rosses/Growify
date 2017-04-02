@@ -182,7 +182,7 @@ angular.module('growify.controllers', [])
         },
         function (obj) {
 
-          var data = {
+          var dataPost = {
             'username':   obj.email, 
             'email':      obj.email, 
             'googleId':   obj.userId,
@@ -190,7 +190,7 @@ angular.module('growify.controllers', [])
             'firstName':  obj.displayName
           };
 
-          $http.post($localStorage.growify.rest+'/registration', data).
+          $http.post($localStorage.growify.rest+'/registration', dataPost).
           then(function (data, status, headers, config) {
 
             if (data.data.jwt) { 
@@ -202,7 +202,7 @@ angular.module('growify.controllers', [])
               $localStorage.growify.access_token = data.data.jwt;     
               $localStorage.growify.auth = 1;
               $localStorage.growify.id = data.data.profile._id;
-
+              $scope.hideload();
               $state.go( "terms" );
             }
             else {
@@ -244,7 +244,7 @@ angular.module('growify.controllers', [])
                   'picture':     data.data.picture.data.url
                 };
 
-                $http.post($localStorage.growify.rest+'/registration', data).
+                $http.post($localStorage.growify.rest+'/registration', dataPost).
                 then(function (data, status, headers, config) {
 
                   if (data.data.jwt) { 
