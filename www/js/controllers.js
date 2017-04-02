@@ -241,8 +241,7 @@ angular.module('growify.controllers', [])
                   'firstName':   data.data.name, 
                   'email':       data.data.email, 
                   'facebookId':  data.data.id,
-                  'picture':     data.data.picture.data.url,
-                  'firstName':   data.data.name
+                  'picture':     data.data.picture.data.url
                 };
 
                 $http.post($localStorage.growify.rest+'/registration', data).
