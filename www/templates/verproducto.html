@@ -30,7 +30,7 @@
       <div class="pstore-tools">
         <a ng-show="!isFavorito" ng-click="addFavorito(product._id, product.productId.name)"><img src="img/btn.favorito.png" style="border-right: 1px solid #CCC; padding-right: 10px;" /></a>
         <a ng-show="isFavorito" ng-click="delFavorito(product._id, product.productId.name)"><img src="img/btn.favoritofull.png" style="border-right: 1px solid #CCC; padding-right: 10px;" /></a>
-        <a data-ng-click="share('{{product.productId.name}}','{{product.images[0]}}','Les recomiendo este producto de Growify!')"><img src="img/btn.compartir.png" style="padding-bottom: 4px; padding-left: 10px;" /></a>
+        <a data-ng-click="share('{{product.productId.name}}','growify://producto/{{product.storeId._id}}/{{product.productId._id}}','Les recomiendo este producto de Growify!')"><img src="img/btn.compartir.png" style="padding-bottom: 4px; padding-left: 10px;" /></a>
       </div>
 
       <div class="pstore-desc">

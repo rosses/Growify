@@ -145,11 +145,42 @@
     </feature>
 
     <config-file target="*-Info.plist">
+      <key>CFBundleURLTypes</key>
+      <array>
+        <dict>
+          <key>CFBundleURLSchemes</key>
+          <array>
+            <string>fb171879819958840</string>
+          </array>
+        </dict>
+      </array>
+    </config-file>
+
+    <config-file target="*-Info.plist">
+      <key>FacebookAppID</key>
+      <array>
+          <string>171879819958840</string>
+      </array>
+    </config-file>
+
+    <config-file target="*-Info.plist">
+      <key>FacebookDisplayName</key>
+      <array>
+          <string>Growify</string>
+      </array>
+    </config-file>
+
+    <config-file target="*-Info.plist">
       <key>LSApplicationQueriesSchemes</key>
       <array>
           <string>fb</string>
+          <string>fbapi</string>
+          <string>fb-messenger-api</string>
+          <string>fbauth2</string>
+          <string>fbshareextension</string>
       </array>
     </config-file>
+
     <config-file parent="CFBundleDevelopmentRegion" target="*-Info.plist">
         <array>
             <string>Spanish</string>

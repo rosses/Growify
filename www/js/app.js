@@ -177,7 +177,10 @@ angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.cont
 });
 
 function handleOpenURL(url) {
+  var body = document.getElementsByTagName("body")[0];
+  var mainController = angular.element(body).scope();
+
   setTimeout(function() {
-    alert("received url: " + url);
+      mainController.reportAppLaunched(url);
   }, 0);
 }
