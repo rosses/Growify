@@ -49,7 +49,9 @@ angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.cont
   $rootScope.default = default_app;
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $compileProvider, $urlRouterProvider) {
+  $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|sms|tel|whatsapp):/);
+
   $stateProvider
   .state('login', {
     url: '/login',
@@ -145,7 +147,7 @@ angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.cont
     url: '/vertienda_fav/{id:/?.*}',
     views: {
       'favoritos-tab': {
-        templateUrl: 'templates/vertienda.html',
+        templateUrl: 'templates/vertienda_fav.html',
         controller: 'VerTiendaCtrl'
       }
     }
@@ -173,3 +175,9 @@ angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.cont
   //abstract: true,
   $urlRouterProvider.otherwise('/login');
 });
+
+function handleOpenURL(url) {
+  setTimeout(function() {
+    alert("received url: " + url);
+  }, 0);
+}

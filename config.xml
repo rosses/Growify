@@ -47,6 +47,7 @@
   <plugin name="org.apache.cordova.media-capture"/>
   <plugin name="org.apache.cordova.splashscreen"/>
   <plugin name="cordova-plugin-file-transfer"/>
+  <plugin name="cordova-plugin-device" />
   <plugin name="cordova-plugin-statusbar" />
   <plugin name="cordova-plugin-settings-hook" />
 
@@ -59,6 +60,9 @@
 
 
   <plugin spec="https://github.com/ranjitpandit/whatsapp-phonegap-plugin.git" source="git" />
+  <plugin spec="https://github.com/EddyVerbruggen/Custom-URL-scheme.git" source="git">
+    <param name="URL_SCHEME" value="growify" />
+  </plugin>
   <!--<plugin name="cordova-plugin-splashscreen" />-->
 
   

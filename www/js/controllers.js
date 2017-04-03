@@ -145,7 +145,7 @@ angular.module('growify.controllers', [])
   $scope.doLogin = function() {
     $scope.cargandoLogin = true;
     $scope.botonesLogin = false;
-    var data = {'username': $scope.loginData.username, 'password': $scope.loginData.password };
+    var data = {'username': $scope.loginData.username.toLowerCase(), 'password': $scope.loginData.password };
     $http.post($localStorage.growify.rest+'/login', data).
     then(function (data, status, headers, config) {
 
@@ -343,7 +343,7 @@ angular.module('growify.controllers', [])
   $scope.selectPicture = function() { 
     var options = {
       quality: 50,
-      destinationType: Camera.DestinationType.FILE_URI,
+      destinationType: Camera.DestinationType.DATA_URL,
       sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
       targetWidth: 400,
       targetHeight: 400
@@ -351,16 +351,7 @@ angular.module('growify.controllers', [])
 
     $cordovaCamera.getPicture(options).then(
       function(imageURI) {
-        window.resolveLocalFileSystemURI(imageURI, function(fileEntry) {
-          //$scope.picData = fileEntry.nativeURL;
-          $scope.ftLoad = true;
-          alert(JSON.stringify(fileEntry));
-          alert(fileEntry.nativeURL);
-          /*
-          var image = document.getElementById('myImage');
-          image.src = fileEntry.nativeURL;
-          */
-          });
+        $scope.uploadPicture(imageURI);
       },
       function(err){
         $ionicLoading.show({template: 'Error al acceder a tu galería', duration:1500});
@@ -371,66 +362,42 @@ angular.module('growify.controllers', [])
   $scope.takePicture = function() {
     var options = {
         quality: 50,
-        destinationType: Camera.DestinationType.FILE_URL,
+        destinationType: Camera.DestinationType.DATA_URL,
         sourceType: Camera.PictureSourceType.CAMERA
       };
     $cordovaCamera.getPicture(options).then(
     function(imageData) {
-      $scope.picData = imageData;
-      $scope.ftLoad = true;
-      $localStorage.fotoUp = imageData;
-      alert('listo');
-      alert(imageData);
+      $scope.uploadPicture(imageData);
     },
     function(err){
       $ionicLoading.show({template: 'Error al acceder a tu cámara', duration:1500});
     })
   }
 
-  $scope.uploadPicture = function() {
-    $ionicLoading.show({template: '<ion-spinner></ion-spinner><br />actualizando imagen...'});
+  $scope.uploadPicture = function(base64) {
+    $ionicLoading.show({template: '<ion-spinner></ion-spinner>'});
+    var base64Image = "data:image/jpeg;base64," + base64;
+    var blob = $scope.dataURItoBlob(base64Image);
+    var objURL = window.URL.createObjectURL(blob);
+    var image = new Image();
+    image.src = objURL;
+    window.URL.revokeObjectURL(objURL);
 
-    var blob = dataURItoBlob($scope.picData);
+    var formData = new FormData();
+    formData.append('avatar', blob, 'avataruser.jpg');
+    formData.append('upload_preset', 'growify');
 
     var xhr = new XMLHttpRequest();
     xhr.onload = function () {
+      alert(this.responseText);
       response = JSON.parse(this.responseText);
 
       //console.log("ajaxSuccess", typeof this.responseText);
       //document.getElementById('uploaded').setAttribute("src", response["secure_url"]);
       //document.getElementById('results').innerText = this.responseText;
     };
-
     xhr.open("post", "https://api.cloudinary.com/v1_1/dujuytngk/image/upload");
-    xhr.send(new FormData(formElement));
-
-    var fd = new FormData(document.forms[0]);
-    fd.append("canvasImage", blob);
-    fd.append("upload_preset", "growify");
-
-    /*
-    var fileURL = $scope.picData;
-    var options = new FileUploadOptions();
-    options.fileKey = "file";
-    options.fileName = fileURL.substr(fileURL.lastIndexOf('/') + 1);
-    options.mimeType = "image/jpeg";
-    options.chunkedMode = true;
-
-    var params = {};
-    params.value1 = "someparams";
-    params.value2 = "otherparams";
-
-    options.params = params;
-
-    var ft = new FileTransfer();
-    ft.upload(fileURL, encodeURI("https://api.cloudinary.com/v1_1/dujuytngk/image/upload"), function(ok) { 
-      $ionicLoading.show({template: '<i class="icon ion-checkmark" style="font-size: 2em;"></i>'});
-      $ionicLoading.hide();      
-    }, function(error) {
-      $ionicLoading.show({template: 'Error al subir imagen'});
-      $ionicLoading.hide();
-    }, options);
-    */
+    xhr.send(formData);
   };
 
   function dataURItoBlob(dataURI) {
@@ -1030,7 +997,12 @@ angular.module('growify.controllers', [])
       return input;
   };
 
-
+  $scope.isiOS = true;
+  $scope.isAndroid = false;
+  if (!!window.cordova) {
+    if (cordova.platformId == "android") { $scope.isAndroid = true; }
+    if (cordova.platformId == "ios") { $scope.isiOS = true; }
+  }
 
   $scope.isLoaded = false;
   $scope.filtrada = false;

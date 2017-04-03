@@ -64,7 +64,7 @@
   	
     <div class="productos">
   		<div class="producto" ng-repeat="product in products">
-  		  <a href="#/main/vertiendaproducto/{{product.storeId._id}}/{{product.productId._id}}">
+  		  <a href="#/main/vertiendaproducto_fav/{{product.storeId._id}}/{{product.productId._id}}">
   			<div ng-if="product.productId.images.length"><img src="{{$root.default.cdn}}/assets/uploads/{{product.productId.images[0]}}" /></div>
   			<div ng-if="!product.productId.images.length"><img src="img/index.png" /></div>
 			  <h3>{{product.productId.name}}</h3>
