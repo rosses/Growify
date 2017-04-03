@@ -1,5 +1,10 @@
 <ion-view view-title='PROMOCIONES'>
   <ion-content scroll="true">
+    <div ng-show="!offer.length && isLoaded" class="no_promociones">
+      <i class="icon ion-ios-close-outline"></i>
+      <br /><br />
+      No tenemos promociones por ahora.
+    </div>
     <div ng-repeat="offer in offers" class="offer">
     	<a href="#/main/vertiendaproducto/{{offer.storeId._id}}/{{offer.productId._id}}">
         <ion-item>

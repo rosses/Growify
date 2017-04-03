@@ -48,6 +48,7 @@
   <plugin name="cordova-plugin-file-transfer"/>
   <plugin name="cordova-plugin-statusbar" />
   <plugin name="cordova-plugin-settings-hook" />
+  <plugin spec="https://github.com/ranjitpandit/whatsapp-phonegap-plugin.git" source="git" />
   <!--<plugin name="cordova-plugin-splashscreen" />-->
 
   

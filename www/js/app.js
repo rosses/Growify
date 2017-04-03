@@ -1,5 +1,5 @@
 /* Configuracion */
-var default_app = {
+var default_app_ = {
     modo:"prod", 
     rest:"http://104.131.133.69:3002",
     cdn: "http://104.131.133.69:3000",
@@ -13,8 +13,10 @@ var default_app = {
     offersLoaded: 0,
     searchLoaded: 0,
     facebookId: 0,
-    googleId: 0
+    googleId: 0,
+    firstName: ''
 };
+var default_app = default_app_;
 infowindow = [];
 infowindowOpened = 666;
 isCordovaApp = !!window.cordova;
@@ -79,7 +81,7 @@ angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.cont
   .state('main.home', {
     url: '/home',
     views: {
-      'menuContent': {
+      'home-tab': {
         templateUrl: 'templates/home.html',
         controller: 'HomeCtrl'
       }
@@ -88,7 +90,7 @@ angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.cont
   .state('main.promociones', {
     url: '/promociones',
     views: {
-      'menuContent': {
+      'promociones-tab': {
         templateUrl: 'templates/promociones.html',
         controller: 'PromocionesCtrl'
       }
@@ -97,7 +99,7 @@ angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.cont
   .state('main.favoritos', {
     url: '/favoritos',
     views: {
-      'menuContent': {
+      'favoritos-tab': {
         templateUrl: 'templates/favoritos.html',
         controller: 'FavoritosCtrl'
       }
@@ -106,7 +108,7 @@ angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.cont
   .state('main.perfil', {
     url: '/perfil',
     views: {
-      'menuContent': {
+      'home-tab': {
         templateUrl: 'templates/perfil.html',
         controller: 'PerfilCtrl'
       }
@@ -115,16 +117,43 @@ angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.cont
   .state('main.vertiendaproducto', {
     url: '/vertiendaproducto/{id:/?.*}/{pro:/?.*}',
     views: {
-      'menuContent': {
+      'home-tab': {
         templateUrl: 'templates/verproducto.html',
         controller: 'VerTiendaProductoCtrl'
+      }
+    }
+  })
+  .state('main.vertiendaproducto_fav', {
+    url: '/vertiendaproducto_fav/{id:/?.*}/{pro:/?.*}',
+    views: {
+      'favoritos-tab': {
+        templateUrl: 'templates/verproducto.html',
+        controller: 'VerTiendaProductoCtrl'
+      }
+    }
+  })
+  .state('main.vertiendaproducto_buscar', {
+    url: '/vertiendaproducto_buscar/{id:/?.*}/{pro:/?.*}',
+    views: {
+      'buscar-tab': {
+        templateUrl: 'templates/verproducto.html',
+        controller: 'VerTiendaProductoCtrl'
+      }
+    }
+  })
+  .state('main.vertienda_fav', {
+    url: '/vertienda_fav/{id:/?.*}',
+    views: {
+      'favoritos-tab': {
+        templateUrl: 'templates/vertienda.html',
+        controller: 'VerTiendaCtrl'
       }
     }
   })
   .state('main.vertienda', {
     url: '/vertienda/{id:/?.*}',
     views: {
-      'menuContent': {
+      'home-tab': {
         templateUrl: 'templates/vertienda.html',
         controller: 'VerTiendaCtrl'
       }
@@ -134,7 +163,7 @@ angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.cont
   .state('main.buscar', {
     url: '/buscar',
     views: {
-      'menuContent': {
+      'buscar-tab': {
         templateUrl: 'templates/buscar.html',
         controller: 'BuscarCtrl'
       }

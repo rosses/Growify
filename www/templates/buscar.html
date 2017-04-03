@@ -1,45 +1,27 @@
 <ion-view view-title='BUSCAR'>
-  <ion-content scroll="true" class="search">
+  <ion-content scroll="true" class="search" delegate-handle="verTiendaScroll">
   	<div class="search-top">
   		<input ng-model="buscar.str" placeholder="Ingresa tu búsqueda" />
   	</div>
   	
-    <div class="search-filtro" ng-show="mostrarResultados">
-      <div class="search-notfound text-center" ng-show="resultados.length == 0">No se encontraron resultados para &quot;{{buscar.str}}&quot;</div>
-
-      <div class="search-lista">
-
-        <div ng-repeat="resultado in resultados" class="offer">
-          <a href="#/main/vertiendaproducto/{{resultado.storeId._id}}/{{resultado.productId._id}}">
-            <ion-item>
-              <div class="offer-foto">
-                <div ng-if="resultado.productId.images.length"><img src="{{$root.default.cdn}}/assets/uploads/{{resultado.productId.images[0]}}" /></div>
-                <div ng-if="!resultado.productId.images.length"><img src="img/index.png" /></div>
-              </div>
-
-              <div class="offer-right">
-                <div class="offer-name">{{resultado.productId.name}}</div>
-                <div class="offer-tienda">{{resultado.storeId.name}}</div>
-                <div class="offer-price-new">{{resultado.price | currency:"$ ":0}}</div>
-              </div>
-
-              <div class="c"></div>
-            </ion-item>
-          </a>
-        </div>
-
-      </div>
-
+    <div class="search-filtro" ng-show="mostrarResultados && isLoaded">
+    <!--<div class="search-notfound text-center" ng-show="resultados.length == 0">No se encontraron resultados para &quot;{{buscar.str}}&quot;</div>-->
     </div>
   	<div class="search-filtro" ng-show="mostrarFiltros">
   	
     <div class="pstore-name">
-		FILTRAR POR
-	</div>
+		  FILTRAR POR
+	  </div>
     <div class="select">
-      <select ng-model="buscar.categ">
-        <option value=''>Categoria</option>
-        <option ng-repeat="pdc in growify.productCategory" value="{{pdc._id}}">
+      <select ng-model="buscar.categ" ng-change="childChoose()" ng-options="pdc._id as pdc.name for pdc in rootCategory">
+        <option value=''>Todas las categorias</option>     
+      </select>
+    </div>
+
+    <div class="select">
+      <select ng-model="buscar.subcateg">
+        <option value=''>Todas las subcategorias</option>
+        <option ng-repeat="pdc in childCategorySelected" value="{{pdc._id}}">
           {{pdc.name}}
         </option>      
       </select>
@@ -47,24 +29,58 @@
     
     <div class="select">
       <select ng-model="buscar.marca">
-        <option value=''>Marca</option>
+        <option value=''>Todas las marcas</option>
         <option ng-repeat="pdb in growify.productBrands" value="{{pdb._id}}">
           {{pdb.name}}
         </option>       
       </select>
     </div>
 
-    <div class="select">
+    <!--<div class="select">
       <select ng-model="buscar.store">
         <option value=''>Tienda</option>
         <option ng-repeat="st in stores" value="{{st._id}}">
           {{st.name}}
         </option>       
       </select>
+    </div>-->
+    <div class="config-guardar" ng-if="mostrarBuscar">
+      <a href ng-click="buscarAhora();"><img src="img/btn.filtrar.png" /></a>
     </div>
 
-    <div class="config-guardar">
-      <a href ng-click="buscarAhora();"><img src="img/btn.filtrar.png" /></a>
+    <div class="search-lista">
+      <div class="no_resultados" ng-show="resultados.length == 0 && isLoaded">
+        <i class="icon ion-ios-close-outline"></i>
+        <br />
+        No se encontraron resultados
+      </div>
+
+      <div ng-if="mostrarBuscando">
+
+        <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+        <span class="sr-only">Loading...</span>
+
+      </div>
+      <div ng-repeat="resultado in resultados" class="offer">
+        <a href="#/main/vertiendaproducto_buscar/{{resultado.storeId._id}}/{{resultado.productId._id}}">
+          <ion-item>
+            <div class="offer-foto">
+              <div ng-if="resultado.productId.images.length"><img src="{{$root.default.cdn}}/assets/uploads/{{resultado.productId.images[0]}}" /></div>
+              <div ng-if="!resultado.productId.images.length"><img src="img/index.png" /></div>
+            </div>
+
+            <div class="offer-right">
+              <div class="buscar-name">{{resultado.productId.name}}</div>
+              <div class="offer-tienda">{{resultado.storeId.name}}</div>
+              <div class="offer-price-new">{{resultado.price | currency:"$ ":0}}</div>
+            </div>
+
+            <div class="c"></div>
+          </ion-item>
+          
+        </a>
+      </div>
+
     </div>
 
     </div>

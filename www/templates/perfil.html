@@ -6,16 +6,17 @@
   	</div>
 
   	<div class="perfil-form">
-  		<input type="text" value="{{growify.username}}" placeholder="Nombre" />
+  		<input type="text" value="{{growify.firstName}}" placeholder="Nombre" />
   		<input type="password" value="{{growify.password}}" placeholder="Clave" />
   		<input type="text" value="{{growify.email}}" placeholder="Correo" />
-  		<input type="text" value="{{growify.city}}" placeholder="Comuna" />
   	</div>
   	<br />
     <div align="center">
-    <button class="button button-growify2">GUARDAR</button>
+    <button class="button button-growify2" ng-click="saveProfile();">GUARDAR</button>
     <br /><br />
+    <!--
     <a ng-click="cerrarSesion();" class="closesession">Cerrar sesión</a>
+    -->
     </div>
 
     <br />

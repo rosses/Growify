@@ -1,57 +1,86 @@
 <ion-view view-title='FAVORITOS'>
+ <ion-content scroll="false">
+<div class="tabs-tiendas">
+   <div>
+      <a class="tab-i tienda_tab_tienda active" ng-click="FavShowDivTienda();">
+         TIENDAS
+      </a>
+        
+      <a class="tab-i tienda_tab_producto" ng-click="FavShowDivProductos();">
+         PRODUCTOS
+      </a>
+   </div>
+</div>
+</ion-content>
   <ion-content scroll="true">
-  	<div class="fav_list">
-      <div class="no_favoritos" ng-show="totalFavoritos == 0">
-      	<i class="icon ion-heart-broken"></i>
-      	<br /><br />
-        No tienes tiendas o productos favoritos
-      </div>
-      <!--
-      <div class="no_puede_favoritos" ng-show="growify.id == 0 && totalFavoritos == 0">
-      	<i class="icon ion-person"></i>
-      	<br /><br />
-        Solo los usuarios registrados pueden tener favoritos en su móvil.
-      </div>
-      -->
+    <div class="the_tab fav-tab1">
 
-      <div class="favoritos" ng-show="totalFavoritos > 0">
-	    <div ng-repeat="tienda in tiendas" class="offer">
-	    	<a href="#/main/vertienda/{{tienda.id}}">
-	        <ion-item>
-	        	<div class="offer-foto">
-					<div ng-if="tienda.avatar"><img src="{{$root.default.cdn}}{{tienda.avatar}}" /></div>
-					<div ng-if="!tienda.avatar"><img src="img/index.png" /></div>
-				</div>
+	  	<div class="fav_list">
+	      <div class="no_favoritos" ng-show="totalFavoritosTiendas == 0 && isLoaded">
+	      	<i class="icon ion-heart-broken"></i>
+	      	<br /><br />
+	        No tienes tiendas favoritas
+	      </div>
+	      <!--
+	      <div class="no_puede_favoritos" ng-show="growify.id == 0 && totalFavoritos == 0">
+	      	<i class="icon ion-person"></i>
+	      	<br /><br />
+	        Solo los usuarios registrados pueden tener favoritos en su móvil.
+	      </div>
+	      -->
+	      <div class="favoritos" ng-show="totalFavoritosTiendas > 0 && isLoaded">
+		    <div ng-repeat="tienda in tiendas" class="offer">
+		    	<a href="#/main/vertienda_fav/{{tienda.id}}">
+		        <ion-item>
+		        	<div class="offer-foto">
+						<div ng-if="tienda.avatar"><img src="{{$root.default.cdn}}{{tienda.avatar}}" /></div>
+						<div ng-if="!tienda.avatar"><img src="img/index.png" /></div>
+					</div>
 
-				<div class="offer-right">
-					<div class="offer-name">{{tienda.name}}</div>
-	  		    </div>
+					<div class="offer-right">
+						<div class="favo-name">{{tienda.name}}</div>
+						<div class="offer-local">Tienda</div>
+						<div class="offer-localdir">Dirección: {{tienda.address}}</div>
+		  		    </div>
 
-	  		    <div class="c"></div>
-	  		    
-	        </ion-item>
-	        </a>
+		  		    <div class="c"></div>
+		  		    
+		        </ion-item>
+		        </a>
+		    </div>
+	      </div>
+
 	    </div>
-	    <div ng-repeat="producto in productos" class="offer">
-	    	<a href="#/main/vertiendaproducto/{{producto.id}}/{{producto.subid}}">
-	        <ion-item>
-	        	<div class="offer-foto">
-					<div ng-if="producto.avatar"><img src="{{$root.default.cdn}}/assets/uploads/{{producto.avatar}}" /></div>
-					<div ng-if="!producto.avatar"><img src="img/index.png" /></div>
-				</div>
+	</div>
 
-				<div class="offer-right">
-					<div class="offer-name">{{producto.name}}</div>
-					<div class="offer-local">Local: {{producto.local}}</div>
-					<div class="offer-localdir">Dirección: {{producto.localdir}}</div>
-	  		    </div>
+	<div class="the_tab fav-tab2" style="display:none;">
+		<div class="fav_list">
+	      <div class="no_favoritos" ng-show="totalFavoritosProductos == 0 && isLoaded">
+	      	<i class="icon ion-heart-broken"></i>
+	      	<br /><br />
+	        No tienes productos favoritos
+	      </div>
+	      <div class="favoritos" ng-show="totalFavoritosProductos > 0 && isLoaded">
+		    <div ng-repeat="producto in productos" class="offer">
+		    	<a href="#/main/vertiendaproducto_fav/{{producto.id}}/{{producto.subid}}">
+		        <ion-item>
+		        	<div class="offer-foto">
+						<div ng-if="producto.avatar"><img src="{{$root.default.cdn}}/assets/uploads/{{producto.avatar}}" /></div>
+						<div ng-if="!producto.avatar"><img src="img/index.png" /></div>
+					</div>
 
-	  		    <div class="c"></div>
-	        </ion-item>
-	        </a>
+					<div class="offer-right">
+						<div class="favo-name">{{producto.name}}</div>
+						<div class="offer-local">Tienda: {{producto.local}}</div>
+						<div class="offer-localdir">Dirección: {{producto.localdir}}</div>
+		  		    </div>
+
+		  		    <div class="c"></div>
+		        </ion-item>
+		        </a>
+		    </div>
+	      </div>
 	    </div>
-      </div>
-
-    </div>
+	</div>
   </ion-content>
 </ion-view>

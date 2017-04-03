@@ -12,14 +12,20 @@
        </div>
     </div>
 
-    <ion-content scroll="true" class="home-map">
+    <ion-content scroll="false" class="home-map">
+        <div ng-if="storesOrdered.length == 0 && isLoaded" style="position:absolute;bottom:20px;z-index:9999; background-color: rgba(255,255,255,0.7); width: 100%; padding-left: 20px;">
+          <h5>No se han encontrado tiendas,<br />revisa tus filtros en la configuración.</h5>
+        </div>
         <div id="map" data-tap-disabled="true"></div>
         <div id="location">
             <a ng-click="followMe();"><i class="fa fa-location-arrow"></i></a>
         </div>
     </ion-content>
     <ion-content scroll="true" class="home-list" style="display:none;">
-        <div ng-repeat="store in stores">
+        <div ng-if="storesOrdered.length == 0" align="center">
+          <h5>No se han encontrado tiendas,<br />revisa tus filtros en la configuración.</h5>
+        </div>
+        <div ng-repeat="store in storesOrdered">
             <ion-item ng-href="#/main/vertienda/{{store._id}}/">
                 <div class="img"><img class="avatar" src="{{$root.default.cdn}}{{store.avatar}}" /></div>
                 <h2>{{store.name}}</h2>

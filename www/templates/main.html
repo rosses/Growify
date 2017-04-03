@@ -1,16 +1,36 @@
 <ion-side-menus enable-menu-with-back-views="true">
   <ion-side-menu-content drag-content="false">
     <ion-nav-bar class="bar-stable">
-      <ion-nav-back-button>
-      </ion-nav-back-button>
+      <ion-nav-back-button></ion-nav-back-button>
 
       <ion-nav-buttons side="right">
         <a ng-click="openDrawer();"><img src="img/gear.png" class="header-gear" /></a>
       </ion-nav-buttons>
     </ion-nav-bar>
 
-    <ion-nav-view name="menuContent"></ion-nav-view>
+    <!--<ion-nav-view name="menuContent"></ion-nav-view>-->
 
+    <ion-tabs class="tabs-icon-top">
+
+      <ion-tab title="TIENDAS" icon-off="icon-bolsa_off" icon-on="icon-bolsa_on" href="#/main/home">
+        <ion-nav-view name="home-tab"></ion-nav-view>
+      </ion-tab>
+
+      <ion-tab title="PROMOS" icon-off="icon-etiqueta_off" icon-on="icon-etiqueta_on" href="#/main/promociones">
+        <div class="foot-icon etiqueta"></div>
+        <ion-nav-view name="promociones-tab"></ion-nav-view>
+      </ion-tab>
+
+      <ion-tab title="FAVORITOS" icon-off="icon-fav_off" icon-on="icon-fav_on" href="#/main/favoritos">
+        <ion-nav-view name="favoritos-tab"></ion-nav-view>
+      </ion-tab>
+
+      <ion-tab title="BUSCAR" icon-off="icon-lupa_off" icon-on="icon-lupa_on" href="#/main/buscar">
+        <ion-nav-view name="buscar-tab"></ion-nav-view>
+      </ion-tab>
+
+    </ion-tabs>
+    <!--
     <ion-footer-bar class="bottom-banner">
       <div class="tabs" id="tabs_footer">
         <li class="tab-item active">
@@ -39,23 +59,25 @@
         </li>
       </div>
     </ion-footer-bar>
+  -->
   </ion-side-menu-content>
+  
   <drawer side="right">
-  <!--<ion-side-menu side="right" drag-content="false">-->
     <ion-header-bar class="bar-stable header-bar">
       <h3><img src="img/gear2.png" class="header-gear2" /> CONFIGURACIÓN</h3>
       <button class="button button-icon button-clear ion-ios-close-empty byemenuright" ng-click="closeDrawer();"></button>
     </ion-header-bar>
     <ion-content>
     <div class="select">
-      <select>
-        <option>Tipo de tienda</option>      
+      <select ng-model="cfg.tienda">
+        <option value="fisica">Tienda Física</option>      
+        <option value="virtual">Tienda Virtual</option>      
       </select>
     </div>
     
     <div class="select">
-      <select>
-        <option>Tipo de entrega</option>
+      <select ng-model="cfg.entrega" ng-disabled="cfg.tienda == 'fisica'">
+        <option value="">Tipo de entrega</option>
         <option ng-repeat="sdt in growify.storeDeliveryTypes" value="{{sdt._id}}">
           {{sdt.name}}
         </option>       
@@ -63,8 +85,8 @@
     </div>
 
     <div class="select">
-      <select>
-        <option>Tiempos de despacho</option>
+      <select ng-model="cfg.tiempo" ng-disabled="cfg.tienda == 'fisica'">
+        <option value="">Tiempos de despacho</option>
         <option ng-repeat="sdt in growify.storeDeliveryTimes" value="{{sdt._id}}">
           {{sdt.name}}
         </option>       
@@ -72,19 +94,27 @@
     </div>
 
     <div class="select">
-       <select>
-          <option ng-repeat="comuna in $root.growify_comunas">{{comuna.name}}</option>
+       <select ng-model="cfg.comuna" ng-disabled="cfg.tienda == 'fisica'">
+        <option value="">Comuna</option>
+        <option value="{{comuna._id}}" ng-repeat="comuna in $root.growify_comunas">{{comuna.name}}</option>
       </select>
     </div>
+    <!--
     <div class="config-guardar">
       <a><img src="img/btn.guardar.png" /></a>
-    </div>
-
+    </div>-->
+    <button class="button-growify-ok" menu-toggle="right" ng-click="aplicarCfg()">Aplicar</button>
+    <hr />
+    <button class="button-growify-line2" ng-show="!growify.id" menu-toggle="right" ng-click="gotoLogin()">Iniciar sesión</button>
+    <button class="button-growify-line2" ng-show="growify.id" menu-toggle="right" ng-click="gotoPerfil()">Mi perfil <i class="icon ion-ios-person-outline"></i></button>
+    <button class="button-growify-line2" ng-show="growify.id" menu-toggle="right" ng-click="cerrarSesion()">Cerrar sesión</button>
+    <!--
     <div class="btn-perfil" ng-show="growify.id">
       <a ng-click="gotoPerfil();" menu-toggle="right"><img src="img/btn.perfil.png" /></a>
+    </div>
+    -->
     </div>
 
     </ion-content>
   </drawer>
-  <!--</ion-side-menu>-->
 </ion-side-menus>

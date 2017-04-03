@@ -28,7 +28,7 @@
             
             <a data-ng-click="share('{{store.name}}','https://www.google.com/maps/preview/@{{store.geolocation.lat}},{{store.geolocation.long}},11z','Les recomiendo este Growify Shop!')"><img src="img/btn.compartir.png" /></a>
             
-            <a ng-if="store.mobile != ''" data-ng-click="whatsapp('{{store.mobilefix}}')"><img src="img/btn.whatsapp.png" /></a>
+            <a ng-if="store.mobile != ''" data-ng-click="whatsapp(store.mobilefix)"><img src="img/btn.whatsapp.png" /></a>
 
   			</div>
   			<!--
@@ -36,7 +36,7 @@
   				
   			</div>-->
   			<div class="tienda-tools-div-call">
-  				<a href="tel:{{store.phone}}"><img src="img/btn.llamar.png" /></a>
+  				<a href="tel:{{store.phonefix}}"><img src="img/btn.llamar.png" /></a>
   			</div>
   			<div class="c"></div>
   		</div>
@@ -44,9 +44,20 @@
 
     <div class="filtros">
       <div class="select">
-        <select>
-          <option>Todas las categorias</option>      
+          <select ng-model="filtro.categ" ng-change="childChoose()" ng-options="pdc._id as pdc.name for pdc in rootCategory">
+            <option value=''>Todas las categorias</option>     
+          </select>
+      </div>
+      <div class="select">
+        <select ng-model="filtro.subcateg">
+          <option value=''>Todas las subcategorias</option>
+          <option ng-repeat="pdc in childCategorySelected" value="{{pdc._id}}">
+            {{pdc.name}}
+          </option>      
         </select>
+      </div>
+      <div class="button" ng-click="filtrar()">
+        <button class="button-growify-line2">Filtrar productos</button>
       </div>
     </div>
   	
@@ -60,8 +71,11 @@
 		  </a>
   		</div>
 
-      <div class="no_productos" ng-show="!products.length">
+      <div class="no_productos" ng-show="!products.length && isLoaded && !filtrada">
         <h5>La tienda no tiene productos por ahora.<br />Inténtalo más tarde.</h5>
+      </div>
+      <div class="no_productos_filtro" ng-show="!products.length && isLoaded && filtrada">
+        <h5>La tienda no tiene productos para las categorias filtradas. Inténtalo más tarde.</h5>
       </div>
 
   		<div class="c"></div>
