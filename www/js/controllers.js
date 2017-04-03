@@ -145,7 +145,7 @@ angular.module('growify.controllers', [])
   $scope.doLogin = function() {
     $scope.cargandoLogin = true;
     $scope.botonesLogin = false;
-    var data = {'username': $scope.loginData.username.toLowerCase(), 'password': $scope.loginData.password };
+    var data = {'username': $scope.loginData.username, 'password': $scope.loginData.password };
     $http.post($localStorage.growify.rest+'/login', data).
     then(function (data, status, headers, config) {
 
