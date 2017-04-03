@@ -67,8 +67,9 @@ angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.cont
   $rootScope.default = default_app;
 })
 
-.config(function($stateProvider, $compileProvider, $urlRouterProvider) {
+.config(function($stateProvider, $compileProvider, $urlRouterProvider, $ionicConfigProvider) {
   $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|sms|tel|whatsapp):/);
+  $ionicConfigProvider.tabs.position('bottom');
 
   $stateProvider
   .state('login', {
