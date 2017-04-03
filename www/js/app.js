@@ -59,7 +59,7 @@ angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.cont
       $state.go("main.vertiendaproducto", { id: split[3], pro: split[4]});
     }
     else {
-      err("Desconocida la ruta "+url+", tal vez sea necesario actualizar Growify");
+      //err("Desconocida la ruta "+url+", tal vez sea necesario actualizar Growify");
     }
 
   }
