@@ -11,6 +11,7 @@
 
   <content src="index.html"/>
   <access origin="*"/>
+  <access origin="whatsapp:*" launch-external="yes" />
   <preference name="webviewbounce" value="false"/>
   <preference name="UIWebViewBounce" value="false"/>
   <preference name="DisallowOverscroll" value="true"/>
@@ -38,7 +39,7 @@
   <plugin name="org.apache.cordova.globalization"/>
   <plugin name="org.apache.cordova.inappbrowser"/>
   <plugin name="org.apache.cordova.dialogs"/>
-  <plugin name="cordova-plugin-media-capture">
+  <plugin name="cordova-plugin-camera">
     <variable name="CAMERA_USAGE_DESCRIPTION" value="La app requiere acceso a tu cámara" />
     <variable name="MICROPHONE_USAGE_DESCRIPTION" value="La app requiere acceso a tu micrófono" />
     <variable name="PHOTOLIBRARY_USAGE_DESCRIPTION" value="La app requiere acceso a tus fotos" />
@@ -48,6 +49,15 @@
   <plugin name="cordova-plugin-file-transfer"/>
   <plugin name="cordova-plugin-statusbar" />
   <plugin name="cordova-plugin-settings-hook" />
+
+  <feature name="StatusBar">
+    <param name="ios-package" value="CDVStatusBar" onload="true"/>
+  </feature>
+  <feature name="Notification">
+    <param name="ios-package" value="CDVNotification" />
+  </feature>
+
+
   <plugin spec="https://github.com/ranjitpandit/whatsapp-phonegap-plugin.git" source="git" />
   <!--<plugin name="cordova-plugin-splashscreen" />-->
 
@@ -64,6 +74,7 @@
 
   <allow-intent href="http://*/*"/>
   <allow-intent href="https://*/*"/>
+  <allow-intent href="whatsapp:*" />
   <allow-intent href="tel:*"/>
   <allow-intent href="sms:*"/>
   <allow-intent href="mailto:*"/>
@@ -135,6 +146,16 @@
           <string>fb</string>
       </array>
     </config-file>
+    <config-file parent="CFBundleDevelopmentRegion" target="*-Info.plist">
+        <array>
+            <string>Spanish</string>
+        </array>
+    </config-file>
+    <config-file parent="CFBundleLocalizations" target="*-Info.plist">
+        <array>
+            <string>es</string>
+        </array>
+    </config-file>
 
     <config-file target="*-Info.plist" parent="NSCameraUsageDescription">
         <string>Esta app necesita acceso a la cámara</string>
@@ -157,6 +178,9 @@
   </platform>
 
   <platform name="android">
+    <feature name="Whatsapp">
+        <param name="android-package" value="mobi.moica.whatsapp.Whatsapp" />
+    </feature>
     <preference name="android-manifest/application/activity[@android:name='noHistory']" delete="true" />
 
     <splash density="land-hdpi" src="resources/android/splash/drawable-land-hdpi-screen.png" />

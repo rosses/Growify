@@ -395,7 +395,7 @@ angular.module('growify.controllers', [])
     var xhr = new XMLHttpRequest();
     xhr.onload = function () {
       response = JSON.parse(this.responseText);
-      
+
       //console.log("ajaxSuccess", typeof this.responseText);
       //document.getElementById('uploaded').setAttribute("src", response["secure_url"]);
       //document.getElementById('results').innerText = this.responseText;
@@ -1074,6 +1074,7 @@ angular.module('growify.controllers', [])
   };
 
   $scope.whatsapp = function(numero) {
+    console.log(numero);
     cordova.plugins.Whatsapp.send(numero);
   };
 
