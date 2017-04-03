@@ -292,8 +292,7 @@ angular.module('growify.controllers', [])
           if(result.cancelled) {
              err('No has autorizado Growify en tu cuenta de Facebook');
           } else if(result.error) {
-             err('Bloqueaste a Growify para usar tu Facebook. Debes usar otro método de autentificación');
-             //alert("Error:" + result.errorLocalized);
+             err('Bloqueaste a Growify para usar tu Facebook. Debes usar otro método de autentificación ('+result.errorLocalized+')');
           }
        }
     });
@@ -576,24 +575,6 @@ angular.module('growify.controllers', [])
     $scope.closeDrawer();
     $state.go("main.perfil");
   };
-
-  $scope.reportAppLaunched = function(url) {
-
-    $scope.$apply( function() {
-      if (url.indexOf("store") >= 0) {
-        var split = url.split("/");
-        $location.path("#/main/vertienda/"+split[3]+"/");
-      }
-      else if (url.indexOf("producto") >= 0) {
-        var split = url.split("/");
-        $location.path("#/main/vertiendaproducto/"+split[3]+"/"+split[4]+"/");
-      }
-      else {
-        err("Desconocida la ruta "+url+", tal vez sea necesario actualizar Growify");
-      }
-      
-    })
-  }
 
   /*
 	$scope.gotoTiendas = function() {

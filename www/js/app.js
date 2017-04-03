@@ -23,7 +23,7 @@ isCordovaApp = !!window.cordova;
 
 angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.controllers', 'ngStorage', 'slickCarousel', 'ionic.contrib.drawer'])
 
-.run(function($rootScope,$ionicPlatform,$ionicSideMenuDelegate,$localStorage,$cordovaGeolocation,$webSql, $cordovaSplashscreen) {
+.run(function($rootScope,$ionicPlatform,$ionicSideMenuDelegate, $location, $state, $localStorage,$cordovaGeolocation,$webSql, $cordovaSplashscreen) {
   $ionicPlatform.ready(function() {
 
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -46,6 +46,24 @@ angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.cont
   },101); // prioridad 100 android, 101 lo pisa
 
   $rootScope.db = $webSql.openDatabase("growify", "1.1", "Aplicacion Growify", 5 * 1024 * 1024);
+
+
+  $rootScope.reportAppLaunched = function(url) {
+    console.log('External Query: '+url);
+    if (url.indexOf("store") >= 0) {
+      var split = url.split("/");
+      $state.go("main.vertienda", { id: split[3]});
+    }
+    else if (url.indexOf("producto") >= 0) {
+      var split = url.split("/");
+      $state.go("main.vertiendaproducto", { id: split[3], pro: split[4]});
+    }
+    else {
+      err("Desconocida la ruta "+url+", tal vez sea necesario actualizar Growify");
+    }
+
+  }
+
   $rootScope.default = default_app;
 })
 
@@ -178,7 +196,7 @@ angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.cont
 
 function handleOpenURL(url) {
   var body = document.getElementsByTagName("body")[0];
-  var mainController = angular.element(body).scope();
+  var mainController = angular.element(body).scope().$root;
 
   setTimeout(function() {
       mainController.reportAppLaunched(url);
