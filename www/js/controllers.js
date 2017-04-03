@@ -523,12 +523,13 @@ angular.module('growify.controllers', [])
   //console.log($scope.growify);
   $scope.share = function(name,url,msg){
     var options = {
-      message: 'Les recomiendo este Growify Shop!', 
+      message: (msg ? msg : 'Mira esto en Growify'), 
       subject: name,
       files: [], 
       url: url,
       chooserTitle: 'Growify' 
     }
+    console.log(name);
     window.plugins.socialsharing.shareWithOptions(options, function() { }, function() { });
   }
 
@@ -1015,7 +1016,7 @@ angular.module('growify.controllers', [])
       return input;
   };
 
-  $scope.isiOS = true;
+  $scope.isiOS = false;
   $scope.isAndroid = false;
   if (!!window.cordova) {
     if (cordova.platformId == "android") { $scope.isAndroid = true; }
@@ -1064,7 +1065,6 @@ angular.module('growify.controllers', [])
   };
 
   $scope.whatsapp = function(numero) {
-    console.log(numero);
     cordova.plugins.Whatsapp.send(numero);
   };
 
@@ -1218,14 +1218,14 @@ angular.module('growify.controllers', [])
 	    }
 	];
 
-    var mapOptions = {
-      center: scl,
-      zoom: 12,
-      disableDefaultUI: true,
-      mapTypeId: google.maps.MapTypeId.ROADMAP,
-      styles: mapStyle
-    };
-    var myLatLng = null;
+  var mapOptions = {
+    center: scl,
+    zoom: 12,
+    disableDefaultUI: true,
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    styles: mapStyle
+  };
+  var myLatLng = null;
   var marker = [];
   $scope.stores = [];
 	$scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
@@ -1236,7 +1236,7 @@ angular.module('growify.controllers', [])
 		var posOptions = {timeout: 10000, enableHighAccuracy: false};
 		$cordovaGeolocation.getCurrentPosition(posOptions).then(function (position) {
 			myLatLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-  			$scope.followMe();
+  		$scope.followMe();
 			$scope.mylat = position.coords.latitude;
 			$scope.mylng = position.coords.longitude;
 	        me = new google.maps.Marker({
