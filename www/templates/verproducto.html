@@ -21,6 +21,12 @@
         </a>
       </div>
 
+      <hr />
+
+      <div class="pstore-name">{{store.name}}<br />
+      {{store.address}}</div>
+
+
       <div class="pstore-tools">
         <a ng-show="!isFavorito" ng-click="addFavorito(product._id, product.productId.name)"><img src="img/btn.favorito.png" style="border-right: 1px solid #CCC; padding-right: 10px;" /></a>
         <a ng-show="isFavorito" ng-click="delFavorito(product._id, product.productId.name)"><img src="img/btn.favoritofull.png" style="border-right: 1px solid #CCC; padding-right: 10px;" /></a>

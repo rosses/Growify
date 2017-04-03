@@ -29,7 +29,7 @@
             <a data-ng-click="share('{{store.name}}','growify://store/{{store._id}}','Les recomiendo este Growify Shop!')"><img src="img/btn.compartir.png" /></a>
             
             <a ng-if="store.mobile != '' && isAndroid" data-ng-click="whatsapp(store.mobilefix)"><img src="img/btn.whatsapp.png" /></a>
-            <a ng-if="store.mobile != '' && isiOS" href="whatsapp://{{store.mobilefix}}"><img src="img/btn.whatsapp.png" /></a>
+            <a ng-if="store.mobile != '' && isiOS" href="whatsapp://send?text={{store.mobilefix}}"><img src="img/btn.whatsapp.png" /></a>
 
   			</div>
   			<!--

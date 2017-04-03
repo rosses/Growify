@@ -300,9 +300,9 @@ angular.module('growify.controllers', [])
   };
 })
 
-.controller('PerfilCtrl', function($scope, $ionicPopup, $cordovaCamera, $webSql, $http, $ionicModal, $rootScope, $location, $state, $localStorage) {
+.controller('PerfilCtrl', function($scope, $ionicPopup, $ionicLoading, $cordovaCamera, $webSql, $http, $ionicModal, $rootScope, $location, $state, $localStorage) {
 
-
+  $scope.fotoSubida = "img/unknown.png";
 
   $scope.setImage = function() {
     $ionicPopup.show({
@@ -377,24 +377,23 @@ angular.module('growify.controllers', [])
   $scope.uploadPicture = function(base64) {
     $ionicLoading.show({template: '<ion-spinner></ion-spinner>'});
     var base64Image = "data:image/jpeg;base64," + base64;
-    var blob = $scope.dataURItoBlob(base64Image);
+    var blob = dataURItoBlob(base64Image);
     var objURL = window.URL.createObjectURL(blob);
     var image = new Image();
     image.src = objURL;
     window.URL.revokeObjectURL(objURL);
 
     var formData = new FormData();
-    formData.append('avatar', blob, 'avataruser.jpg');
+    formData.append('file', blob, 'avataruser.jpg');
     formData.append('upload_preset', 'growify');
 
     var xhr = new XMLHttpRequest();
-    xhr.onload = function () {
-      alert(this.responseText);
-      response = JSON.parse(this.responseText);
-
-      //console.log("ajaxSuccess", typeof this.responseText);
-      //document.getElementById('uploaded').setAttribute("src", response["secure_url"]);
-      //document.getElementById('results').innerText = this.responseText;
+    xhr.onreadystatechange = function () {
+        if(xhr.readyState === 4 && xhr.status === 200) {
+          var json = JSON.parse(xhr.responseText);
+          $scope.fotoSubida=json.url;
+          $ionicLoading.hide();
+        }
     };
     xhr.open("post", "https://api.cloudinary.com/v1_1/dujuytngk/image/upload");
     xhr.send(formData);
