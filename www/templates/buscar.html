@@ -1,7 +1,7 @@
 <ion-view view-title='BUSCAR'>
   <ion-content scroll="true" class="search" delegate-handle="verTiendaScroll">
   	<div class="search-top">
-  		<input ng-model="buscar.str" placeholder="Ingresa tu búsqueda" />
+  		<input type="text" ng-model="buscar.str" my-enter="buscarOnEnter()" placeholder="Ingresa tu búsqueda" />
   	</div>
   	
     <div class="search-filtro" ng-show="mostrarResultados && isLoaded">

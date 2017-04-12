@@ -193,6 +193,19 @@ angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.cont
   // if none of the above states are matched, use this as the fallback
   //abstract: true,
   $urlRouterProvider.otherwise('/login');
+})
+.directive('myEnter', function () {
+    return function (scope, element, attrs) {
+        element.bind("keydown keypress", function (event) {
+            if(event.which === 13) {
+                scope.$apply(function (){
+                    scope.$eval(attrs.myEnter);
+                });
+
+                event.preventDefault();
+            }
+        });
+    };
 });
 
 function handleOpenURL(url) {

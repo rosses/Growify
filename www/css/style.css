@@ -1040,3 +1040,17 @@ a.activated i {
     height:60px;
     background-size: 100% 0px;
 }
+input[type="search"] {
+	-webkit-appearance: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-moz-appearance: border-box;
+	appearance: border-box;
+	box-sizing: border-box;
+}
+.tabs-striped .tab-item.tab-item-active, .tabs-striped .tab-item.active, .tabs-striped .tab-item.activated {
+	border:0;
+}
+.platform-android .tab-item {
+	padding-top: 10px;
+}

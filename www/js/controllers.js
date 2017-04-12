@@ -799,7 +799,7 @@ angular.module('growify.controllers', [])
 })
 
 .controller('BuscarCtrl', function($rootScope, $scope, $state, $http, $ionicScrollDelegate, $ionicLoading, $ionicModal, $interval, $timeout, $location, $localStorage, $cordovaGeolocation, $ionicSlideBoxDelegate) {
-  console.log($localStorage.growify);
+
   $scope.buscar = {
   	categ: '',
   	str: '',
@@ -834,6 +834,9 @@ angular.module('growify.controllers', [])
   $scope.mostrarBuscar = true;
   $scope.mostrarBuscando = false;
 
+  $scope.buscarOnEnter = function() {
+    $scope.buscarAhora();
+  }
   $scope.childChoose = function() {
     $scope.childCategorySelected = $scope.childCategory[$scope.buscar.categ];
   }
