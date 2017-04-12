@@ -786,18 +786,28 @@ h5 { font-size: 16px; }
 	background-color: #44A743;
 	padding: 25px;
 }
-.search-top input {
-	background-image: url(../img/icon.lupa.png);
+.search-top div {
+	width: 100%;
+	background-color: #FFF;
+	border-radius: 20px;
+}
+.search-top div input {
+	/*background-image: url(../img/icon.lupa.png);
 	background-repeat: no-repeat;
 	background-position: right 20px center;
-	background-size: 25px;
-	border-radius: 33px;
-	padding: 12px;
+	background-size: 25px;*/
+	padding: 10px;
 	border:0;
-	background-color: white;
+	background-color: transparent;
 	color: #4C6271;
-	width: 100%;
-	padding-right: 45px;
+	width: calc(100% - 40px);
+}
+.search-top div button { padding:0; background: transparent; border:0; }
+.search-top div button img { max-width: 25px; }
+.search-top div button.activated {
+	transform: scale(0.9);
+	-webkit-transform: scale(0.9);
+	-moz-transform: scale(0.9);
 }
 .bar .title.title-left { text-align: center; }
 
@@ -1053,4 +1063,9 @@ input[type="search"] {
 }
 .platform-android .tab-item {
 	padding-top: 10px;
+}
+.checkcfg h5 {
+	padding: 20px;
+	text-align:center;
+	margin-top: 30px;
 }

@@ -37,6 +37,13 @@ angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.cont
       // org.apache.cordova.statusbar required
       StatusBar.styleLightContent();
     }
+
+    if ($localStorage.growify.auth == 1) {
+      $state.go("main.home");
+    }
+    else {
+      $state.go("login");
+    }
     
   });
   $ionicPlatform.registerBackButtonAction(function(e){
@@ -192,7 +199,7 @@ angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.cont
   });
   // if none of the above states are matched, use this as the fallback
   //abstract: true,
-  $urlRouterProvider.otherwise('/login');
+  //$urlRouterProvider.otherwise('/login');
 })
 .directive('myEnter', function () {
     return function (scope, element, attrs) {

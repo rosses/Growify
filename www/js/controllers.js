@@ -28,7 +28,8 @@ angular.module('growify.controllers', [])
   $scope.urlImg = "img/loginbg.png";
   
 
-  if ($localStorage.growify && $localStorage.growify.auth == 1) {
+  /*if ($localStorage.growify && $localStorage.growify.auth == 1) {
+
     var goLogin = 0;
     if ($localStorage.growify.username != "" && $localStorage.growify.password != "") {
       var data = {'username': $localStorage.growify.email, 'password': $localStorage.growify.password };
@@ -69,9 +70,8 @@ angular.module('growify.controllers', [])
     }
   } else {
     $localStorage.growify = default_app_;
-  }
-
-
+  }*/
+  $localStorage.growify = default_app_;
 
   $scope.goToRecover = function() { 
     $localStorage.growify.username = "";
@@ -537,7 +537,7 @@ angular.module('growify.controllers', [])
     });
   };
 })
-.controller('MainCtrl', function($scope, $webSql, $timeout, $location, $state, $ionicLoading, $localStorage, $state, $http, $rootScope, $ionicModal, $cordovaGeolocation, $interval) {
+.controller('MainCtrl', function($scope, $webSql, $rootScope, $timeout, $location, $state, $ionicLoading, $localStorage, $state, $http, $rootScope, $ionicModal, $cordovaGeolocation, $interval) {
 
   if (!$localStorage.growify) {
       $state.go( "login" );
@@ -553,19 +553,35 @@ angular.module('growify.controllers', [])
   }
 
   $scope.cfg = JSON.parse(localStorage.getItem("ngStorage-growifyCfg"));
+
+  $rootScope.isMapEnabled = true;
+
+
   //console.log($scope.cfg);
   $scope.aplicarCfg = function() {
     $localStorage.growifyCfg = $scope.cfg;
+
     $scope.closeDrawer();
+    $scope.$broadcast ('updateTiendas');
+
+    console.log($scope.cfg);
+    if ($scope.cfg.tienda == 'fisica') {
+      $rootScope.isMapEnabled = true;
+    }
+    else {
+      $rootScope.isMapEnabled = false;
+      $scope.$broadcast ('showDivLista');
+    }
+
+    /*
     $ionicLoading.show({
       template: '<i class="icon ion-checkmark" style="font-size: 2em;"></i><br />Configuración Aplicada',
       duration: 2500
     }).then(function(){
-       
+
     });
-
-    $scope.$broadcast ('updateTiendas');
-
+    setTimeout(function() {  },2500);
+    */
   };
 
 
@@ -1236,12 +1252,15 @@ angular.module('growify.controllers', [])
   $http.post($localStorage.growify.rest+'/tracker', {'type': 'store', 'storeId': $stateParams.id.replace('/','') }, { }).then(function (data) { },function (data) { });
 
 })
-.controller('HomeCtrl', function($scope, $http, $ionicModal, $timeout, $state, $location, $localStorage, $cordovaGeolocation) {
-	$scope.mylat = 0;
-	$scope.mylng = 0;
+.controller('HomeCtrl', function($scope, $http, $rootScope, $ionicModal, $timeout, $state, $location, $localStorage, $cordovaGeolocation) {
+  $scope.mylat = 0;
+  $scope.mylng = 0;
   $scope.isLoaded = false;
   $scope.showload();
 
+  $scope.$on('showDivLista', function(e) {
+      $scope.tiendasShowDivLista();
+  });
   $scope.$on('updateTiendas', function(e) {
       for (var i = 0 ; i < marker.length;i++) {
         marker[i].setMap(null);
@@ -1290,8 +1309,14 @@ angular.module('growify.controllers', [])
 	          icon: 'img/icon.me.png'
 	        });
 			//if (default_app.storeLoaded == 0) {
-				$scope.getStores();
+			$scope.getStores();
 			//}
+			if ($scope.cfg.tienda == 'fisica') {
+				$rootScope.isMapEnabled = true;
+			}
+			else {
+				$rootScope.isMapEnabled = false;
+			}
 		});
 	});
     
