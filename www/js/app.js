@@ -37,13 +37,18 @@ angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.cont
       // org.apache.cordova.statusbar required
       StatusBar.styleLightContent();
     }
-
-    if ($localStorage.growify.auth == 1) {
-      $state.go("main.home");
-    }
-    else {
+    if (!localStorage.growify) {
       $state.go("login");
     }
+    else {
+      if ($localStorage.growify.auth == 1) {
+        $state.go("main.home");
+      }
+      else {
+        $state.go("login");
+      }      
+    }
+
     
   });
   $ionicPlatform.registerBackButtonAction(function(e){
