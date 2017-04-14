@@ -37,7 +37,9 @@ angular.module('growify', ['ngCordova', 'angular-websql', 'ionic', 'growify.cont
       // org.apache.cordova.statusbar required
       StatusBar.styleLightContent();
     }
-    if (!localStorage.growify) {
+
+    if (!$localStorage.growify) {
+      $localStorage.growify = default_app_;
       $state.go("login");
     }
     else {

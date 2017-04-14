@@ -71,7 +71,7 @@ angular.module('growify.controllers', [])
   } else {
     $localStorage.growify = default_app_;
   }*/
-  $localStorage.growify = default_app_;
+  //$localStorage.growify = default_app_;
 
   $scope.goToRecover = function() { 
     $localStorage.growify.username = "";
@@ -564,7 +564,6 @@ angular.module('growify.controllers', [])
     $scope.closeDrawer();
     $scope.$broadcast ('updateTiendas');
 
-    console.log($scope.cfg);
     if ($scope.cfg.tienda == 'fisica') {
       $rootScope.isMapEnabled = true;
     }
