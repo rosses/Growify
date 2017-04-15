@@ -53,7 +53,7 @@
 
   <plugin spec="https://github.com/ranjitpandit/whatsapp-phonegap-plugin.git" source="git" />
 
-  <plugin spec="https://github.com/EddyVerbruggen/Custom-URL-scheme.git" source="git">
+  <plugin name="cordova-plugin-customurlscheme" source="npm">
     <param name="URL_SCHEME" value="growify" />
   </plugin>
   <plugin name="cordova-plugin-splashscreen" />
