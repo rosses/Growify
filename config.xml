@@ -51,19 +51,19 @@
   <plugin name="cordova-plugin-statusbar" />
   <plugin name="cordova-plugin-settings-hook" />
 
-  <plugin spec="https://github.com/ranjitpandit/whatsapp-phonegap-plugin.git" source="git" />
-
-
-  <feature name="Custom URL scheme">
-    <param name="id" value="cordova-plugin-customurlscheme" />
-    <param name="url" value="https://github.com/EddyVerbruggen/Custom-URL-scheme.git" />
-    <variable name="URL_SCHEME" value="growify" /><!-- change as appropriate -->
+  <feature name="StatusBar">
+    <param name="ios-package" value="CDVStatusBar" onload="true"/>
   </feature>
-  
-  <plugin name="cordova-plugin-customurlscheme" source="npm">
+  <feature name="Notification">
+    <param name="ios-package" value="CDVNotification" />
+  </feature>
+
+
+  <plugin spec="https://github.com/ranjitpandit/whatsapp-phonegap-plugin.git" source="git" />
+  <plugin spec="https://github.com/EddyVerbruggen/Custom-URL-scheme.git" source="git">
     <param name="URL_SCHEME" value="growify" />
   </plugin>
-  <plugin name="cordova-plugin-splashscreen" />
+  <!--<plugin name="cordova-plugin-splashscreen" />-->
 
   
   <plugin name="cordova-plugin-googleplus" source="npm">
@@ -75,13 +75,6 @@
   </plugin>
 
   <plugin name="cordova-plugin-x-socialsharing" source="npm" />
-
-  <feature name="StatusBar">
-    <param name="ios-package" value="CDVStatusBar" onload="true"/>
-  </feature>
-  <feature name="Notification">
-    <param name="ios-package" value="CDVNotification" />
-  </feature>
 
   <allow-intent href="http://*/*"/>
   <allow-intent href="https://*/*"/>
