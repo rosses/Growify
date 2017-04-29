@@ -44,7 +44,12 @@
     <variable name="MICROPHONE_USAGE_DESCRIPTION" value="La app requiere acceso a tu micrófono" />
     <variable name="PHOTOLIBRARY_USAGE_DESCRIPTION" value="La app requiere acceso a tus fotos" />
   </plugin>
-  <plugin name="org.apache.cordova.media-capture"/>
+  <plugin name="cordova-plugin-media-capture" source="npm" spec="*">
+    <variable name="CAMERA_USAGE_DESCRIPTION" value="App would like to access the camera." />
+    <variable name="MICROPHONE_USAGE_DESCRIPTION" value="App would like to access the microphone." />
+    <variable name="PHOTOLIBRARY_USAGE_DESCRIPTION" value="App would like to access the library." />
+  </plugin>
+
   <plugin name="org.apache.cordova.splashscreen"/>
   <plugin name="cordova-plugin-file-transfer"/>
   <plugin name="cordova-plugin-device" />
