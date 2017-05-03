@@ -66,9 +66,7 @@
 
   <plugin spec="https://github.com/ranjitpandit/whatsapp-phonegap-plugin.git" source="git" />
   <plugin spec="https://github.com/EddyVerbruggen/Custom-URL-scheme.git" source="git">
-    <params>
     <param name="URL_SCHEME" value="growify" />
-  </params>
   </plugin>
   <!--<plugin name="cordova-plugin-splashscreen" />-->
 
@@ -94,18 +92,12 @@
   <allow-intent href="fb:*"/>
   <allow-navigation href="*" />
 
-  <platform name="android">
-    <allow-intent href="market:*"/>
-  </platform>
-  <platform name="ios">
-    <allow-intent href="itms:*"/>
-    <allow-intent href="itms-apps:*"/>
-  </platform>
-
   
   <icon src="icon.png" role="default" />
 
   <platform name="ios">
+    <allow-intent href="itms:*"/>
+    <allow-intent href="itms-apps:*"/>
     <feature name="SplashScreen">
         <param name="android-package" value="org.apache.cordova.splashscreen.SplashScreen" />
         <param name="onload" value="true" />
@@ -221,6 +213,7 @@
   </platform>
 
   <platform name="android">
+    <allow-intent href="market:*"/>
     <feature name="Whatsapp">
         <param name="android-package" value="mobi.moica.whatsapp.Whatsapp" />
     </feature>
