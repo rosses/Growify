@@ -25,7 +25,7 @@
   <preference name="android-minSdkVersion" value="16"/>
   <preference name="BackupWebStorage" value="none"/>
   <preference name="permissions" value="none"/>
-  <preference name="Orientation" value="portrait" />
+  
 
   <preference name="StatusBarOverlaysWebView" value="true" />
   <preference name="StatusBarStyle" value="lightcontent" />
@@ -96,6 +96,7 @@
   <icon src="icon.png" role="default" />
 
   <platform name="ios">
+    <preference name="Orientation" value="all" />
     <allow-intent href="itms:*"/>
     <allow-intent href="itms-apps:*"/>
     <feature name="SplashScreen">
@@ -213,6 +214,7 @@
   </platform>
 
   <platform name="android">
+    <preference name="Orientation" value="portrait" />
     <allow-intent href="market:*"/>
     <feature name="Whatsapp">
         <param name="android-package" value="mobi.moica.whatsapp.Whatsapp" />
